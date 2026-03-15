@@ -1,5 +1,7 @@
 package com.mathisland.app.feature.chest
 
+import com.mathisland.app.GameProgress
+
 data class ChestUiState(
     val stickers: List<String>,
     val totalStars: Int
@@ -9,6 +11,11 @@ data class ChestUiState(
 }
 
 object ChestViewModel {
+    fun uiState(progress: GameProgress): ChestUiState = ChestUiState(
+        stickers = progress.stickerNames.toList(),
+        totalStars = progress.totalStars
+    )
+
     fun uiState(
         stickers: List<String>,
         totalStars: Int

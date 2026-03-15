@@ -19,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.ParentSummary
-
 @Composable
 fun ParentSummaryTabletScreen(
-    summary: ParentSummary,
+    state: ParentSummaryUiState,
     onBackHome: () -> Unit
 ) {
     Column(
@@ -51,24 +49,24 @@ fun ParentSummaryTabletScreen(
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "今日学习",
-                value = summary.todayLearned.joinToString("、").ifEmpty { "今天还没有新进度" }
+                value = state.todayLearnedText
             )
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "薄弱知识点",
-                value = summary.weakTopics.joinToString("、").ifEmpty { "暂无薄弱项" }
+                value = state.weakTopicsText
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "连续学习",
-                value = "${summary.streakDays} 天"
+                value = state.streakText
             )
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "建议优先复习",
-                value = summary.recommendedIsland
+                value = state.recommendedIslandText
             )
         }
     }
