@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.mathisland.app.data.progress.DataStoreProgressStore
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,10 +26,7 @@ class MathIslandTabletFlowTest {
     @Before
     fun resetProgress() {
         composeRule.activityRule.scenario.onActivity { activity ->
-            activity.getSharedPreferences("math_island_progress", Context.MODE_PRIVATE)
-                .edit()
-                .clear()
-                .commit()
+            DataStoreProgressStore(activity).clear()
         }
         composeRule.activityRule.scenario.recreate()
     }
