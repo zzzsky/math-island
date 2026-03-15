@@ -29,13 +29,16 @@ import com.mathisland.app.domain.model.CurriculumCatalog
 import com.mathisland.app.feature.chest.ChestTabletScreen
 import com.mathisland.app.feature.chest.ChestViewModel
 import com.mathisland.app.feature.home.HomeTabletScreen
+import com.mathisland.app.feature.home.HomeViewModel
 import com.mathisland.app.feature.lesson.LessonAnswerPane
 import com.mathisland.app.feature.lesson.LessonTabletScreen
 import com.mathisland.app.feature.lesson.LessonViewModel
 import com.mathisland.app.feature.map.MapTabletScreen
 import com.mathisland.app.feature.map.MapViewModel
 import com.mathisland.app.feature.parent.ParentGateScreen as ParentGateFeatureScreen
+import com.mathisland.app.feature.parent.ParentGateViewModel
 import com.mathisland.app.feature.parent.ParentSummaryTabletScreen
+import com.mathisland.app.feature.parent.ParentSummaryViewModel
 import com.mathisland.app.feature.reward.RewardTabletScreen
 import com.mathisland.app.feature.reward.RewardViewModel
 
@@ -115,8 +118,8 @@ fun MathIslandApp() {
                 )
                 .padding(horizontal = 28.dp, vertical = 20.dp)
         ) {
-            val homeState = remember(state) { getHomeStateUseCase() }
-            val parentSummary = remember(state) { getParentSummaryUseCase() }
+            val homeState = remember(state) { HomeViewModel.uiState(getHomeStateUseCase) }
+            val parentSummary = remember(state) { ParentSummaryViewModel.uiState(getParentSummaryUseCase()) }
             when (state.destination) {
                 AppDestination.HOME -> HomeTabletScreen(
                     state = homeState,
@@ -134,10 +137,7 @@ fun MathIslandApp() {
                 )
 
                 AppDestination.CHEST -> ChestTabletScreen(
-                    state = ChestViewModel.uiState(
-                        stickers = state.stickerNames.toList(),
-                        totalStars = state.totalStars
-                    ),
+                    state = ChestViewModel.uiState(state),
                     onBackHome = { updateState(controller.goHome(state)) },
                     onOpenMap = { updateState(controller.openMap(state)) }
                 )
@@ -173,12 +173,13 @@ fun MathIslandApp() {
                 }
 
                 AppDestination.PARENT_GATE -> ParentGateFeatureScreen(
+                    state = ParentGateViewModel.uiState(),
                     onAnswer = { answer -> updateState(controller.submitParentGateAnswer(state, answer)) },
                     onBackHome = { updateState(controller.goHome(state)) }
                 )
 
                 AppDestination.PARENT_SUMMARY -> ParentSummaryTabletScreen(
-                    summary = parentSummary,
+                    state = parentSummary,
                     onBackHome = { updateState(controller.closeParentSummary(state)) }
                 )
             }

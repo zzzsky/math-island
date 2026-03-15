@@ -6,7 +6,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import com.mathisland.app.MathIslandTheme
-import com.mathisland.app.ParentSummary
 import org.junit.Rule
 import org.junit.Test
 
@@ -19,11 +18,11 @@ class ParentSummaryTabletScreenTest {
         composeRule.setContent {
             MathIslandTheme {
                 ParentSummaryTabletScreen(
-                    summary = ParentSummary(
-                        todayLearned = listOf("修桥加减法"),
-                        weakTopics = listOf("测量与图形"),
-                        streakDays = 3,
-                        recommendedIsland = "测量与图形岛"
+                    state = ParentSummaryUiState(
+                        todayLearnedText = "修桥加减法",
+                        weakTopicsText = "测量与图形",
+                        streakText = "3 天",
+                        recommendedIslandText = "测量与图形岛"
                     ),
                     onBackHome = {}
                 )
@@ -42,6 +41,7 @@ class ParentSummaryTabletScreenTest {
         composeRule.setContent {
             MathIslandTheme {
                 ParentGateScreen(
+                    state = ParentGateViewModel.uiState(),
                     onAnswer = {},
                     onBackHome = {}
                 )

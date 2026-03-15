@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ParentGateScreen(
+    state: ParentGateUiState,
     onAnswer: (String) -> Unit,
     onBackHome: () -> Unit
 ) {
@@ -43,19 +44,19 @@ fun ParentGateScreen(
                     .padding(28.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                ParentChipLabel(text = "家长入口")
+                ParentChipLabel(text = state.chipLabel)
                 Text(
-                    text = "请先完成一道口算",
+                    text = state.title,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
                 ParentInfoCard(
                     title = "验证题",
-                    subtitle = "8 + 7 = ?",
-                    body = "用于确认由家长进入摘要页。"
+                    subtitle = state.question,
+                    body = state.subtitle
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    listOf("14", "15", "16").forEach { answer ->
+                    state.answers.forEach { answer ->
                         Button(
                             modifier = Modifier.testTag("parent-answer-$answer"),
                             onClick = { onAnswer(answer) },
