@@ -10,9 +10,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MathIslandTheme {
-                MathIslandApp()
-            }
+            MathIslandTabletApp()
         }
     }
 }
