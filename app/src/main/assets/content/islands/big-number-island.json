@@ -1,0 +1,25 @@
+{
+  "id": "big-number-island",
+  "title": "大数岛",
+  "subtitle": "灯塔报码",
+  "sourceUnits": ["二下-4"],
+  "knowledgePoints": [
+    "读数写数",
+    "大小比较"
+  ],
+  "exampleTypes": ["读写类", "比较类"],
+  "lessons": [
+    {
+      "id": "big-number-read-01",
+      "title": "灯塔拨数台",
+      "summary": "拨出并写出万以内的数。",
+      "questionFamily": "BIG_NUMBER"
+    },
+    {
+      "id": "big-number-sort-01",
+      "title": "山峰高度排序",
+      "summary": "比较大小并完成排序。",
+      "questionFamily": "BIG_NUMBER"
+    }
+  ]
+}

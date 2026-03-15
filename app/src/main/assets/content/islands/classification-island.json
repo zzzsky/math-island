@@ -1,0 +1,18 @@
+{
+  "id": "classification-island",
+  "title": "分类岛",
+  "subtitle": "贝壳集市整理台",
+  "sourceUnits": ["二下-7"],
+  "knowledgePoints": [
+    "分类统计"
+  ],
+  "exampleTypes": ["操作类"],
+  "lessons": [
+    {
+      "id": "classification-shell-01",
+      "title": "纽扣分类台",
+      "summary": "按形状和扣眼数切换标准分类。",
+      "questionFamily": "CLASSIFICATION"
+    }
+  ]
+}

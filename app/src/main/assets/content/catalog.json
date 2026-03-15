@@ -1,0 +1,46 @@
+{
+  "islands": [
+    {
+      "id": "calculation-island",
+      "title": "计算岛",
+      "assetPath": "islands/calculation-island.json",
+      "sourceUnits": ["二上-1", "二下-1", "二下-6"]
+    },
+    {
+      "id": "measurement-geometry-island",
+      "title": "测量与图形岛",
+      "assetPath": "islands/measurement-geometry-island.json",
+      "sourceUnits": ["二上-2", "二下-2-5"]
+    },
+    {
+      "id": "multiplication-island",
+      "title": "乘法口诀岛",
+      "assetPath": "islands/multiplication-island.json",
+      "sourceUnits": ["二上-3-4-7"]
+    },
+    {
+      "id": "division-island",
+      "title": "平均分与除法岛",
+      "assetPath": "islands/division-island.json",
+      "sourceUnits": ["二上-5", "二下-3"]
+    },
+    {
+      "id": "big-number-island",
+      "title": "大数岛",
+      "assetPath": "islands/big-number-island.json",
+      "sourceUnits": ["二下-4"]
+    },
+    {
+      "id": "classification-island",
+      "title": "分类岛",
+      "assetPath": "islands/classification-island.json",
+      "sourceUnits": ["二下-7"]
+    },
+    {
+      "id": "challenge-island",
+      "title": "综合挑战岛",
+      "assetPath": "islands/challenge-island.json",
+      "sourceUnits": []
+    }
+  ]
+}

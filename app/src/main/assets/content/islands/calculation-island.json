@@ -1,0 +1,29 @@
+{
+  "id": "calculation-island",
+  "title": "计算岛",
+  "subtitle": "修桥与列车",
+  "sourceUnits": ["二上-1", "二下-1", "二下-6"],
+  "knowledgePoints": [
+    "进位加法",
+    "退位减法",
+    "连加运算",
+    "解决实际问题",
+    "三位数计算",
+    "验算方法"
+  ],
+  "exampleTypes": ["计算类", "应用类", "表格推理类", "纠错类"],
+  "lessons": [
+    {
+      "id": "calc-carry-01",
+      "title": "修桥进位关",
+      "summary": "练习两位数加减与进位退位。",
+      "questionFamily": "CALCULATION"
+    },
+    {
+      "id": "calc-big-number-01",
+      "title": "三位数验算站",
+      "summary": "练习三位数加减和验算。",
+      "questionFamily": "CALCULATION"
+    }
+  ]
+}

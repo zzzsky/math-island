@@ -1,0 +1,27 @@
+{
+  "id": "measurement-geometry-island",
+  "title": "测量与图形岛",
+  "subtitle": "尺子工坊与拼图山谷",
+  "sourceUnits": ["二上-2", "二下-2-5"],
+  "knowledgePoints": [
+    "单位换算",
+    "测量方法",
+    "平面与立体转化",
+    "平行四边形"
+  ],
+  "exampleTypes": ["判断类", "操作类", "组合类"],
+  "lessons": [
+    {
+      "id": "measure-ruler-01",
+      "title": "尺子零刻度",
+      "summary": "练习厘米、米和正确测量方法。",
+      "questionFamily": "MEASUREMENT"
+    },
+    {
+      "id": "geometry-shape-01",
+      "title": "图形变化坡道",
+      "summary": "认识平行四边形和七巧板拼组。",
+      "questionFamily": "MEASUREMENT"
+    }
+  ]
+}

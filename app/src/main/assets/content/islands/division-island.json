@@ -1,0 +1,27 @@
+{
+  "id": "division-island",
+  "title": "平均分与除法岛",
+  "subtitle": "猴子分水果与小船运输队",
+  "sourceUnits": ["二上-5", "二下-3"],
+  "knowledgePoints": [
+    "平均分",
+    "用口诀求商",
+    "余数规律",
+    "实际取舍"
+  ],
+  "exampleTypes": ["操作类", "计算类", "情境类"],
+  "lessons": [
+    {
+      "id": "division-share-01",
+      "title": "猴子分水果",
+      "summary": "练习平均分和用口诀求商。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-remainder-01",
+      "title": "租船进一法",
+      "summary": "练习有余数除法和情境取舍。",
+      "questionFamily": "DIVISION"
+    }
+  ]
+}

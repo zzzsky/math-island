@@ -1,0 +1,31 @@
+{
+  "id": "challenge-island",
+  "title": "综合挑战岛",
+  "subtitle": "藏宝图试炼",
+  "sourceUnits": [],
+  "knowledgePoints": [
+    "跨主题复习",
+    "错题回练"
+  ],
+  "exampleTypes": ["混合闯关", "错题回放", "限时挑战"],
+  "lessons": [
+    {
+      "id": "challenge-mixed-01",
+      "title": "藏宝图试炼",
+      "summary": "把前面主岛的核心知识点混合到一轮挑战里。",
+      "questionFamily": "CHALLENGE"
+    },
+    {
+      "id": "challenge-sprint-01",
+      "title": "海图冲刺赛",
+      "summary": "用更快节奏完成跨主题口算和换算挑战。",
+      "questionFamily": "CHALLENGE"
+    },
+    {
+      "id": "challenge-review-01",
+      "title": "错题回放站",
+      "summary": "把之前做错过的题型再过一遍，确认已经掌握。",
+      "questionFamily": "CHALLENGE"
+    }
+  ]
+}
