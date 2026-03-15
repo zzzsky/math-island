@@ -6,6 +6,7 @@ import com.mathisland.app.MathIslandProgressStore
 import com.mathisland.app.data.progress.InMemoryProgressStore
 import com.mathisland.app.data.progress.ProgressRepository
 import com.mathisland.app.data.progress.ProgressStore
+import com.mathisland.app.data.progress.DataStoreProgressStore
 import com.mathisland.app.data.progress.SharedPreferencesProgressStore
 import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
@@ -33,7 +34,7 @@ data class AppContainer(
             val curriculum = CurriculumRepository.loadFromAssets(context.assets)
             return fromCurriculum(
                 curriculum = curriculum,
-                progressStore = SharedPreferencesProgressStore(MathIslandProgressStore(context))
+                progressStore = DataStoreProgressStore(context)
             )
         }
 
