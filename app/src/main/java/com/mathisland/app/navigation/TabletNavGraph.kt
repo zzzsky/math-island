@@ -12,17 +12,17 @@ import com.mathisland.app.feature.chest.ChestTabletScreen
 import com.mathisland.app.feature.chest.ChestViewModel
 import com.mathisland.app.feature.home.HomeTabletScreen
 import com.mathisland.app.feature.home.HomeViewModel
-import com.mathisland.app.feature.lesson.LessonAnswerPane
-import com.mathisland.app.feature.lesson.LessonTabletScreen
-import com.mathisland.app.feature.lesson.LessonViewModel
+import com.mathisland.app.feature.level.LevelAnswerPane
+import com.mathisland.app.feature.level.LevelTabletScreen
+import com.mathisland.app.feature.level.LevelViewModel
+import com.mathisland.app.feature.level.RewardOverlay
+import com.mathisland.app.feature.level.RewardViewModel
 import com.mathisland.app.feature.map.MapTabletScreen
 import com.mathisland.app.feature.map.MapViewModel
 import com.mathisland.app.feature.parent.ParentGateScreen
 import com.mathisland.app.feature.parent.ParentGateViewModel
 import com.mathisland.app.feature.parent.ParentSummaryTabletScreen
 import com.mathisland.app.feature.parent.ParentSummaryViewModel
-import com.mathisland.app.feature.reward.RewardTabletScreen
-import com.mathisland.app.feature.reward.RewardViewModel
 import com.mathisland.app.sampleIslands
 
 @Composable
@@ -74,15 +74,15 @@ fun TabletNavGraph() {
             )
 
             AppDestination.LESSON -> {
-                val lessonState = LessonViewModel.uiState(controller, routeState.progress)
-                if (lessonState != null) {
-                    LessonTabletScreen(
-                        state = lessonState,
+                val levelState = LevelViewModel.uiState(controller, routeState.progress)
+                if (levelState != null) {
+                    LevelTabletScreen(
+                        state = levelState,
                         onQuit = routeState::openMap,
                         onExpire = routeState::expireLesson,
                         answerPane = {
-                            LessonAnswerPane(
-                                question = lessonState.question,
+                            LevelAnswerPane(
+                                question = levelState.question,
                                 onAnswer = routeState::answer
                             )
                         }
@@ -93,7 +93,7 @@ fun TabletNavGraph() {
             AppDestination.REWARD -> {
                 val rewardState = RewardViewModel.uiState(routeState.progress)
                 if (rewardState != null) {
-                    RewardTabletScreen(
+                    RewardOverlay(
                         state = rewardState,
                         onContinue = routeState::claimReward,
                         onSecondaryAction = rewardState.reward.secondaryActionLessonId?.let { lessonId ->
