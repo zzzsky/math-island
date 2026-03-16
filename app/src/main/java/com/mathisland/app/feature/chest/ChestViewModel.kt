@@ -1,6 +1,6 @@
 package com.mathisland.app.feature.chest
 
-import com.mathisland.app.GameProgress
+import com.mathisland.app.domain.model.GameProgress
 
 data class ChestUiState(
     val stickers: List<String>,

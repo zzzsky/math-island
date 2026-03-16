@@ -1,11 +1,11 @@
 package com.mathisland.app.domain.usecase
 
-import com.mathisland.app.GameProgress
-import com.mathisland.app.Lesson
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.ReviewTask
 import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.ReviewTask
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

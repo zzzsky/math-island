@@ -1,107 +1,23 @@
 package com.mathisland.app
 
+import com.mathisland.app.domain.model.AppDestination
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.Island
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.ParentSummary
+import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.ReviewTask
 import com.mathisland.app.domain.usecase.GetPendingReviewUseCase
+import com.mathisland.app.domain.usecase.LessonResolutionUseCase
+import com.mathisland.app.domain.usecase.ProgressionQueryUseCase
 import com.mathisland.app.domain.usecase.SubmitLessonResultUseCase
-
-enum class AppDestination {
-    HOME,
-    MAP,
-    CHEST,
-    LESSON,
-    REWARD,
-    PARENT_GATE,
-    PARENT_SUMMARY
-}
-
-data class Question(
-    val prompt: String,
-    val choices: List<String>,
-    val correctChoice: String,
-    val hint: String,
-    val family: String
-)
-
-data class Lesson(
-    val id: String,
-    val islandId: String,
-    val title: String,
-    val focus: String,
-    val summary: String,
-    val questions: List<Question>,
-    val timeLimitSeconds: Int? = null,
-    val isReview: Boolean = false
-)
-
-data class Island(
-    val id: String,
-    val title: String,
-    val subtitle: String,
-    val description: String,
-    val rewardSticker: String,
-    val lessons: List<Lesson>
-)
-
-data class RewardSummary(
-    val lessonTitle: String,
-    val starsEarned: Int,
-    val correctAnswers: Int,
-    val totalQuestions: Int,
-    val newIslandId: String?,
-    val newIslandTitle: String?,
-    val newStickerName: String?,
-    val timedOut: Boolean = false,
-    val gradeLabel: String? = null,
-    val gradeDescription: String? = null,
-    val secondaryActionLabel: String? = null,
-    val secondaryActionLessonId: String? = null
-)
-
-data class ReviewTask(
-    val questionFamily: String
-)
-
-data class ParentSummary(
-    val todayLearned: List<String>,
-    val weakTopics: List<String>,
-    val streakDays: Int,
-    val recommendedIsland: String
-)
-
-data class GameProgress(
-    val destination: AppDestination,
-    val unlockedIslandIds: Set<String>,
-    val completedLessonIds: Set<String>,
-    val totalStars: Int,
-    val stickerNames: Set<String>,
-    val activeLessonId: String?,
-    val activeQuestionIndex: Int,
-    val correctAnswersInLesson: Int,
-    val lastWrongFamily: String?,
-    val consecutiveWrongCount: Int,
-    val scheduledReviewFamily: String?,
-    val pendingReview: ReviewTask?,
-    val todayLessonTitles: List<String>,
-    val streakDays: Int,
-    val lastStudyDayEpoch: Long?,
-    val pendingReward: RewardSummary?
-)
 
 class MathIslandGameController(
     val islands: List<Island>
 ) {
-    private val lessonIndex: Map<String, Lesson> = islands
-        .flatMap { island -> island.lessons }
-        .associateBy { lesson -> lesson.id }
-
     private val islandIndex: Map<String, Island> = islands.associateBy { island -> island.id }
-    private val reviewQuestionBank: Map<String, List<Question>> = islands
-        .flatMap { island -> island.lessons }
-        .flatMap { lesson -> lesson.questions }
-        .groupBy { question -> question.family }
-    private val reviewLessonSource: Map<String, Lesson> = islands
-        .flatMap { island -> island.lessons }
-        .flatMap { lesson -> lesson.questions.map { question -> question.family to lesson } }
-        .toMap()
+    private val lessonResolutionUseCase = LessonResolutionUseCase(islands)
+    private val progressionQueryUseCase = ProgressionQueryUseCase(islands)
     private val submitLessonResultUseCase = SubmitLessonResultUseCase(islands)
     private val getPendingReviewUseCase = GetPendingReviewUseCase(this)
 
@@ -130,7 +46,7 @@ class MathIslandGameController(
     }
 
     fun startLesson(state: GameProgress, lessonId: String): GameProgress {
-        val lesson = resolveLesson(state, lessonId)
+        val lesson = lessonResolutionUseCase.resolveLesson(state, lessonId)
         require(state.unlockedIslandIds.contains(lesson.islandId)) {
             "Lesson $lessonId is not unlocked."
         }
@@ -164,12 +80,8 @@ class MathIslandGameController(
 
     fun goHome(state: GameProgress): GameProgress = state.copy(destination = AppDestination.HOME)
 
-    fun parentSummary(state: GameProgress): ParentSummary = ParentSummary(
-        todayLearned = state.todayLessonTitles,
-        weakTopics = state.pendingReview?.questionFamily?.let { family -> listOf(topicLabelForFamily(family)) }.orEmpty(),
-        streakDays = state.streakDays,
-        recommendedIsland = recommendedIslandTitle(state)
-    )
+    fun parentSummary(state: GameProgress): ParentSummary =
+        lessonResolutionUseCase.parentSummary(state, recommendedLesson(state))
 
     fun answer(state: GameProgress, choice: String): GameProgress {
         val lesson = currentLesson(state) ?: return state
@@ -240,44 +152,23 @@ class MathIslandGameController(
         pendingReward = null
     )
 
-    fun currentLesson(state: GameProgress): Lesson? = state.activeLessonId?.let { lessonId ->
-        dynamicLessonForState(state, lessonId)
-            ?: lessonIndex[lessonId]
-            ?: reviewLessonForState(state)?.takeIf { lesson -> lesson.id == lessonId }
-    }
+    fun currentLesson(state: GameProgress): Lesson? = lessonResolutionUseCase.currentLesson(state)
 
-    fun currentQuestion(state: GameProgress): Question? {
-        val lesson = currentLesson(state) ?: return null
-        return lesson.questions.getOrNull(state.activeQuestionIndex)
-    }
+    fun currentQuestion(state: GameProgress): Question? = lessonResolutionUseCase.currentQuestion(state)
 
     fun recommendedLesson(state: GameProgress): Lesson? =
-        getPendingReviewUseCase(state) ?: nextPlayableLesson(state)
+        lessonResolutionUseCase.recommendedLesson(state, getPendingReviewUseCase(state) ?: nextPlayableLesson(state))
 
     fun pendingReviewLesson(state: GameProgress): Lesson? =
-        challengeReplayRecommendation(state) ?: reviewLessonForState(state)
+        lessonResolutionUseCase.pendingReviewLesson(state)
 
-    fun nextPlayableLesson(state: GameProgress): Lesson? {
-        islands
-            .filter { island -> state.unlockedIslandIds.contains(island.id) }
-            .forEach { island ->
-                island.lessons.firstOrNull { lesson ->
-                    !state.completedLessonIds.contains(lesson.id)
-                }?.let { lesson ->
-                    return lesson
-                }
-            }
+    fun nextPlayableLesson(state: GameProgress): Lesson? = progressionQueryUseCase.nextPlayableLesson(state)
 
-        return null
-    }
-
-    fun islandProgress(state: GameProgress, island: Island): Float {
-        val completed = island.lessons.count { lesson -> state.completedLessonIds.contains(lesson.id) }
-        return completed.toFloat() / island.lessons.size.toFloat()
-    }
+    fun islandProgress(state: GameProgress, island: Island): Float =
+        progressionQueryUseCase.islandProgress(state, island)
 
     fun lessonCompleted(state: GameProgress, lesson: Lesson): Boolean =
-        state.completedLessonIds.contains(lesson.id)
+        progressionQueryUseCase.lessonCompleted(state, lesson)
 
     private fun completeLesson(
         state: GameProgress,
@@ -307,7 +198,7 @@ class MathIslandGameController(
 
         val totalQuestions = lesson.questions.size
         val completedLessonIds = state.completedLessonIds + lesson.id
-        val unlockedIslandIds = computeUnlockedIslands(completedLessonIds)
+        val unlockedIslandIds = progressionQueryUseCase.computeUnlockedIslands(completedLessonIds)
         val island = islandIndex.getValue(lesson.islandId)
         val previousCompletedCount = island.lessons.count { current ->
             state.completedLessonIds.contains(current.id)
@@ -365,109 +256,6 @@ class MathIslandGameController(
             lastStudyDayEpoch = studySnapshot.studyDayEpoch,
             pendingReward = outcome.reward
         )
-    }
-
-    private fun computeUnlockedIslands(completedLessonIds: Set<String>): Set<String> {
-        val unlocked = mutableSetOf<String>()
-        islands.forEachIndexed { index, island ->
-            if (index == 0) {
-                unlocked += island.id
-            } else {
-                val previousIsland = islands[index - 1]
-                val previousCleared = previousIsland.lessons.all { lesson ->
-                    completedLessonIds.contains(lesson.id)
-                }
-                if (previousCleared) {
-                    unlocked += island.id
-                }
-            }
-        }
-        return unlocked
-    }
-
-    private fun resolveLesson(state: GameProgress, lessonId: String): Lesson =
-        dynamicLessonForState(state, lessonId)
-            ?: lessonIndex[lessonId]
-            ?: reviewLessonForState(state)?.takeIf { lesson -> lesson.id == lessonId }
-            ?: error("Lesson $lessonId was not found.")
-
-    private fun dynamicLessonForState(state: GameProgress, lessonId: String): Lesson? =
-        when (lessonId) {
-            CHALLENGE_REPLAY_LESSON_ID -> challengeReplayLessonForState(state)
-            else -> null
-        }
-
-    private fun reviewLessonForState(state: GameProgress): Lesson? {
-        val family = state.pendingReview?.questionFamily ?: return null
-        val sourceLesson = reviewLessonSource[family] ?: return null
-        val questions = reviewQuestionBank[family]?.take(2).orEmpty()
-        if (questions.isEmpty()) {
-            return null
-        }
-
-        return Lesson(
-            id = "review-$family",
-            islandId = sourceLesson.islandId,
-            title = "小海鸥求助",
-            focus = "${sourceLesson.focus} 复习",
-            summary = "先帮小海鸥复习 2 道同类型题目，再回到主线冒险。",
-            questions = questions,
-            isReview = true
-        )
-    }
-
-    private fun challengeReplayLessonForState(state: GameProgress): Lesson? {
-        val baseLesson = lessonIndex[CHALLENGE_REPLAY_LESSON_ID] ?: return null
-        val family = state.pendingReview?.questionFamily ?: return baseLesson
-        val questions = reviewQuestionBank[family]?.take(3).orEmpty()
-        if (questions.isEmpty()) {
-            return baseLesson
-        }
-
-        return baseLesson.copy(
-            focus = "${topicLabelForFamily(family)} 回放",
-            summary = "把之前容易出错的 ${topicLabelForFamily(family)} 题再过一遍。",
-            questions = questions
-        )
-    }
-
-    private fun challengeReplayRecommendation(state: GameProgress): Lesson? {
-        if (state.pendingReview?.questionFamily != "challenge") {
-            return null
-        }
-        val lesson = challengeReplayLessonForState(state) ?: return null
-        return lesson.takeIf { replay ->
-            state.unlockedIslandIds.contains(replay.islandId)
-        }
-    }
-
-    private fun recommendedIslandTitle(state: GameProgress): String =
-        state.pendingReview?.questionFamily?.let(::islandTitleForFamily)
-            ?: recommendedLesson(state)?.let { lesson ->
-                islandIndex[lesson.islandId]?.title ?: islands.first().title
-            }
-            ?: islands.last().title
-
-    private fun topicLabelForFamily(family: String): String = when (family) {
-        "calculation" -> "计算"
-        "measurement" -> "测量与图形"
-        "multiplication" -> "乘法口诀"
-        "division" -> "平均分与除法"
-        "big-number" -> "大数"
-        "classification" -> "分类"
-        "challenge" -> "综合挑战"
-        else -> family
-    }
-
-    private fun islandTitleForFamily(family: String): String = when (family) {
-        "calculation" -> "计算岛"
-        "measurement" -> "测量与图形岛"
-        "multiplication" -> "乘法口诀岛"
-        "division" -> "平均分与除法岛"
-        "big-number" -> "大数岛"
-        "classification" -> "分类岛"
-        "challenge" -> "综合挑战岛"
-        else -> islands.first().title
     }
 
     private fun updateStudySnapshot(state: GameProgress, lessonTitle: String): StudySnapshot {

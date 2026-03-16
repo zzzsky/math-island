@@ -1,11 +1,11 @@
 package com.mathisland.app.data.content
 
-import com.mathisland.app.Island
-import com.mathisland.app.Lesson
-import com.mathisland.app.Question
 import com.mathisland.app.domain.model.CurriculumBundle
 import com.mathisland.app.domain.model.CurriculumIslandContent
 import com.mathisland.app.domain.model.CurriculumLesson
+import com.mathisland.app.domain.model.Island
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.Question
 
 fun curriculumToGameIslands(curriculum: CurriculumBundle): List<Island> =
     curriculum.catalog.islands.map { catalogEntry ->

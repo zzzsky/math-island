@@ -1,12 +1,12 @@
 package com.mathisland.app.feature.map
 
-import com.mathisland.app.AppDestination
-import com.mathisland.app.GameProgress
-import com.mathisland.app.Island
-import com.mathisland.app.Lesson
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.Question
-import com.mathisland.app.ReviewTask
+import com.mathisland.app.domain.model.AppDestination
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.Island
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.ReviewTask
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

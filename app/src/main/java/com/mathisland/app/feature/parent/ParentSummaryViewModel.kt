@@ -1,6 +1,6 @@
 package com.mathisland.app.feature.parent
 
-import com.mathisland.app.ParentSummary
+import com.mathisland.app.domain.model.ParentSummary
 
 data class ParentSummaryUiState(
     val todayLearnedText: String,

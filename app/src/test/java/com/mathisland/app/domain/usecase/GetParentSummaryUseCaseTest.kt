@@ -1,10 +1,10 @@
 package com.mathisland.app.domain.usecase
 
-import com.mathisland.app.ReviewTask
 import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
 import com.mathisland.app.data.progress.InMemoryProgressStore
 import com.mathisland.app.data.progress.ProgressRepository
+import com.mathisland.app.domain.model.ReviewTask
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Test

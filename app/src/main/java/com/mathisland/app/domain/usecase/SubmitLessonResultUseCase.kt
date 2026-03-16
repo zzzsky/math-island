@@ -1,10 +1,10 @@
 package com.mathisland.app.domain.usecase
 
-import com.mathisland.app.GameProgress
-import com.mathisland.app.Island
-import com.mathisland.app.Lesson
-import com.mathisland.app.ReviewTask
-import com.mathisland.app.RewardSummary
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.Island
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.ReviewTask
+import com.mathisland.app.domain.model.RewardSummary
 
 data class LessonResultOutcome(
     val starsEarned: Int,

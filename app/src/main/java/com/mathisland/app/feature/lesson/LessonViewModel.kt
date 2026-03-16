@@ -1,9 +1,9 @@
 package com.mathisland.app.feature.lesson
 
-import com.mathisland.app.GameProgress
-import com.mathisland.app.Lesson
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.Question
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.Question
 
 data class LessonUiState(
     val lesson: Lesson,

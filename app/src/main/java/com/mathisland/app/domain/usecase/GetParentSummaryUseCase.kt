@@ -1,8 +1,8 @@
 package com.mathisland.app.domain.usecase
 
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.ParentSummary
 import com.mathisland.app.data.progress.ProgressRepository
+import com.mathisland.app.domain.model.ParentSummary
 
 class GetParentSummaryUseCase(
     private val repository: ProgressRepository,

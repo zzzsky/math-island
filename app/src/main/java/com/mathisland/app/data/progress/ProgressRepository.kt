@@ -1,7 +1,7 @@
 package com.mathisland.app.data.progress
 
-import com.mathisland.app.GameProgress
 import com.mathisland.app.MathIslandGameController
+import com.mathisland.app.domain.model.GameProgress
 
 class ProgressRepository(
     private val store: ProgressStore,
