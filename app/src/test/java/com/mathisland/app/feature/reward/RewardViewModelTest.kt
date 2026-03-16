@@ -1,8 +1,8 @@
 package com.mathisland.app.feature.reward
 
-import com.mathisland.app.RewardSummary
-import com.mathisland.app.sampleIslands
 import com.mathisland.app.MathIslandGameController
+import com.mathisland.app.domain.model.RewardSummary
+import com.mathisland.app.sampleIslands
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test

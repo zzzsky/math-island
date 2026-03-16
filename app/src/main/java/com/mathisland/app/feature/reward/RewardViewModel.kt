@@ -1,7 +1,7 @@
 package com.mathisland.app.feature.reward
 
-import com.mathisland.app.GameProgress
-import com.mathisland.app.RewardSummary
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.RewardSummary
 
 data class RewardUiState(
     val reward: RewardSummary,

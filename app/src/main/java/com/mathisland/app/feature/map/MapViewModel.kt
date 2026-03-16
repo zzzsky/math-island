@@ -1,7 +1,7 @@
 package com.mathisland.app.feature.map
 
-import com.mathisland.app.GameProgress
 import com.mathisland.app.MathIslandGameController
+import com.mathisland.app.domain.model.GameProgress
 
 data class MapTabletLessonUiState(
     val id: String,

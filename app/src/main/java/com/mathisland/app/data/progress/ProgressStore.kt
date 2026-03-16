@@ -10,10 +10,10 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.mathisland.app.AppDestination
-import com.mathisland.app.GameProgress
 import com.mathisland.app.MathIslandProgressStore
-import com.mathisland.app.ReviewTask
+import com.mathisland.app.domain.model.AppDestination
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.ReviewTask
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap

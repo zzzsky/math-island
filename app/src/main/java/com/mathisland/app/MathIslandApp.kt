@@ -24,8 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mathisland.app.di.AppContainer
+import com.mathisland.app.domain.model.AppDestination
 import com.mathisland.app.domain.model.CurriculumBundle
 import com.mathisland.app.domain.model.CurriculumCatalog
+import com.mathisland.app.domain.model.GameProgress
+import com.mathisland.app.domain.model.RewardSummary
 import com.mathisland.app.feature.chest.ChestTabletScreen
 import com.mathisland.app.feature.chest.ChestViewModel
 import com.mathisland.app.feature.home.HomeTabletScreen

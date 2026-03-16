@@ -1,5 +1,6 @@
 package com.mathisland.app
 
+import com.mathisland.app.domain.model.ReviewTask
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

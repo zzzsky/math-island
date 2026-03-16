@@ -1,9 +1,9 @@
 package com.mathisland.app.feature.lesson
 
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.Island
-import com.mathisland.app.Lesson
-import com.mathisland.app.Question
+import com.mathisland.app.domain.model.Island
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.Question
 import com.mathisland.app.sampleIslands
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

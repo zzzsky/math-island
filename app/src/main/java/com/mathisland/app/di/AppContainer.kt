@@ -16,11 +16,12 @@ import com.mathisland.app.domain.usecase.GetPendingReviewUseCase
 import com.mathisland.app.domain.usecase.GetParentSummaryUseCase
 import com.mathisland.app.domain.usecase.SubmitLessonResultUseCase
 import com.mathisland.app.domain.model.CurriculumBundle
+import com.mathisland.app.domain.model.Island
 import java.io.File
 
 data class AppContainer(
     val curriculumBundle: CurriculumBundle,
-    val islands: List<com.mathisland.app.Island>,
+    val islands: List<Island>,
     val gameController: MathIslandGameController,
     val progressRepository: ProgressRepository,
     val getHomeStateUseCase: GetHomeStateUseCase,
@@ -48,7 +49,7 @@ data class AppContainer(
 
         fun fromIslands(
             curriculumBundle: CurriculumBundle,
-            islands: List<com.mathisland.app.Island>,
+            islands: List<Island>,
             progressStore: ProgressStore = InMemoryProgressStore()
         ): AppContainer {
             val controller = MathIslandGameController(islands)

@@ -2,6 +2,8 @@ package com.mathisland.app
 
 import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
+import com.mathisland.app.domain.model.AppDestination
+import com.mathisland.app.domain.model.ReviewTask
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
