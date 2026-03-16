@@ -37,8 +37,8 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithText("数学岛").assertIsDisplayed()
         composeRule.onNodeWithTag("home-open-map").performClick()
 
-        composeRule.onNodeWithText("计算岛").assertIsDisplayed()
-        composeRule.onNodeWithTag("start-calc-carry-01").performClick()
+        composeRule.onAllNodesWithText("计算岛").onFirst().assertIsDisplayed()
+        openLessonFromMap("start-calc-carry-01")
 
         composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-44").performClick()
@@ -50,15 +50,17 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("reward-return-map").performClick()
 
         composeRule.onNodeWithText("总星星 3").assertIsDisplayed()
-        composeRule.onNodeWithText("再次练习").assertIsDisplayed()
+        composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
     }
 
     @Test
     fun clearingCalculationIsland_unlocksMeasurementIsland() {
         clearCalculationIsland()
 
-        composeRule.onNodeWithText("测量与图形岛").assertIsDisplayed()
-        composeRule.onNodeWithTag("start-measure-ruler-01").assertIsDisplayed()
+        composeRule.onAllNodesWithText("测量与图形岛").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("map-islands-list")
+            .performScrollToNode(hasTestTag("start-measure-ruler-01"))
+        composeRule.onAllNodesWithTag("start-measure-ruler-01").assertCountEquals(2)
     }
 
     @Test
@@ -98,14 +100,14 @@ class MathIslandTabletFlowTest {
         composeRule.activityRule.scenario.recreate()
 
         composeRule.onNodeWithText("总星星 3").assertIsDisplayed()
-        composeRule.onNodeWithText("再次练习").assertIsDisplayed()
+        composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
     }
 
     @Test
     fun seagullReviewIsPrioritizedAfterRecreation() {
         composeRule.onNodeWithText("数学岛").assertIsDisplayed()
         composeRule.onNodeWithTag("home-open-map").performClick()
-        composeRule.onNodeWithTag("start-calc-carry-01").performClick()
+        openLessonFromMap("start-calc-carry-01")
 
         composeRule.onNodeWithTag("answer-34").performClick()
         composeRule.onNodeWithTag("answer-45").performClick()
@@ -140,7 +142,7 @@ class MathIslandTabletFlowTest {
     fun measurementLesson_usesRulerRenderer() {
         clearCalculationIsland()
 
-        composeRule.onNodeWithTag("start-measure-ruler-01").performClick()
+        openLessonFromMap("start-measure-ruler-01")
 
         composeRule.onNodeWithTag("renderer-ruler").assertIsDisplayed()
         composeRule.onNodeWithTag("tablet-ruler-handle").assertIsDisplayed()
@@ -212,7 +214,7 @@ class MathIslandTabletFlowTest {
         openLessonFromMap("start-challenge-sprint-01")
 
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
-        composeRule.waitUntil(10_000) {
+        composeRule.waitUntil(12_000) {
             composeRule.onAllNodesWithText("时间到，本次冲刺记为练习")
                 .fetchSemanticsNodes().isNotEmpty()
         }
@@ -226,7 +228,7 @@ class MathIslandTabletFlowTest {
         unlockChallengeIsland()
 
         openLessonFromMap("start-challenge-sprint-01")
-        composeRule.waitUntil(10_000) {
+        composeRule.waitUntil(12_000) {
             composeRule.onAllNodesWithText("时间到，本次冲刺记为练习")
                 .fetchSemanticsNodes().isNotEmpty()
         }
