@@ -35,6 +35,7 @@ import com.mathisland.app.feature.common.TabletChipLabel
 import com.mathisland.app.feature.common.TabletDeepWater
 import com.mathisland.app.feature.island.IslandOverlaySheet
 import com.mathisland.app.feature.island.IslandViewModel
+import com.mathisland.app.ui.components.IslandMapCanvas
 
 private val MapSeaweed = Color(0xFF4B6F44)
 
@@ -85,7 +86,7 @@ fun MapTabletScreen(
                 MapProgressFeedback(feedback = feedback)
             }
 
-            MapSceneCanvas(
+            IslandMapCanvas(
                 islands = state.islands,
                 selectedIslandId = selectedIsland?.id,
                 highlightedIslandId = state.feedback?.highlightedIslandId,
