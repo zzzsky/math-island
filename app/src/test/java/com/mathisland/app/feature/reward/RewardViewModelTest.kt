@@ -19,6 +19,7 @@ class RewardViewModelTest {
                 starsEarned = 3,
                 correctAnswers = 3,
                 totalQuestions = 3,
+                newIslandId = null,
                 newIslandTitle = "测量与图形岛",
                 newStickerName = "Bridge Builder"
             )
@@ -40,6 +41,7 @@ class RewardViewModelTest {
                 starsEarned = 3,
                 correctAnswers = 3,
                 totalQuestions = 3,
+                newIslandId = null,
                 newIslandTitle = "测量与图形岛",
                 newStickerName = null
             )

@@ -46,6 +46,7 @@ data class RewardSummary(
     val starsEarned: Int,
     val correctAnswers: Int,
     val totalQuestions: Int,
+    val newIslandId: String?,
     val newIslandTitle: String?,
     val newStickerName: String?,
     val timedOut: Boolean = false,
@@ -322,9 +323,10 @@ class MathIslandGameController(
         } else {
             state.stickerNames
         }
-        val newIslandTitle = unlockedIslandIds
+        val newIslandId = unlockedIslandIds
             .minus(state.unlockedIslandIds)
             .firstOrNull()
+        val newIslandTitle = newIslandId
             ?.let(islandIndex::get)
             ?.title
         val clearedChallengeReplay = lesson.id == CHALLENGE_REPLAY_LESSON_ID &&
@@ -338,11 +340,12 @@ class MathIslandGameController(
         val studySnapshot = updateStudySnapshot(state, lesson.title)
         val outcome = submitLessonResultUseCase.onLessonCompleted(
             state = state.copy(pendingReview = pendingReview),
-            lesson = lesson,
-            correctAnswers = correctAnswers,
-            newIslandTitle = newIslandTitle,
-            newStickerName = newStickerName
-        )
+                lesson = lesson,
+                correctAnswers = correctAnswers,
+                newIslandId = newIslandId,
+                newIslandTitle = newIslandTitle,
+                newStickerName = newStickerName
+            )
 
         return state.copy(
             destination = AppDestination.REWARD,

@@ -110,7 +110,7 @@ fun IslandOverlaySheet(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.78f)
                             )
                             Button(
-                                modifier = Modifier.testTag("start-${lesson.id}"),
+                                modifier = Modifier.testTag("panel-start-${lesson.id}"),
                                 onClick = { onStartLesson(lesson.id) },
                                 enabled = lesson.enabled,
                                 colors = ButtonDefaults.buttonColors(

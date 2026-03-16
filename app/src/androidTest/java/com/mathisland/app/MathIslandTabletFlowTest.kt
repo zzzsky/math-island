@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mathisland.app.data.progress.DataStoreProgressStore
@@ -47,7 +48,7 @@ class MathIslandTabletFlowTest {
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
         composeRule.onNodeWithText("本关星星").assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-return-map").performClick()
+        returnToMapFromReward()
 
         composeRule.onNodeWithText("总星星 3").assertIsDisplayed()
         composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
@@ -58,9 +59,8 @@ class MathIslandTabletFlowTest {
         clearCalculationIsland()
 
         composeRule.onAllNodesWithText("测量与图形岛").onFirst().assertIsDisplayed()
-        composeRule.onNodeWithTag("map-islands-list")
-            .performScrollToNode(hasTestTag("start-measure-ruler-01"))
-        composeRule.onAllNodesWithTag("start-measure-ruler-01").assertCountEquals(2)
+        composeRule.onAllNodesWithTag("start-measure-ruler-01").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("panel-start-measure-ruler-01").assertCountEquals(1)
     }
 
     @Test
@@ -113,7 +113,7 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("answer-45").performClick()
         composeRule.onNodeWithTag("answer-62").performClick()
 
-        composeRule.onNodeWithTag("reward-return-map").performClick()
+        returnToMapFromReward()
         composeRule.onNodeWithText("返回首页").performClick()
 
         composeRule.activityRule.scenario.recreate()
@@ -232,7 +232,7 @@ class MathIslandTabletFlowTest {
             composeRule.onAllNodesWithText("时间到，本次冲刺记为练习")
                 .fetchSemanticsNodes().isNotEmpty()
         }
-        composeRule.onNodeWithTag("reward-return-map").performClick()
+        returnToMapFromReward()
         composeRule.onNodeWithText("返回首页").performClick()
         composeRule.onNodeWithTag("home-continue-adventure").performClick()
 
@@ -354,7 +354,7 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("answer-34").performClick()
         composeRule.onNodeWithTag("answer-45").performClick()
         composeRule.onNodeWithTag("answer-62").performClick()
-        composeRule.onNodeWithTag("reward-return-map").performClick()
+        returnToMapFromReward()
 
         completeLesson(
             startTag = "start-calc-big-number-01",
@@ -407,7 +407,15 @@ class MathIslandTabletFlowTest {
         }
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-return-map").performClick()
+        returnToMapFromReward()
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("map-scene-canvas")
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    private fun returnToMapFromReward() {
+        composeRule.onNodeWithTag("reward-return-map").performScrollTo().performClick()
     }
 
     private fun inputNumberPadAnswer(answer: String) {
@@ -418,8 +426,58 @@ class MathIslandTabletFlowTest {
     }
 
     private fun openLessonFromMap(startTag: String) {
-        composeRule.onNodeWithTag("map-islands-list")
-            .performScrollToNode(hasTestTag(startTag))
-        composeRule.onAllNodesWithTag(startTag).onFirst().assertIsDisplayed().performClick()
+        val islandId = islandIdForLessonStart(startTag)
+        val mapNodeTag = "map-node-$islandId"
+        val mapCardTag = "select-island-$islandId"
+
+        when {
+            composeRule.onAllNodesWithTag("map-islands-list").fetchSemanticsNodes().isNotEmpty() -> {
+                composeRule.onNodeWithTag("map-islands-list")
+                    .performScrollToNode(hasTestTag(mapCardTag))
+                composeRule.onNodeWithTag(mapCardTag).performClick()
+            }
+
+            composeRule.onAllNodesWithTag(mapNodeTag).fetchSemanticsNodes().isNotEmpty() -> {
+                composeRule.onNodeWithTag(mapNodeTag).performClick()
+            }
+
+            composeRule.onAllNodesWithTag(mapCardTag).fetchSemanticsNodes().isNotEmpty() -> {
+                composeRule.onNodeWithTag(mapCardTag).performClick()
+            }
+        }
+
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithText(islandTitleForIslandId(islandId))
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+        composeRule.onNodeWithTag(panelStartTagForLesson(startTag)).assertIsDisplayed().performClick()
+    }
+
+    private fun panelStartTagForLesson(startTag: String): String =
+        "panel-${startTag}"
+
+    private fun islandTitleForIslandId(islandId: String): String = when (islandId) {
+        "calculation-island" -> "计算岛"
+        "measurement-geometry-island" -> "测量与图形岛"
+        "multiplication-island" -> "乘法口诀岛"
+        "division-island" -> "平均分与除法岛"
+        "big-number-island" -> "大数岛"
+        "classification-island" -> "分类岛"
+        "challenge-island" -> "综合挑战岛"
+        else -> error("Unknown island id: $islandId")
+    }
+
+    private fun islandIdForLessonStart(startTag: String): String {
+        val lessonId = startTag.removePrefix("start-")
+        return when {
+            lessonId.startsWith("calc-") -> "calculation-island"
+            lessonId.startsWith("measure-") || lessonId.startsWith("geometry-") -> "measurement-geometry-island"
+            lessonId.startsWith("multi-") -> "multiplication-island"
+            lessonId.startsWith("division-") -> "division-island"
+            lessonId.startsWith("big-number-") -> "big-number-island"
+            lessonId.startsWith("classification-") -> "classification-island"
+            lessonId.startsWith("challenge-") -> "challenge-island"
+            else -> error("Unknown lesson tag: $startTag")
+        }
     }
 }

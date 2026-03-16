@@ -26,6 +26,7 @@ class SubmitLessonResultUseCase(
                 starsEarned = 0,
                 correctAnswers = state.correctAnswersInLesson,
                 totalQuestions = totalQuestions,
+                newIslandId = null,
                 newIslandTitle = null,
                 newStickerName = null,
                 timedOut = true,
@@ -49,6 +50,7 @@ class SubmitLessonResultUseCase(
         state: GameProgress,
         lesson: Lesson,
         correctAnswers: Int,
+        newIslandId: String? = null,
         newIslandTitle: String? = null,
         newStickerName: String? = null
     ): LessonResultOutcome {
@@ -65,6 +67,7 @@ class SubmitLessonResultUseCase(
                     starsEarned = starsEarned,
                     correctAnswers = correctAnswers,
                     totalQuestions = totalQuestions,
+                    newIslandId = null,
                     newIslandTitle = null,
                     newStickerName = null,
                     secondaryActionLabel = replaySecondaryActionLabel(
@@ -98,6 +101,7 @@ class SubmitLessonResultUseCase(
                     starsEarned = starsEarned,
                     correctAnswers = correctAnswers,
                     totalQuestions = totalQuestions,
+                    newIslandId = newIslandId,
                     newIslandTitle = newIslandTitle,
                     newStickerName = newStickerName,
                     gradeLabel = challengeGradeLabel(

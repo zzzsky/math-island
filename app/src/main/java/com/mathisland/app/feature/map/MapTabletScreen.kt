@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +20,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,14 +46,6 @@ fun MapTabletScreen(
     onStartLesson: (String) -> Unit,
     onConsumeFeedback: () -> Unit = {}
 ) {
-    if (state.feedback != null) {
-        DisposableEffect(state.feedback) {
-            onDispose {
-                onConsumeFeedback()
-            }
-        }
-    }
-
     var selectedIslandId by remember(state.recommendedIslandId, state.islands) {
         mutableStateOf(state.recommendedIslandId)
     }
@@ -110,7 +102,10 @@ fun MapTabletScreen(
             }
 
             LazyColumn(
-                modifier = Modifier.testTag("map-islands-list"),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 220.dp)
+                    .testTag("map-islands-list"),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 items(state.islands) { island ->

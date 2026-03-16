@@ -28,6 +28,7 @@ class RewardTabletScreenTest {
                             starsEarned = 0,
                             correctAnswers = 1,
                             totalQuestions = 3,
+                            newIslandId = null,
                             newIslandTitle = null,
                             newStickerName = null,
                             timedOut = true,

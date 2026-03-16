@@ -133,9 +133,18 @@ fun MathIslandApp() {
 
                 AppDestination.MAP -> MapTabletScreen(
                     state = MapViewModel.uiState(controller, state, pendingMapFeedback),
-                    onBackHome = { updateState(controller.goHome(state)) },
-                    onOpenChest = { updateState(controller.openChest(state)) },
-                    onStartLesson = { lessonId -> updateState(controller.startLesson(state, lessonId)) },
+                    onBackHome = {
+                        pendingMapFeedback = null
+                        updateState(controller.goHome(state))
+                    },
+                    onOpenChest = {
+                        pendingMapFeedback = null
+                        updateState(controller.openChest(state))
+                    },
+                    onStartLesson = { lessonId ->
+                        pendingMapFeedback = null
+                        updateState(controller.startLesson(state, lessonId))
+                    },
                     onConsumeFeedback = { pendingMapFeedback = null }
                 )
 
@@ -217,5 +226,11 @@ private fun RewardSummary.toMapFeedback(): MapFeedbackUiState? {
         }
     }.joinToString("，")
 
-    return MapFeedbackUiState(title = title, body = body)
+    return MapFeedbackUiState(
+        title = title,
+        body = body,
+        highlightedIslandId = newIslandId,
+        starsEarned = starsEarned,
+        chestReady = newStickerName != null
+    )
 }
