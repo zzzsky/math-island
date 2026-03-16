@@ -18,6 +18,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,8 +36,17 @@ fun MapTabletScreen(
     state: MapTabletUiState,
     onBackHome: () -> Unit,
     onOpenChest: () -> Unit,
-    onStartLesson: (String) -> Unit
+    onStartLesson: (String) -> Unit,
+    onConsumeFeedback: () -> Unit = {}
 ) {
+    if (state.feedback != null) {
+        DisposableEffect(state.feedback) {
+            onDispose {
+                onConsumeFeedback()
+            }
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -60,6 +70,10 @@ fun MapTabletScreen(
                 text = "总星星 ${state.totalStars}",
                 style = MaterialTheme.typography.titleMedium
             )
+        }
+
+        state.feedback?.let { feedback ->
+            MapProgressFeedback(feedback = feedback)
         }
 
         LazyColumn(

@@ -33,6 +33,7 @@ import com.mathisland.app.feature.home.HomeViewModel
 import com.mathisland.app.feature.lesson.LessonAnswerPane
 import com.mathisland.app.feature.lesson.LessonTabletScreen
 import com.mathisland.app.feature.lesson.LessonViewModel
+import com.mathisland.app.feature.map.MapFeedbackUiState
 import com.mathisland.app.feature.map.MapTabletScreen
 import com.mathisland.app.feature.map.MapViewModel
 import com.mathisland.app.feature.parent.ParentGateScreen as ParentGateFeatureScreen
@@ -94,6 +95,7 @@ fun MathIslandApp() {
     val getHomeStateUseCase = remember(container) { container.getHomeStateUseCase }
     val getParentSummaryUseCase = remember(container) { container.getParentSummaryUseCase }
     var state by remember(container) { mutableStateOf(progressRepository.load()) }
+    var pendingMapFeedback by remember(container) { mutableStateOf<MapFeedbackUiState?>(null) }
 
     fun updateState(nextState: GameProgress) {
         state = nextState
@@ -130,10 +132,11 @@ fun MathIslandApp() {
                 )
 
                 AppDestination.MAP -> MapTabletScreen(
-                    state = MapViewModel.uiState(controller, state),
+                    state = MapViewModel.uiState(controller, state, pendingMapFeedback),
                     onBackHome = { updateState(controller.goHome(state)) },
                     onOpenChest = { updateState(controller.openChest(state)) },
-                    onStartLesson = { lessonId -> updateState(controller.startLesson(state, lessonId)) }
+                    onStartLesson = { lessonId -> updateState(controller.startLesson(state, lessonId)) },
+                    onConsumeFeedback = { pendingMapFeedback = null }
                 )
 
                 AppDestination.CHEST -> ChestTabletScreen(
@@ -164,7 +167,10 @@ fun MathIslandApp() {
                     if (rewardState != null) {
                         RewardTabletScreen(
                             state = rewardState,
-                            onContinue = { updateState(controller.claimReward(state)) },
+                            onContinue = {
+                                pendingMapFeedback = state.pendingReward?.toMapFeedback()
+                                updateState(controller.claimReward(state))
+                            },
                             onSecondaryAction = rewardState.reward.secondaryActionLessonId?.let { lessonId ->
                                 { updateState(controller.startLesson(state, lessonId)) }
                             }
@@ -193,4 +199,23 @@ private fun MathIslandAppPreview() {
     MathIslandTheme {
         MathIslandApp()
     }
+}
+
+private fun RewardSummary.toMapFeedback(): MapFeedbackUiState? {
+    val title = when {
+        newIslandTitle != null -> "新岛已解锁"
+        newStickerName != null -> "宝箱有新收藏"
+        starsEarned > 0 -> "星星增加"
+        else -> null
+    } ?: return null
+
+    val body = buildList {
+        newIslandTitle?.let { islandTitle -> add("$islandTitle 已开放") }
+        newStickerName?.let { stickerName -> add("$stickerName 已收入宝箱") }
+        if (starsEarned > 0) {
+            add("累计获得 $starsEarned 颗星星。")
+        }
+    }.joinToString("，")
+
+    return MapFeedbackUiState(title = title, body = body)
 }

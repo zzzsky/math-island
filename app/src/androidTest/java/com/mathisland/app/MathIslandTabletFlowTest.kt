@@ -72,6 +72,19 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun mapFeedback_isShownOnceAfterUnlockThenConsumed() {
+        clearCalculationIsland()
+
+        composeRule.onNodeWithTag("map-progress-feedback").assertIsDisplayed()
+        composeRule.onNodeWithText("新岛已解锁").assertIsDisplayed()
+
+        composeRule.onNodeWithText("返回首页").performClick()
+        composeRule.onNodeWithTag("home-open-map").performClick()
+
+        composeRule.onAllNodesWithTag("map-progress-feedback").assertCountEquals(0)
+    }
+
+    @Test
     fun progressPersistsAfterActivityRecreation() {
         composeRule.onNodeWithText("数学岛").assertIsDisplayed()
         composeRule.onNodeWithTag("home-open-map").performClick()

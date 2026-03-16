@@ -23,15 +23,18 @@ data class MapTabletIslandUiState(
 
 data class MapTabletUiState(
     val totalStars: Int,
+    val feedback: MapFeedbackUiState? = null,
     val islands: List<MapTabletIslandUiState>
 )
 
 object MapViewModel {
     fun uiState(
         controller: MathIslandGameController,
-        progress: GameProgress
+        progress: GameProgress,
+        feedback: MapFeedbackUiState? = null
     ): MapTabletUiState = MapTabletUiState(
         totalStars = progress.totalStars,
+        feedback = feedback,
         islands = controller.islands.map { island ->
             val unlocked = progress.unlockedIslandIds.contains(island.id)
             MapTabletIslandUiState(
