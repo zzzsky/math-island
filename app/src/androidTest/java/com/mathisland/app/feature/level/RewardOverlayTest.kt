@@ -9,7 +9,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.RewardSummary
-import com.mathisland.app.feature.reward.RewardUiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,7 +21,7 @@ class RewardOverlayTest {
         composeRule.setContent {
             MathIslandTheme {
                 RewardOverlay(
-                    state = RewardUiState(
+                    state = RewardOverlayUiState(
                         reward = RewardSummary(
                             lessonTitle = "海图冲刺赛",
                             starsEarned = 0,

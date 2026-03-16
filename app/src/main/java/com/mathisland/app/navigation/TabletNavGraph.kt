@@ -16,13 +16,13 @@ import com.mathisland.app.feature.level.LevelAnswerPane
 import com.mathisland.app.feature.level.LevelTabletScreen
 import com.mathisland.app.feature.level.LevelViewModel
 import com.mathisland.app.feature.level.RewardOverlay
+import com.mathisland.app.feature.level.RewardViewModel
 import com.mathisland.app.feature.map.MapTabletScreen
 import com.mathisland.app.feature.map.MapViewModel
 import com.mathisland.app.feature.parent.ParentGateScreen
 import com.mathisland.app.feature.parent.ParentGateViewModel
 import com.mathisland.app.feature.parent.ParentSummaryTabletScreen
 import com.mathisland.app.feature.parent.ParentSummaryViewModel
-import com.mathisland.app.feature.reward.RewardViewModel
 import com.mathisland.app.sampleIslands
 
 @Composable
