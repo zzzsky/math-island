@@ -23,10 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.feature.common.TabletChipLabel
 import com.mathisland.app.feature.common.TabletFoam
-import com.mathisland.app.feature.common.TabletInfoCard
-import com.mathisland.app.feature.common.TabletStatTile
+import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.components.TabletInfoCard
+import com.mathisland.app.ui.components.TabletStatTile
 
 @Composable
 fun RewardTabletScreen(

@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.QuestionRendererType
 import com.mathisland.app.domain.model.Question
-import com.mathisland.app.feature.common.TabletChipLabel
+import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.feature.common.TabletDeepWater
 import com.mathisland.app.feature.common.TabletFoam
 import com.mathisland.app.feature.common.TabletSand
