@@ -20,7 +20,10 @@ class MapProgressFeedbackTest {
                 MapProgressFeedback(
                     feedback = MapFeedbackUiState(
                         title = "新岛已解锁",
-                        body = "测量与图形岛已开放，累计获得 3 颗星星。"
+                        body = "测量与图形岛已开放，累计获得 3 颗星星。",
+                        highlightedIslandId = "measurement-island",
+                        starsEarned = 3,
+                        chestReady = true
                     )
                 )
             }
@@ -29,5 +32,7 @@ class MapProgressFeedbackTest {
         composeRule.onNodeWithTag("map-progress-feedback").assertIsDisplayed()
         composeRule.onNodeWithText("新岛已解锁").assertIsDisplayed()
         composeRule.onNodeWithText("测量与图形岛已开放，累计获得 3 颗星星。").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-stars-pill").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-chest-pill").assertIsDisplayed()
     }
 }

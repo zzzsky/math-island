@@ -176,4 +176,71 @@ class MapTabletScreenTest {
         composeRule.onNodeWithTag("map-node-measurement-island").performClick()
         composeRule.onNodeWithText("当前查看 测量与图形岛").assertIsDisplayed()
     }
+
+    @Test
+    fun mapScreen_feedbackHighlightsUnlockedIslandAndChest() {
+        composeRule.setContent {
+            MathIslandTheme {
+                MapTabletScreen(
+                    state = MapTabletUiState(
+                        totalStars = 9,
+                        recommendedIslandId = "measurement-island",
+                        feedback = MapFeedbackUiState(
+                            title = "新岛已解锁",
+                            body = "测量与图形岛已开放，累计获得 3 颗星星。",
+                            highlightedIslandId = "measurement-island",
+                            starsEarned = 3,
+                            chestReady = true
+                        ),
+                        islands = listOf(
+                            MapTabletIslandUiState(
+                                id = "calculation-island",
+                                title = "计算岛",
+                                subtitle = "加减法",
+                                description = "口算与估算",
+                                unlocked = true,
+                                completed = true,
+                                progress = 1f,
+                                lessons = listOf(
+                                    MapTabletLessonUiState(
+                                        id = "calc-bridge",
+                                        title = "修桥加减法",
+                                        summary = "summary",
+                                        completed = true,
+                                        enabled = true
+                                    )
+                                )
+                            ),
+                            MapTabletIslandUiState(
+                                id = "measurement-island",
+                                title = "测量与图形岛",
+                                subtitle = "长度与图形",
+                                description = "米和厘米",
+                                unlocked = true,
+                                completed = false,
+                                progress = 0f,
+                                lessons = listOf(
+                                    MapTabletLessonUiState(
+                                        id = "measure-ruler",
+                                        title = "尺子工坊",
+                                        summary = "summary",
+                                        completed = false,
+                                        enabled = true
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    onBackHome = {},
+                    onOpenChest = {},
+                    onStartLesson = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("map-feedback-stars-pill").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-chest-pill").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-route-highlight-measurement-island").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-node-highlight-measurement-island").assertIsDisplayed()
+    }
 }
