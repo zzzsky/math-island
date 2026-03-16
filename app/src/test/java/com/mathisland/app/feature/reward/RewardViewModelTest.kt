@@ -30,4 +30,24 @@ class RewardViewModelTest {
         assertEquals("修桥加减法", uiState?.reward?.lessonTitle)
         assertEquals(9, uiState?.totalStars)
     }
+
+    @Test
+    fun uiState_buildsNextStepCopyForNewIslandUnlock() {
+        val progress = controller.initialState().copy(
+            totalStars = 9,
+            pendingReward = RewardSummary(
+                lessonTitle = "修桥加减法",
+                starsEarned = 3,
+                correctAnswers = 3,
+                totalQuestions = 3,
+                newIslandTitle = "测量与图形岛",
+                newStickerName = null
+            )
+        )
+
+        val uiState = RewardViewModel.uiState(progress)
+
+        assertEquals("前往新岛", uiState?.continueLabel)
+        assertEquals("下一步去测量与图形岛", uiState?.nextStepTitle)
+    }
 }

@@ -49,7 +49,8 @@ class LessonTabletScreenTest {
                         question = lesson.questions.first(),
                         questionIndex = 0,
                         totalQuestions = 3,
-                        totalStars = 12
+                        totalStars = 12,
+                        flowHint = "冲刺结束后会显示评级，并决定是否优先进入错题回放。"
                     ),
                     onQuit = {},
                     answerPane = {
@@ -68,6 +69,8 @@ class LessonTabletScreenTest {
         composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-flow-hint").assertIsDisplayed()
+        composeRule.onNodeWithText("冲刺结束后会显示评级，并决定是否优先进入错题回放。").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-answer-pane").assertIsDisplayed()
     }
 }

@@ -10,7 +10,8 @@ data class LessonUiState(
     val question: Question,
     val questionIndex: Int,
     val totalQuestions: Int,
-    val totalStars: Int
+    val totalStars: Int,
+    val flowHint: String
 )
 
 object LessonViewModel {
@@ -25,7 +26,12 @@ object LessonViewModel {
             question = question,
             questionIndex = progress.activeQuestionIndex,
             totalQuestions = lesson.questions.size,
-            totalStars = progress.totalStars
+            totalStars = progress.totalStars,
+            flowHint = when {
+                lesson.timeLimitSeconds != null -> "冲刺结束后会显示评级，并决定是否优先进入错题回放。"
+                lesson.isReview -> "完成这轮复习后，会回到主线继续推荐下一节课程。"
+                else -> "完成本节后会先结算星星，再回地图继续探索。"
+            }
         )
     }
 }
