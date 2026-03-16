@@ -1,5 +1,7 @@
 package com.mathisland.app.feature.reward
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +47,8 @@ fun RewardTabletScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(28.dp),
+                    .padding(28.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 TabletChipLabel(text = if (reward.timedOut) "时间到" else "关卡完成")
@@ -102,6 +105,12 @@ fun RewardTabletScreen(
                         body = "岛屿全清后会进入宝箱收藏。"
                     )
                 }
+                TabletInfoCard(
+                    title = "下一步",
+                    subtitle = state.nextStepTitle,
+                    body = state.nextStepBody,
+                    modifier = Modifier.testTag("reward-next-step-card")
+                )
                 reward.secondaryActionLabel?.let { label ->
                     onSecondaryAction?.let { action ->
                         Button(
@@ -121,7 +130,7 @@ fun RewardTabletScreen(
                     onClick = onContinue,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("回到地图")
+                    Text(state.continueLabel)
                 }
             }
         }

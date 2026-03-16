@@ -115,6 +115,12 @@ fun LessonTabletScreen(
                     )
                 }
                 TabletInfoCard(
+                    title = "流程提示",
+                    subtitle = "完成后会发生什么",
+                    body = state.flowHint,
+                    modifier = Modifier.testTag("lesson-flow-hint")
+                )
+                TabletInfoCard(
                     title = "题目",
                     subtitle = question.prompt,
                     body = question.hint

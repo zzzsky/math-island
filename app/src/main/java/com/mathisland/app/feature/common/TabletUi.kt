@@ -70,11 +70,13 @@ fun TabletActionCard(
 
 @Composable
 fun TabletInfoCard(
+    modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     body: String
 ) {
     Card(
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color(0x80244C5E)),
         shape = RoundedCornerShape(24.dp)
     ) {
