@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.common.TabletChipLabel
 import com.mathisland.app.feature.common.TabletDeepWater
+import com.mathisland.app.feature.island.IslandOverlaySheet
+import com.mathisland.app.feature.island.IslandViewModel
 
 private val MapSeaweed = Color(0xFF4B6F44)
 
@@ -201,10 +203,13 @@ fun MapTabletScreen(
             }
         }
 
-        selectedIsland?.let { island ->
+        selectedIsland?.let {
             Column(modifier = Modifier.weight(0.95f)) {
-                IslandDetailPanel(
-                    island = island,
+                IslandOverlaySheet(
+                    state = IslandViewModel.uiState(
+                        mapState = state,
+                        selectedIslandId = selectedIslandId
+                    ),
                     onStartLesson = onStartLesson
                 )
             }

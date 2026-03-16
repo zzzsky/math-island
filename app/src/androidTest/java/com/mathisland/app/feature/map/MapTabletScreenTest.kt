@@ -55,7 +55,7 @@ class MapTabletScreenTest {
         composeRule.onNodeWithTag("map-scene-canvas").assertIsDisplayed()
         composeRule.onNodeWithTag("select-island-calculation-island").assertIsDisplayed()
         composeRule.onNodeWithTag("panel-island-title").assertIsDisplayed()
-        composeRule.onNodeWithTag("panel-primary-action").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-primary-action").assertIsDisplayed()
     }
 
     @Test
