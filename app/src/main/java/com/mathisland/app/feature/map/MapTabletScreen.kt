@@ -94,6 +94,7 @@ fun MapTabletScreen(
             MapSceneCanvas(
                 islands = state.islands,
                 selectedIslandId = selectedIsland?.id,
+                highlightedIslandId = state.feedback?.highlightedIslandId,
                 onSelectIsland = { islandId -> selectedIslandId = islandId }
             )
 
