@@ -11,9 +11,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.Lesson
 import com.mathisland.app.MathIslandTheme
-import com.mathisland.app.Question
+import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.Question
 import org.junit.Rule
 import org.junit.Test
 

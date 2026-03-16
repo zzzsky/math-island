@@ -3,8 +3,8 @@ package com.mathisland.app.data.progress
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.mathisland.app.AppDestination
 import com.mathisland.app.MathIslandGameController
+import com.mathisland.app.domain.model.AppDestination
 import com.mathisland.app.sampleIslands
 import org.junit.Assert.assertEquals
 import org.junit.Test

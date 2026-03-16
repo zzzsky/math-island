@@ -9,7 +9,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import com.mathisland.app.MathIslandTheme
-import com.mathisland.app.RewardSummary
+import com.mathisland.app.domain.model.RewardSummary
 import org.junit.Rule
 import org.junit.Test
 
