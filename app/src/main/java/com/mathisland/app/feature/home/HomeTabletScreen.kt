@@ -20,12 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mathisland.app.domain.usecase.HomeState
-import com.mathisland.app.feature.common.TabletActionCard
-import com.mathisland.app.feature.common.TabletChipLabel
 import com.mathisland.app.feature.common.TabletFoam
-import com.mathisland.app.feature.common.TabletInfoCard
 import com.mathisland.app.feature.common.TabletSand
-import com.mathisland.app.feature.common.TabletStatTile
+import com.mathisland.app.ui.components.TabletActionCard
+import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.components.TabletInfoCard
+import com.mathisland.app.ui.components.TabletStatTile
 
 private val HomeCoral = Color(0xFFEE964B)
 
