@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,10 +16,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.StoryPanelCard
+import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.TabletDeepWater
+import com.mathisland.app.ui.theme.TabletFoam
+import com.mathisland.app.ui.theme.TabletInfoSurface
+import com.mathisland.app.ui.theme.TabletPanelSurface
+import com.mathisland.app.ui.theme.TabletSand
+import com.mathisland.app.ui.theme.TabletStatSurface
 
-val TabletDeepWater = Color(0xFF114B5F)
-val TabletFoam = Color(0xFFF3FAF8)
-val TabletSand = Color(0xFFF4D58D)
+val TabletDeepWater: Color
+    get() = com.mathisland.app.ui.theme.TabletDeepWater
+
+val TabletFoam: Color
+    get() = com.mathisland.app.ui.theme.TabletFoam
+
+val TabletSand: Color
+    get() = com.mathisland.app.ui.theme.TabletSand
 
 @Composable
 fun TabletActionCard(
@@ -34,10 +43,9 @@ fun TabletActionCard(
     accent: Color,
     onClick: () -> Unit
 ) {
-    Card(
+    StoryPanelCard(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xCC173C4C)),
-        shape = RoundedCornerShape(24.dp)
+        containerColor = TabletPanelSurface
     ) {
         Column(
             modifier = Modifier
@@ -54,16 +62,12 @@ fun TabletActionCard(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
             )
-            Button(
+            WoodButton(
+                text = buttonText,
                 modifier = buttonTag?.let(Modifier::testTag) ?: Modifier,
                 onClick = onClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = accent,
-                    contentColor = TabletDeepWater
-                )
-            ) {
-                Text(buttonText)
-            }
+                containerColor = accent
+            )
         }
     }
 }
@@ -75,10 +79,9 @@ fun TabletInfoCard(
     subtitle: String,
     body: String
 ) {
-    Card(
+    StoryPanelCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color(0x80244C5E)),
-        shape = RoundedCornerShape(24.dp)
+        containerColor = TabletInfoSurface
     ) {
         Column(
             modifier = Modifier
@@ -108,10 +111,9 @@ fun TabletStatTile(
     value: String,
     accent: Color
 ) {
-    Card(
+    StoryPanelCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color(0x661F4A5D)),
-        shape = RoundedCornerShape(22.dp)
+        containerColor = TabletStatSurface
     ) {
         Column(
             modifier = Modifier
