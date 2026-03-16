@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +41,12 @@ fun MapTabletScreen(
     onOpenChest: () -> Unit,
     onStartLesson: (String) -> Unit
 ) {
+    var selectedIslandId by remember(state.recommendedIslandId, state.islands) {
+        mutableStateOf(state.recommendedIslandId)
+    }
+    val selectedIsland = state.islands.firstOrNull { island -> island.id == selectedIslandId }
+        ?: state.islands.firstOrNull()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -59,6 +69,21 @@ fun MapTabletScreen(
             Text(
                 text = "总星星 ${state.totalStars}",
                 style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        MapSceneCanvas(
+            islands = state.islands,
+            selectedIslandId = selectedIsland?.id,
+            onSelectIsland = { islandId -> selectedIslandId = islandId }
+        )
+
+        selectedIsland?.let { island ->
+            Text(
+                text = "当前查看 ${island.title}",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.testTag("map-selected-title")
             )
         }
 
@@ -95,7 +120,14 @@ fun MapTabletScreen(
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
                                 )
                             }
-                            TabletChipLabel(text = if (island.unlocked) "已解锁" else "等待前岛完成")
+                            TabletChipLabel(
+                                text = when {
+                                    island.id == selectedIsland?.id -> "当前焦点"
+                                    island.completed -> "已完成"
+                                    island.unlocked -> "已解锁"
+                                    else -> "等待前岛完成"
+                                }
+                            )
                         }
 
                         LinearProgressIndicator(
