@@ -7,6 +7,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -69,6 +70,19 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithText("宝箱收藏").assertIsDisplayed()
         composeRule.onNodeWithText("Bridge Builder").assertIsDisplayed()
         composeRule.onNodeWithText("累计星星 6 · 收集到 1 张岛屿贴纸").assertIsDisplayed()
+    }
+
+    @Test
+    fun mapFeedback_isShownOnceAfterUnlockThenConsumed() {
+        clearCalculationIsland()
+
+        composeRule.onNodeWithTag("map-progress-feedback").assertIsDisplayed()
+        composeRule.onNodeWithText("新岛已解锁").assertIsDisplayed()
+
+        composeRule.onNodeWithText("返回首页").performClick()
+        composeRule.onNodeWithTag("home-open-map").performClick()
+
+        composeRule.onAllNodesWithTag("map-progress-feedback").assertCountEquals(0)
     }
 
     @Test
@@ -404,6 +418,6 @@ class MathIslandTabletFlowTest {
     private fun openLessonFromMap(startTag: String) {
         composeRule.onNodeWithTag("map-islands-list")
             .performScrollToNode(hasTestTag(startTag))
-        composeRule.onNodeWithTag(startTag).assertIsDisplayed().performClick()
+        composeRule.onAllNodesWithTag(startTag).onFirst().assertIsDisplayed().performClick()
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,14 +32,26 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.common.TabletChipLabel
+import com.mathisland.app.feature.common.TabletDeepWater
+
+private val MapSeaweed = Color(0xFF4B6F44)
 
 @Composable
 fun MapTabletScreen(
     state: MapTabletUiState,
     onBackHome: () -> Unit,
     onOpenChest: () -> Unit,
-    onStartLesson: (String) -> Unit
+    onStartLesson: (String) -> Unit,
+    onConsumeFeedback: () -> Unit = {}
 ) {
+    if (state.feedback != null) {
+        DisposableEffect(state.feedback) {
+            onDispose {
+                onConsumeFeedback()
+            }
+        }
+    }
+
     var selectedIslandId by remember(state.recommendedIslandId, state.islands) {
         mutableStateOf(state.recommendedIslandId)
     }
@@ -72,6 +85,10 @@ fun MapTabletScreen(
                     text = "总星星 ${state.totalStars}",
                     style = MaterialTheme.typography.titleMedium
                 )
+            }
+
+            state.feedback?.let { feedback ->
+                MapProgressFeedback(feedback = feedback)
             }
 
             MapSceneCanvas(
@@ -149,6 +166,35 @@ fun MapTabletScreen(
                                 color = MaterialTheme.colorScheme.primary,
                                 trackColor = Color.White.copy(alpha = 0.14f)
                             )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                island.lessons.forEach { lesson ->
+                                    Button(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .testTag("start-${lesson.id}"),
+                                        onClick = { onStartLesson(lesson.id) },
+                                        enabled = lesson.enabled,
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = if (lesson.completed) {
+                                                MapSeaweed
+                                            } else {
+                                                MaterialTheme.colorScheme.primary
+                                            },
+                                            contentColor = if (lesson.completed) {
+                                                Color.White
+                                            } else {
+                                                TabletDeepWater
+                                            }
+                                        )
+                                    ) {
+                                        Text(if (lesson.completed) "再次练习" else "开始")
+                                    }
+                                }
+                            }
                         }
                     }
                 }

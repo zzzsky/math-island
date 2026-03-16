@@ -107,7 +107,7 @@ fun IslandDetailPanel(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.78f)
                             )
                             Button(
-                                modifier = Modifier.testTag("panel-lesson-${lesson.id}"),
+                                modifier = Modifier.testTag("start-${lesson.id}"),
                                 onClick = { onStartLesson(lesson.id) },
                                 enabled = lesson.enabled,
                                 colors = ButtonDefaults.buttonColors(
