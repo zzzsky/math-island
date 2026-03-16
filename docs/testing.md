@@ -46,3 +46,8 @@ Run one focused flow:
 - Parent gate and summary
 - Measurement / chant / grouping / sorting renderers
 - Challenge mixed run, timed sprint, replay routing, grading, and retry CTA
+
+## Stable Test Contracts
+
+- End-to-end lesson entry should target `panel-start-<lessonId>` from the island overlay.
+- Plain `start-<lessonId>` tags are treated as local map/list affordances and should not be the primary flow anchor in instrumentation.
