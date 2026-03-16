@@ -114,7 +114,8 @@ class DataStoreProgressStore(
     }
 }
 
-class SharedPreferencesProgressStore(
+// Kept only as a compatibility-backed fallback around the old SharedPreferences delegate.
+internal class SharedPreferencesProgressStore(
     private val delegate: MathIslandProgressStore
 ) : ProgressStore {
     override fun load(initial: GameProgress): GameProgress = delegate.load(initial)

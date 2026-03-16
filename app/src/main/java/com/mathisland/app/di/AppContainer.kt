@@ -2,12 +2,10 @@ package com.mathisland.app.di
 
 import android.content.Context
 import com.mathisland.app.MathIslandGameController
-import com.mathisland.app.MathIslandProgressStore
+import com.mathisland.app.data.progress.DataStoreProgressStore
 import com.mathisland.app.data.progress.InMemoryProgressStore
 import com.mathisland.app.data.progress.ProgressRepository
 import com.mathisland.app.data.progress.ProgressStore
-import com.mathisland.app.data.progress.DataStoreProgressStore
-import com.mathisland.app.data.progress.SharedPreferencesProgressStore
 import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
 import com.mathisland.app.domain.usecase.GetHomeStateUseCase

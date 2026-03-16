@@ -35,8 +35,12 @@ Then launch the app on a tablet-class emulator. The project has been validated o
 
 - `app/src/main/assets/content`
   Curriculum catalog and island content
+- `app/src/main/java/com/mathisland/app/MathIslandTabletApp.kt`
+  Tablet-first entry point and adaptive scaffold shell
+- `app/src/main/java/com/mathisland/app/navigation/TabletNavGraph.kt`
+  Tablet navigation boundary that hosts app scenes
 - `app/src/main/java/com/mathisland/app/MathIslandApp.kt`
-  Current Compose app shell and screens
+  Current scene host and route coordinator content
 - `app/src/main/java/com/mathisland/app/MathIslandGame.kt`
   Game state machine, reward logic, review routing
 - `app/src/main/java/com/mathisland/app/di/AppContainer.kt`
@@ -45,4 +49,9 @@ Then launch the app on a tablet-class emulator. The project has been validated o
 ## Known Gaps
 
 - UI and state are still concentrated in a few files; the planned `feature/*`, `navigation/*`, and `domain/usecase/*` split is not finished yet.
-- Progress persistence is still `SharedPreferences`-based, not the planned `DataStore` + repository stack.
+- Progress persistence is compatibility-backed: `DataStore` is the primary path, while the old SharedPreferences delegate remains only as a fallback wrapper.
+
+## Stable UI Contracts
+
+- The stable map-to-lesson entry contract is `panel-start-<lessonId>` from the active island overlay.
+- List-level `start-<lessonId>` tags still exist for local map cards, but they are not the primary end-to-end contract.

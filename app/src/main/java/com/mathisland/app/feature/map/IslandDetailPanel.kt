@@ -27,6 +27,10 @@ import com.mathisland.app.feature.common.TabletDeepWater
 
 private val CompletedLessonColor = Color(0xFF4B6F44)
 
+@Deprecated(
+    message = "Legacy list-only panel retained only as a quarantined reference. Use feature.island.IslandOverlaySheet and the panel-start-* contract instead.",
+    replaceWith = ReplaceWith("com.mathisland.app.feature.island.IslandOverlaySheet")
+)
 @Composable
 fun IslandDetailPanel(
     island: MapTabletIslandUiState,

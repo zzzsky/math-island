@@ -13,7 +13,10 @@ private const val KEY_TODAY_LESSONS = "today_lessons"
 private const val KEY_STREAK_DAYS = "streak_days"
 private const val KEY_LAST_STUDY_DAY = "last_study_day"
 
-class MathIslandProgressStore(context: Context) {
+@Deprecated(
+    message = "Compatibility delegate for legacy SharedPreferences progress only. Use data.progress.ProgressStore implementations directly."
+)
+internal class MathIslandProgressStore(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     fun load(initial: GameProgress): GameProgress {
