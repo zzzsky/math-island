@@ -1,4 +1,4 @@
-package com.mathisland.app.feature.lesson
+package com.mathisland.app.feature.level
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
@@ -14,7 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
-class LessonAnswerPaneTest {
+class LevelAnswerPaneTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
@@ -31,7 +31,7 @@ class LessonAnswerPaneTest {
 
         composeRule.setContent {
             MathIslandTheme {
-                LessonAnswerPane(
+                LevelAnswerPane(
                     question = question,
                     onAnswer = { selectedAnswer = it }
                 )
@@ -57,7 +57,7 @@ class LessonAnswerPaneTest {
 
         composeRule.setContent {
             MathIslandTheme {
-                LessonAnswerPane(
+                LevelAnswerPane(
                     question = question,
                     onAnswer = { selectedAnswer = it }
                 )
@@ -84,7 +84,7 @@ class LessonAnswerPaneTest {
 
         composeRule.setContent {
             MathIslandTheme {
-                LessonAnswerPane(
+                LevelAnswerPane(
                     question = question,
                     onAnswer = {}
                 )
