@@ -22,8 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.feature.common.TabletDeepWater
 import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.theme.TabletDeepWater
 
 private val CompletedLessonColor = Color(0xFF4B6F44)
 
