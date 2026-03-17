@@ -16,7 +16,7 @@ This batch is intentionally architecture-only:
 The current app is functionally stable, but three areas are still misaligned with the plan:
 
 1. Theme tokens and reusable visual primitives are still partially embedded in app/feature files.
-2. The lesson and reward surfaces still live under `feature/lesson` and `feature/reward`, while the plan assumes a `feature/level` boundary and a dedicated reward overlay surface.
+2. The lesson and reward surfaces were aligned into `feature/level`; the old `feature/lesson` and `feature/reward` wrappers have since been removed.
 3. Some map and panel primitives exist as active behavior but are not yet expressed through the shared component names described in the plan.
 
 ## Recommended Approach
@@ -47,7 +47,7 @@ Acceptance:
 
 Target:
 
-- align `feature/lesson/*` toward the planned `feature/level/*` boundary
+- align the active lesson surface to the planned `feature/level/*` boundary and remove obsolete wrappers
 - introduce a dedicated `RewardOverlay` surface
 - keep current lesson state, renderer routing, challenge flow, and reward behavior unchanged
 

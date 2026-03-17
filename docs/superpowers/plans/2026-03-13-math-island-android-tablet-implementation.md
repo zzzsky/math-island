@@ -100,14 +100,16 @@ I'm using the writing-plans skill to create the implementation plan.
   Choice questions.
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/NumberPadQuestionPane.kt`
   Number entry.
+- `app/src/main/java/com/mathisland/app/feature/level/renderers/ChantQuestionPane.kt`
+  Multiplication chant questions.
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/SortQuestionPane.kt`
   Sort/compare questions.
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/GroupQuestionPane.kt`
   Grouping and classification questions.
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/RulerQuestionPane.kt`
   Measurement questions.
-- `app/src/main/java/com/mathisland/app/feature/reward/RewardOverlay.kt`
-  End-of-level reward layer.
+- `app/src/main/java/com/mathisland/app/feature/level/RewardOverlay.kt`
+  End-of-level reward layer. The active implementation now lives under `feature/level`.
 - `app/src/main/java/com/mathisland/app/feature/chest/ChestViewModel.kt`
   Chest inventory state.
 - `app/src/main/java/com/mathisland/app/feature/chest/ChestTabletScreen.kt`
@@ -383,7 +385,7 @@ git commit -m "feat: add tablet home and map flow"
 - Create: `app/src/main/java/com/mathisland/app/feature/island/IslandOverlaySheet.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt`
-- Create: `app/src/main/java/com/mathisland/app/feature/reward/RewardOverlay.kt`
+- Create: `app/src/main/java/com/mathisland/app/feature/level/RewardOverlay.kt`
 - Test: `app/src/test/java/com/mathisland/app/feature/level/LevelViewModelTest.kt`
 - Test: `app/src/androidTest/java/com/mathisland/app/feature/level/LevelTabletScreenTest.kt`
 
@@ -421,7 +423,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add app/src/main/java/com/mathisland/app/feature/island/IslandViewModel.kt app/src/main/java/com/mathisland/app/feature/island/IslandOverlaySheet.kt app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt app/src/main/java/com/mathisland/app/feature/reward/RewardOverlay.kt app/src/test/java/com/mathisland/app/feature/level/LevelViewModelTest.kt app/src/androidTest/java/com/mathisland/app/feature/level/LevelTabletScreenTest.kt
+git add app/src/main/java/com/mathisland/app/feature/island/IslandViewModel.kt app/src/main/java/com/mathisland/app/feature/island/IslandOverlaySheet.kt app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt app/src/main/java/com/mathisland/app/feature/level/RewardOverlay.kt app/src/test/java/com/mathisland/app/feature/level/LevelViewModelTest.kt app/src/androidTest/java/com/mathisland/app/feature/level/LevelTabletScreenTest.kt
 git commit -m "feat: add tablet lesson and reward flow"
 ```
 
@@ -430,10 +432,11 @@ git commit -m "feat: add tablet lesson and reward flow"
 **Files:**
 - Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/ChoiceQuestionPane.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/NumberPadQuestionPane.kt`
+- Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/ChantQuestionPane.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/SortQuestionPane.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/GroupQuestionPane.kt`
 - Create: `app/src/main/java/com/mathisland/app/feature/level/renderers/RulerQuestionPane.kt`
-- Test: `app/src/androidTest/java/com/mathisland/app/feature/level/QuestionPaneTest.kt`
+- Test: `app/src/androidTest/java/com/mathisland/app/feature/level/LevelAnswerPaneTest.kt`
 
 - [ ] **Step 1: Write the failing renderer UI test**
 
@@ -447,22 +450,22 @@ fun rulerPane_showsTabletRulerHandle() {
 
 - [ ] **Step 2: Run the UI test to verify it fails**
 
-Run: `.\gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.feature.level.QuestionPaneTest`
+Run: `.\gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.feature.level.LevelAnswerPaneTest`
 
 Expected: FAIL because the tablet renderers do not exist.
 
-- [ ] **Step 3: Implement the five question panes sized for tablet interaction**
+- [ ] **Step 3: Implement the renderer panes sized for tablet interaction, including chant support for multiplication content**
 
 - [ ] **Step 4: Re-run the UI test**
 
-Run: `.\gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.feature.level.QuestionPaneTest`
+Run: `.\gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.feature.level.LevelAnswerPaneTest`
 
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add app/src/main/java/com/mathisland/app/feature/level/renderers/*.kt app/src/androidTest/java/com/mathisland/app/feature/level/QuestionPaneTest.kt
+git add app/src/main/java/com/mathisland/app/feature/level/renderers/*.kt app/src/androidTest/java/com/mathisland/app/feature/level/LevelAnswerPaneTest.kt
 git commit -m "feat: add tablet question panes"
 ```
 

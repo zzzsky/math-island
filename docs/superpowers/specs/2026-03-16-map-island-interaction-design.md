@@ -48,6 +48,8 @@
 
 ### 5.1 MapSceneCanvas
 
+Current implementation note: this responsibility is now carried by the shared `ui/components/IslandMapCanvas.kt`, with the original feature-local canvas folded away.
+
 职责：
 
 - 绘制地图背景、岛屿节点、航线、焦点高亮和状态徽记
@@ -61,6 +63,8 @@
 - 业务解锁计算
 
 ### 5.2 IslandDetailPanel
+
+Current implementation note: this responsibility is now carried by `feature/island/IslandOverlaySheet.kt`, and the temporary `IslandDetailPanel` quarantine surface was later removed.
 
 职责：
 

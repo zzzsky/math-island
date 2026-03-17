@@ -19,6 +19,8 @@ Focused examples:
 ./gradlew.bat testDebugUnitTest --tests "com.mathisland.app.MathIslandGameControllerTest"
 ```
 
+The active lesson renderer implementations now live under `app/src/main/java/com/mathisland/app/feature/level/renderers`.
+
 ## Device Tests
 
 Run the tablet end-to-end suite:
@@ -45,6 +47,7 @@ Run one focused flow:
 - Island unlocks and chest rewards
 - Parent gate and summary
 - Measurement / chant / grouping / sorting renderers
+- Active `feature/level/renderers/*` answer-pane split, including challenge number-pad flow
 - Challenge mixed run, timed sprint, replay routing, grading, and retry CTA
 
 ## Stable Test Contracts

@@ -96,4 +96,76 @@ class LevelAnswerPaneTest {
         composeRule.onAllNodesWithTag("answer-10 厘米").assertCountEquals(1)
         composeRule.onNodeWithText("拖动尺子观察刻度，再选择最合适的答案。").assertIsDisplayed()
     }
+
+    @Test
+    fun multiplicationQuestion_showsChantAffordance() {
+        val question = Question(
+            prompt = "7 x 8 = ?",
+            choices = listOf("54", "56", "64"),
+            correctChoice = "56",
+            hint = "先念口诀。",
+            family = "multiplication"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-chant").assertIsDisplayed()
+        composeRule.onNodeWithTag("chant-beat-strip").assertIsDisplayed()
+        composeRule.onNodeWithText("先大声念口诀，再点中正确答案。").assertIsDisplayed()
+    }
+
+    @Test
+    fun divisionQuestion_showsGroupingAffordance() {
+        val question = Question(
+            prompt = "12 个海星平均放进 3 个篮子，每个篮子几个？",
+            choices = listOf("3", "4", "5"),
+            correctChoice = "4",
+            hint = "先分组。",
+            family = "division"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-group").assertIsDisplayed()
+        composeRule.onNodeWithTag("group-basket-zone").assertIsDisplayed()
+        composeRule.onNodeWithText("先想想该怎么分组或分类，再确认答案。").assertIsDisplayed()
+    }
+
+    @Test
+    fun bigNumberQuestion_showsSortingAffordance() {
+        val question = Question(
+            prompt = "把数字按从小到大排好。",
+            choices = listOf("208, 280, 820", "280, 208, 820", "820, 280, 208"),
+            correctChoice = "208, 280, 820",
+            hint = "先比较百位。",
+            family = "big-number"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-sort").assertIsDisplayed()
+        composeRule.onNodeWithTag("sort-signal-lights").assertIsDisplayed()
+        composeRule.onNodeWithText("比较大小或顺序后，点亮正确信号灯。").assertIsDisplayed()
+    }
 }

@@ -30,7 +30,7 @@
 
 **建议文件：**
 
-- Create: `app/src/main/java/com/mathisland/app/feature/map/MapSceneCanvas.kt`
+- Create: `app/src/main/java/com/mathisland/app/feature/map/MapSceneCanvas.kt` (later folded into shared `ui/components/IslandMapCanvas.kt`)
 - Update: `app/src/main/java/com/mathisland/app/feature/map/MapTabletScreen.kt`
 - Update: `app/src/main/java/com/mathisland/app/feature/map/MapViewModel.kt`
 - Test: `app/src/androidTest/java/com/mathisland/app/feature/map/MapTabletScreenTest.kt`
@@ -51,10 +51,10 @@
 
 **建议文件：**
 
-- Create: `app/src/main/java/com/mathisland/app/feature/map/IslandDetailPanel.kt`
+- Create: `app/src/main/java/com/mathisland/app/feature/map/IslandDetailPanel.kt` (legacy quarantine surface, later removed)
 - Update: `app/src/main/java/com/mathisland/app/feature/map/MapTabletScreen.kt`
 - Update: `app/src/main/java/com/mathisland/app/feature/map/MapViewModel.kt`
-- Test: `app/src/androidTest/java/com/mathisland/app/feature/map/IslandDetailPanelTest.kt`
+- Test: `app/src/androidTest/java/com/mathisland/app/feature/map/IslandDetailPanelTest.kt` (later removed with the legacy panel)
 
 **完成标准：**
 

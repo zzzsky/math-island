@@ -15,7 +15,7 @@ Files:
 - `app/src/main/java/com/mathisland/app/ui/theme/*`
 - `app/src/main/java/com/mathisland/app/ui/components/*`
 - `app/src/main/java/com/mathisland/app/MathIslandApp.kt`
-- `app/src/main/java/com/mathisland/app/feature/common/TabletUi.kt`
+- `app/src/main/java/com/mathisland/app/feature/common/TabletUi.kt` (compatibility layer, now removed)
 
 Outcome:
 
@@ -39,8 +39,8 @@ Outcome:
 
 Files:
 
-- `app/src/main/java/com/mathisland/app/feature/lesson/*`
-- `app/src/main/java/com/mathisland/app/feature/reward/*`
+- `app/src/main/java/com/mathisland/app/feature/lesson/*` (compatibility wrappers, now removed)
+- `app/src/main/java/com/mathisland/app/feature/reward/*` (compatibility wrappers, now removed)
 - `app/src/main/java/com/mathisland/app/feature/level/*`
 
 Outcome:

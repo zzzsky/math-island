@@ -45,11 +45,15 @@ Then launch the app on a tablet-class emulator. The project has been validated o
   Game state machine, reward logic, review routing
 - `app/src/main/java/com/mathisland/app/di/AppContainer.kt`
   Minimal dependency assembly for curriculum and controller wiring
+- `app/src/main/java/com/mathisland/app/feature/level/*`
+  Level screen, reward overlay, and answer-pane entry point for the active lesson flow
+- `app/src/main/java/com/mathisland/app/feature/level/renderers/*`
+  Active renderer implementations for choice, number-pad, ruler, chant, grouping, and sorting question panes
 
 ## Known Gaps
 
 - UI and state are still concentrated in a few files; the planned `feature/*`, `navigation/*`, and `domain/usecase/*` split is not finished yet.
-- Progress persistence is compatibility-backed: `DataStore` is the primary path, while the old SharedPreferences delegate remains only as a fallback wrapper.
+- Progress persistence now uses `DataStore` directly on the active path.
 
 ## Stable UI Contracts
 

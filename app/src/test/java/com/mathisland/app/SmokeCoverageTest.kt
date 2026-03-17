@@ -3,7 +3,6 @@ package com.mathisland.app
 import com.mathisland.app.di.AppContainer
 import java.io.File
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,25 +27,41 @@ class SmokeCoverageTest {
     }
 
     @Test
-    fun staleMapPanelPath_isQuarantined_andDocsDescribeStableContracts() {
+    fun stableContracts_areDocumented_andLegacyWrappersAreRemoved() {
         val repoRoot = sequenceOf(
             File("."),
             File(".."),
             File("..", "..")
         ).first { candidate -> File(candidate, "README.md").exists() }
 
-        val legacyPanel = File(repoRoot, "app/src/main/java/com/mathisland/app/feature/map/IslandDetailPanel.kt")
-        if (legacyPanel.exists()) {
-            val legacyPanelSource = legacyPanel.readText()
-            assertTrue(legacyPanelSource.contains("@Deprecated("))
-            assertFalse(legacyPanelSource.contains("testTag(\"panel-start-"))
+        val removedPaths = listOf(
+            "app/src/main/java/com/mathisland/app/feature/map/IslandDetailPanel.kt",
+            "app/src/main/java/com/mathisland/app/feature/map/MapSceneCanvas.kt",
+            "app/src/main/java/com/mathisland/app/MathIslandProgressStore.kt",
+            "app/src/main/java/com/mathisland/app/feature/lesson/LessonAnswerPane.kt",
+            "app/src/main/java/com/mathisland/app/feature/reward/RewardTabletScreen.kt",
+            "app/src/main/java/com/mathisland/app/feature/common/TabletUi.kt"
+        )
+        removedPaths.forEach { path ->
+            assertTrue(!File(repoRoot, path).exists())
+        }
+
+        val rendererFiles = listOf(
+            "app/src/main/java/com/mathisland/app/feature/level/renderers/ChoiceQuestionPane.kt",
+            "app/src/main/java/com/mathisland/app/feature/level/renderers/NumberPadQuestionPane.kt",
+            "app/src/main/java/com/mathisland/app/feature/level/renderers/RulerQuestionPane.kt"
+        )
+        rendererFiles.forEach { path ->
+            assertTrue(File(repoRoot, path).exists())
         }
 
         val readme = File(repoRoot, "README.md").readText()
         assertTrue(readme.contains("panel-start-<lessonId>"))
-        assertTrue(readme.contains("compatibility-backed"))
+        assertTrue(readme.contains("DataStore"))
+        assertTrue(readme.contains("feature/level/renderers/*"))
 
         val testingGuide = File(repoRoot, "docs/testing.md").readText()
         assertTrue(testingGuide.contains("panel-start-<lessonId>"))
+        assertTrue(testingGuide.contains("feature/level/renderers"))
     }
 }
