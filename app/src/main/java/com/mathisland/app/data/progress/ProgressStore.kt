@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.mathisland.app.MathIslandProgressStore
+import com.mathisland.app.data.progress.legacy.LegacySharedPreferencesProgressStore
 import com.mathisland.app.domain.model.AppDestination
 import com.mathisland.app.domain.model.GameProgress
 import com.mathisland.app.domain.model.ReviewTask
@@ -116,7 +116,7 @@ class DataStoreProgressStore(
 
 // Kept only as a compatibility-backed fallback around the old SharedPreferences delegate.
 internal class SharedPreferencesProgressStore(
-    private val delegate: MathIslandProgressStore
+    private val delegate: LegacySharedPreferencesProgressStore
 ) : ProgressStore {
     override fun load(initial: GameProgress): GameProgress = delegate.load(initial)
 
