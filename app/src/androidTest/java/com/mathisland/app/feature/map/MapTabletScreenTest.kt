@@ -55,6 +55,8 @@ class MapTabletScreenTest {
         }
 
         composeRule.onNodeWithTag("map-total-stars").assertTextEquals("总星星 3")
+        composeRule.onNodeWithTag("map-open-chest").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-total-stars-pill").assertIsDisplayed()
         composeRule.onNodeWithTag("map-scene-canvas").assertIsDisplayed()
         composeRule.onNodeWithTag("select-island-calculation-island").assertIsDisplayed()
         composeRule.onNodeWithTag("panel-island-title").assertIsDisplayed()
@@ -318,6 +320,8 @@ class MapTabletScreenTest {
         }
 
         composeRule.onAllNodesWithTag("map-scene-canvas").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-open-chest").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-node-calculation-island").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-node-highlight-measurement-island").assertCountEquals(1)
