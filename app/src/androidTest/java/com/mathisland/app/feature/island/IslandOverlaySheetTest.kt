@@ -2,9 +2,11 @@ package com.mathisland.app.feature.island
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.feature.map.MapTabletLessonUiState
@@ -56,8 +58,10 @@ class IslandOverlaySheetTest {
         composeRule.onNodeWithText("测量与图形岛").assertIsDisplayed()
         composeRule.onNodeWithTag("island-primary-action").assertIsDisplayed()
         composeRule.onNodeWithText("尺子工坊").assertIsDisplayed()
-        composeRule.onNodeWithText("图形搭搭乐").assertIsDisplayed()
         composeRule.onNodeWithText("推荐开始").assertIsDisplayed()
-        composeRule.onNodeWithText("再次练习").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-lessons-list")
+            .performScrollToNode(hasTestTag("panel-start-geometry-shape-01"))
+        composeRule.onNodeWithText("图形搭搭乐").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-start-geometry-shape-01").assertIsDisplayed()
     }
 }

@@ -457,6 +457,10 @@ class MathIslandTabletFlowTest {
             composeRule.onAllNodesWithText(islandTitleForIslandId(islandId))
                 .fetchSemanticsNodes().isNotEmpty()
         }
+        if (composeRule.onAllNodesWithTag("panel-lessons-list").fetchSemanticsNodes().isNotEmpty()) {
+            composeRule.onNodeWithTag("panel-lessons-list")
+                .performScrollToNode(hasTestTag(panelStartTagForLesson(startTag)))
+        }
         composeRule.onNodeWithTag(panelStartTagForLesson(startTag)).assertIsDisplayed().performClick()
     }
 

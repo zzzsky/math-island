@@ -58,6 +58,10 @@ class MapTabletScreenTest {
         composeRule.onNodeWithTag("map-scene-canvas").assertIsDisplayed()
         composeRule.onNodeWithTag("select-island-calculation-island").assertIsDisplayed()
         composeRule.onNodeWithTag("panel-island-title").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-header-icon").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-story-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-lesson-card-calc-bridge").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-start-calc-bridge").assertIsDisplayed()
         composeRule.onNodeWithTag("island-primary-action").assertIsDisplayed()
     }
 
@@ -119,6 +123,9 @@ class MapTabletScreenTest {
         composeRule.onNodeWithTag("select-island-measurement-island").performClick()
         composeRule.onNodeWithTag("panel-island-title").assertIsDisplayed()
         composeRule.onNodeWithTag("panel-island-title").assertTextEquals("测量与图形岛")
+        composeRule.onNodeWithTag("panel-header-icon").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-lesson-card-measure-ruler").assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-start-measure-ruler").assertIsDisplayed()
     }
 
     @Test
@@ -314,6 +321,9 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("map-node-calculation-island").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-node-highlight-measurement-island").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("panel-header-icon").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("panel-story-card").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("panel-start-measure-ruler").assertCountEquals(1)
     }
 
     @Test
