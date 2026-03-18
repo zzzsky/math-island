@@ -250,6 +250,73 @@ class MapTabletScreenTest {
     }
 
     @Test
+    fun mapScreen_keepsTokenizedMapAndPanelContractsVisible() {
+        composeRule.setContent {
+            MathIslandTheme {
+                MapTabletScreen(
+                    state = MapTabletUiState(
+                        totalStars = 9,
+                        recommendedIslandId = "calculation-island",
+                        feedback = MapFeedbackUiState(
+                            title = "新岛已解锁",
+                            body = "测量与图形岛已开放，累计获得 3 颗星星。",
+                            highlightedIslandId = "measurement-island",
+                            starsEarned = 3,
+                            chestReady = true
+                        ),
+                        islands = listOf(
+                            MapTabletIslandUiState(
+                                id = "calculation-island",
+                                title = "计算岛",
+                                subtitle = "加减法",
+                                description = "口算与估算",
+                                unlocked = true,
+                                completed = true,
+                                progress = 1f,
+                                lessons = listOf(
+                                    MapTabletLessonUiState(
+                                        id = "calc-bridge",
+                                        title = "修桥加减法",
+                                        summary = "summary",
+                                        completed = true,
+                                        enabled = true
+                                    )
+                                )
+                            ),
+                            MapTabletIslandUiState(
+                                id = "measurement-island",
+                                title = "测量与图形岛",
+                                subtitle = "长度与图形",
+                                description = "米和厘米",
+                                unlocked = true,
+                                completed = false,
+                                progress = 0f,
+                                lessons = listOf(
+                                    MapTabletLessonUiState(
+                                        id = "measure-ruler",
+                                        title = "尺子工坊",
+                                        summary = "summary",
+                                        completed = false,
+                                        enabled = true
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    onBackHome = {},
+                    onOpenChest = {},
+                    onStartLesson = {}
+                )
+            }
+        }
+
+        composeRule.onAllNodesWithTag("map-scene-canvas").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-node-calculation-island").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-node-highlight-measurement-island").assertCountEquals(1)
+    }
+
+    @Test
     fun mapScreen_feedbackIsConsumedAfterMotionWindow() {
         var consumeCount = 0
 

@@ -80,7 +80,9 @@ class MathIslandTabletFlowTest {
         composeRule.onAllNodesWithTag("map-progress-feedback").assertCountEquals(1)
         composeRule.onAllNodesWithText("新岛已解锁").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-route-highlight-measurement-geometry-island").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-node-highlight-measurement-geometry-island").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("panel-start-measure-ruler-01").assertCountEquals(1)
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("map-open-chest-pulse")
                 .fetchSemanticsNodes().isNotEmpty()

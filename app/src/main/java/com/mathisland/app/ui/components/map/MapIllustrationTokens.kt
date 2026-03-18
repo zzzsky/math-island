@@ -17,6 +17,18 @@ internal object MapIllustrationTokens {
     val IslandArtAlignment = Alignment.Center
     val BadgeAlignment = Alignment.TopEnd
 
+    val SeaBackdropBase = 0xFF0E5165.toInt()
+    val SeaBackdropMid = 0xFF2B7890.toInt()
+    val SeaBackdropLight = 0xFF77B8D8.toInt()
+    val SeaBackdropWash = 0x66F1E2B6.toInt()
+    val IslandPaperShadow = 0x330C3140.toInt()
+    val IslandPaperLight = 0x33FFFFFF.toInt()
+    val IslandInk = 0xFF18475A.toInt()
+    val RoutePaper = 0xFFF9EED6.toInt()
+    val RouteInk = 0xFF8C6335.toInt()
+    val RouteGlow = 0x66F4D58D.toInt()
+    val RouteHighlight = 0xFFF4D58D.toInt()
+
     const val SeaBackdropKey = "map_sea_backdrop"
     const val RouteDefaultKey = "route_segment_default"
     const val RouteHighlightKey = "route_segment_highlight"
