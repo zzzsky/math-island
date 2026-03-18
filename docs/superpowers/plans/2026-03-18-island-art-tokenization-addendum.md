@@ -39,6 +39,7 @@
 
 - 岛屿、航线、海面从单文件绘制拆成独立 painter 层
 - 每层都支持 `asset or fallback painter`
+- 不改变节点位置、热区和标签结构
 
 ### Task C: 默认视觉语言升级
 
@@ -52,11 +53,19 @@
 
 - 地图默认外观升级为轻手绘冒险感
 - 交互、测试标签和点击区域保持稳定
+- `MapTabletScreen.kt` 只允许做最小接线改动；不允许新增业务状态或改写地图交互规则
 
 ## 3. 并行策略
 
 - `Task A` 可先独立完成
-- `Task B` 和 `Task C` 可以并发，但 `Task C` 依赖 `Task A` 提供的视觉 token
+- `Task B` 在 `Task A` 完成后开始
+- `Task C` 只在 `Task B` 提供稳定 painter 边界后开始，避免与 `IslandMapCanvas.kt` 产生写冲突
+
+推荐合并顺序：
+
+1. `Task A`
+2. `Task B`
+3. `Task C`
 
 ## 4. 验收命令
 

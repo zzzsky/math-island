@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -70,12 +71,20 @@ fun IslandMapCanvas(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     if (island.id != islands.first().id) {
+                        val routeAlpha by animateFloatAsState(
+                            targetValue = if (highlightedIslandId == island.id) 1f else 0.5f,
+                            animationSpec = tween(durationMillis = 600),
+                            label = "map-route-alpha-${island.id}"
+                        )
                         Box(
                             modifier = Modifier
                                 .height(6.dp)
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(999.dp))
-                                .background(if (highlightedIslandId == island.id) FocusRing.copy(alpha = 0.72f) else RouteGlow)
+                                .background(
+                                    FocusRing.copy(alpha = routeAlpha)
+                                        .compositeOver(RouteGlow)
+                                )
                                 .testTag("map-route-highlight-${island.id}")
                         )
                     }

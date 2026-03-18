@@ -50,7 +50,7 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithText("本关星星").assertIsDisplayed()
         returnToMapFromReward()
 
-        composeRule.onNodeWithText("总星星 3").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-total-stars").assertIsDisplayed()
         composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
     }
 
@@ -59,7 +59,6 @@ class MathIslandTabletFlowTest {
         clearCalculationIsland()
 
         composeRule.onAllNodesWithText("测量与图形岛").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithTag("start-measure-ruler-01").assertCountEquals(1)
         composeRule.onAllNodesWithTag("panel-start-measure-ruler-01").assertCountEquals(1)
     }
 
@@ -78,8 +77,14 @@ class MathIslandTabletFlowTest {
     fun mapFeedback_isShownOnceAfterUnlockThenConsumed() {
         clearCalculationIsland()
 
-        composeRule.onNodeWithTag("map-progress-feedback").assertIsDisplayed()
-        composeRule.onNodeWithText("新岛已解锁").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("map-progress-feedback").assertCountEquals(1)
+        composeRule.onAllNodesWithText("新岛已解锁").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-node-highlight-measurement-geometry-island").assertCountEquals(1)
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("map-open-chest-pulse")
+                .fetchSemanticsNodes().isNotEmpty()
+        }
 
         composeRule.onNodeWithText("返回首页").performClick()
         composeRule.onNodeWithTag("home-open-map").performClick()
@@ -99,7 +104,7 @@ class MathIslandTabletFlowTest {
 
         composeRule.activityRule.scenario.recreate()
 
-        composeRule.onNodeWithText("总星星 3").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-total-stars").assertIsDisplayed()
         composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
     }
 

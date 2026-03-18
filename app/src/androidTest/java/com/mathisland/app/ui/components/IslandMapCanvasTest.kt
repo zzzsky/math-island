@@ -53,4 +53,42 @@ class IslandMapCanvasTest {
         composeRule.onNodeWithTag("map-node-calculation-island").performClick()
         assertEquals("calculation-island", selected)
     }
+
+    @Test
+    fun islandMapCanvas_highlightsRouteWhenSpecified() {
+        composeRule.setContent {
+            MathIslandTheme {
+                IslandMapCanvas(
+                    islands = listOf(
+                        MapTabletIslandUiState(
+                            id = "calculation-island",
+                            title = "计算岛",
+                            subtitle = "加减法",
+                            description = "口算与估算",
+                            unlocked = true,
+                            completed = false,
+                            progress = 0.5f,
+                            lessons = emptyList()
+                        ),
+                        MapTabletIslandUiState(
+                            id = "measurement-island",
+                            title = "测量与图形岛",
+                            subtitle = "尺子",
+                            description = "长度",
+                            unlocked = true,
+                            completed = false,
+                            progress = 0.2f,
+                            lessons = emptyList()
+                        )
+                    ),
+                    selectedIslandId = "calculation-island",
+                    highlightedIslandId = "measurement-island",
+                    onSelectIsland = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("map-route-highlight-measurement-island").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-node-highlight-measurement-island").assertIsDisplayed()
+    }
 }

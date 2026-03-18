@@ -30,8 +30,11 @@ class MapProgressFeedbackTest {
         }
 
         composeRule.onNodeWithTag("map-progress-feedback").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-title").assertIsDisplayed()
         composeRule.onNodeWithText("新岛已解锁").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-body").assertIsDisplayed()
         composeRule.onNodeWithText("测量与图形岛已开放，累计获得 3 颗星星。").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-feedback-summary").assertIsDisplayed()
         composeRule.onNodeWithTag("map-feedback-stars-pill").assertIsDisplayed()
         composeRule.onNodeWithTag("map-feedback-chest-pill").assertIsDisplayed()
     }

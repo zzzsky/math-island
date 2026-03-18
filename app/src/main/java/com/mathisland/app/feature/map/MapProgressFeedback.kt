@@ -57,12 +57,23 @@ fun MapProgressFeedback(
                 Text(
                     text = feedback.title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.testTag("map-feedback-title")
                 )
                 Text(
                     text = feedback.body,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.84f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.84f),
+                    modifier = Modifier.testTag("map-feedback-body")
                 )
+                if (feedback.starsEarned > 0 || feedback.chestReady) {
+                    Text(
+                        text = "本次推进",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.testTag("map-feedback-summary")
+                    )
+                }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (feedback.starsEarned > 0) {
                         AssistChip(
