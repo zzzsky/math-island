@@ -16,6 +16,7 @@ import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.ui.components.map.ArtSlotSpec
+import com.mathisland.app.ui.components.map.MapArtRegistry
 import com.mathisland.app.ui.components.map.MapArtSource
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -223,6 +224,25 @@ class IslandMapCanvasTest {
         }
         composeRule.onNodeWithTag("map-node-measurement-geometry-island").assertIsDisplayed()
         composeRule.onNodeWithTag("map-node-measurement-geometry-island").performClick()
+    }
+
+    @Test
+    fun islandMapCanvas_rendersWithProductionDrawableRegistry() {
+        composeRule.setContent {
+            MathIslandTheme {
+                IslandMapCanvas(
+                    islands = sampleIslands(),
+                    selectedIslandId = "calculation-island",
+                    highlightedIslandId = "measurement-geometry-island",
+                    onSelectIsland = {},
+                    artSource = MapArtRegistry
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("map-node-calculation-island").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-node-highlight-measurement-geometry-island").assertIsDisplayed()
+        composeRule.onNodeWithTag("map-route-highlight-measurement-geometry-island").assertIsDisplayed()
     }
 
     private fun sampleIslands() = listOf(

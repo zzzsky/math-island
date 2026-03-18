@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotSame
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -47,6 +48,19 @@ class MapArtRegistryTest {
         assertEquals("map_sea_backdrop", MapArtRegistry.resolveSeaBackdrop().key)
         assertEquals("route_segment_default", MapArtRegistry.resolveRouteArt(highlighted = false).key)
         assertEquals("route_segment_highlight", MapArtRegistry.resolveRouteArt(highlighted = true).key)
+    }
+
+    @Test
+    fun resolveSharedArt_exposesDrawableResourceIdsForCanonicalSlots() {
+        assertNotNull(MapArtRegistry.resolveSeaBackdrop().slot.drawableResId)
+        assertNotNull(MapArtRegistry.resolveRouteArt(highlighted = false).slot.drawableResId)
+        assertNotNull(MapArtRegistry.resolveRouteArt(highlighted = true).slot.drawableResId)
+        assertNotNull(
+            MapArtRegistry.resolveIslandArt("measurement-geometry-island").baseSlot.drawableResId
+        )
+        assertNotNull(
+            MapArtRegistry.resolveIslandArt("measurement-geometry-island").iconSlot.drawableResId
+        )
     }
 
     @Test

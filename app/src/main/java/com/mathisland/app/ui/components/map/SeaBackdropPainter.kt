@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -23,6 +24,7 @@ fun SeaBackdropPainter(
     artSource: MapArtSource = MapArtRegistry
 ) {
     val seaArt = MapArtRegistry.resolveSeaBackdrop(artSource)
+    val backdropPainter = seaArt.slot.drawableResId?.let { painterResource(it) } ?: seaArt.painter
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(28.dp))
@@ -73,7 +75,7 @@ fun SeaBackdropPainter(
             )
         }
         Image(
-            painter = seaArt.painter,
+            painter = backdropPainter,
             contentDescription = null,
             contentScale = seaArt.slot.contentScale,
             modifier = Modifier

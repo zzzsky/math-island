@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 private val RouteGlow = Color(MapIllustrationTokens.RouteGlow)
@@ -34,6 +35,7 @@ fun RoutePainter(
     artSource: MapArtSource = MapArtRegistry
 ) {
     val routeArt = MapArtRegistry.resolveRouteArt(highlighted, artSource)
+    val routePainter = routeArt.slot.drawableResId?.let { painterResource(it) } ?: routeArt.painter
     val routeAlpha by animateFloatAsState(
         targetValue = if (highlighted) 1f else 0.5f,
         animationSpec = tween(durationMillis = 600),
@@ -70,7 +72,7 @@ fun RoutePainter(
             )
         }
         Image(
-            painter = routeArt.painter,
+            painter = routePainter,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier

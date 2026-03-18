@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.map.MapTabletIslandUiState
 
@@ -45,6 +46,12 @@ fun IslandNodePainter(
     modifier: Modifier = Modifier
 ) {
     val islandArt = MapArtRegistry.resolveIslandArt(island.id, artSource)
+    val basePainter = islandArt.baseSlot.drawableResId?.let { painterResource(it) } ?: islandArt.baseArt
+    val iconPainter = islandArt.iconSlot.drawableResId?.let { painterResource(it) } ?: islandArt.iconArt
+    val lockedOverlayPainter =
+        islandArt.lockedOverlaySlot.drawableResId?.let { painterResource(it) } ?: islandArt.lockedOverlay
+    val unlockedTintPainter =
+        islandArt.unlockedTintSlot.drawableResId?.let { painterResource(it) } ?: islandArt.unlockedTint
     val visualScale by animateFloatAsState(
         targetValue = if (selected || highlighted) 1.05f else 1f,
         animationSpec = tween(durationMillis = 350),
@@ -93,7 +100,7 @@ fun IslandNodePainter(
                     )
             )
             Image(
-                painter = islandArt.baseArt,
+                painter = basePainter,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )
@@ -119,7 +126,7 @@ fun IslandNodePainter(
 
             if (!island.unlocked) {
                 Image(
-                    painter = islandArt.lockedOverlay,
+                    painter = lockedOverlayPainter,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -127,7 +134,7 @@ fun IslandNodePainter(
 
             if (island.unlocked && !island.completed) {
                 Image(
-                    painter = islandArt.unlockedTint,
+                    painter = unlockedTintPainter,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -148,7 +155,7 @@ fun IslandNodePainter(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = islandArt.iconArt,
+                    painter = iconPainter,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )

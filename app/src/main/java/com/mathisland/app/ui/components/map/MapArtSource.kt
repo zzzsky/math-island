@@ -16,7 +16,8 @@ data class ArtSlotSpec(
     val sourcePriority: List<SourceType>,
     val size: IntSize? = null,
     val alignment: Alignment = MapIllustrationTokens.IslandArtAlignment,
-    val contentScale: ContentScale = MapIllustrationTokens.ArtContentScale
+    val contentScale: ContentScale = MapIllustrationTokens.ArtContentScale,
+    val drawableResId: Int? = null
 )
 
 data class SeaArtSpec(

@@ -1,8 +1,10 @@
 package com.mathisland.app.ui.components.map
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
+import com.mathisland.app.R
 
 object MapArtRegistry : MapArtSource {
     val defaultSourcePriority = listOf(SourceType.Vector, SourceType.WebP, SourceType.Png)
@@ -73,7 +75,8 @@ object MapArtRegistry : MapArtSource {
         sourcePriority = defaultSourcePriority,
         size = size,
         alignment = alignment,
-        contentScale = MapIllustrationTokens.ArtContentScale
+        contentScale = MapIllustrationTokens.ArtContentScale,
+        drawableResId = drawableResIdOrNull(key)
     )
 
     private fun resolvePainter(source: MapArtSource, slot: ArtSlotSpec): Painter =
@@ -89,4 +92,10 @@ object MapArtRegistry : MapArtSource {
         val blue = 120 + ((hash shr 12) and 0x3F)
         return Color(red, green, blue, 255)
     }
+
+    @DrawableRes
+    private fun drawableResIdOrNull(key: String): Int? =
+        runCatching {
+            R.drawable::class.java.getField(key).getInt(null)
+        }.getOrNull()?.takeIf { it != 0 }
 }
