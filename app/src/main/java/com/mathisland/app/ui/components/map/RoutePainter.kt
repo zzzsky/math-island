@@ -31,6 +31,7 @@ private val RoutePaper = Color(MapIllustrationTokens.RoutePaper)
 fun RoutePainter(
     islandId: String,
     highlighted: Boolean,
+    motionProgress: Float = 0f,
     modifier: Modifier = Modifier,
     artSource: MapArtSource = MapArtRegistry
 ) {
@@ -41,6 +42,7 @@ fun RoutePainter(
         animationSpec = tween(durationMillis = 600),
         label = "map-route-alpha-$islandId"
     )
+    val sweepProgress = if (highlighted) motionProgress.coerceIn(0f, 1f) else 0f
     Box(
         modifier = modifier
             .height(6.dp)
@@ -70,6 +72,34 @@ fun RoutePainter(
                 strokeWidth = 0.9f,
                 cap = androidx.compose.ui.graphics.StrokeCap.Round
             )
+            if (sweepProgress > 0f) {
+                val sweepStartX = size.width * 0.08f
+                val sweepEndX = size.width * 0.92f
+                val sweepStartY = size.height * 0.33f
+                val sweepEndY = size.height * 0.42f
+                val sweepHead = sweepProgress
+                val sweepTail = (sweepHead - 0.18f).coerceAtLeast(0f)
+                val head = Offset(
+                    x = sweepStartX + ((sweepEndX - sweepStartX) * sweepHead),
+                    y = sweepStartY + ((sweepEndY - sweepStartY) * sweepHead)
+                )
+                val tail = Offset(
+                    x = sweepStartX + ((sweepEndX - sweepStartX) * sweepTail),
+                    y = sweepStartY + ((sweepEndY - sweepStartY) * sweepTail)
+                )
+                drawLine(
+                    color = FocusRing.copy(alpha = 0.42f + (sweepProgress * 0.36f)),
+                    start = tail,
+                    end = head,
+                    strokeWidth = 2.8f,
+                    cap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+                drawCircle(
+                    color = RouteGlow.copy(alpha = 0.34f + (sweepProgress * 0.36f)),
+                    radius = 2.2f + (sweepProgress * 1.4f),
+                    center = head
+                )
+            }
         }
         Image(
             painter = routePainter,

@@ -42,6 +42,7 @@ fun IslandNodePainter(
     island: MapTabletIslandUiState,
     selected: Boolean,
     highlighted: Boolean,
+    motionProgress: Float = 0f,
     artSource: MapArtSource = MapArtRegistry,
     modifier: Modifier = Modifier
 ) {
@@ -57,6 +58,8 @@ fun IslandNodePainter(
         animationSpec = tween(durationMillis = 350),
         label = "map-node-visual-scale-${island.id}"
     )
+    val pulseScale = if (selected || highlighted) 1f + (motionProgress * 0.1f) else 1f
+    val pulseAlpha = if (selected || highlighted) 0.24f + (motionProgress * 0.18f) else 0f
 
     val nodeBackground = when {
         !island.unlocked -> LockedIsland
@@ -83,9 +86,25 @@ fun IslandNodePainter(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .scale(visualScale),
+                .scale(visualScale * pulseScale),
             contentAlignment = Alignment.Center
         ) {
+            if (selected || highlighted) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .scale(1f + (motionProgress * 0.12f))
+                        .background(
+                            Brush.radialGradient(
+                                colors = listOf(
+                                    FocusRing.copy(alpha = pulseAlpha),
+                                    Color.Transparent
+                                )
+                            ),
+                            HandDrawnShape
+                        )
+                )
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()

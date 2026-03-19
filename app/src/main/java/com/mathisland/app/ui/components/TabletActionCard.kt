@@ -7,10 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -19,7 +19,7 @@ fun TabletActionCard(
     subtitle: String,
     buttonText: String,
     buttonTag: String? = null,
-    accent: Color,
+    role: ActionRole = ActionRole.Primary,
     onClick: () -> Unit
 ) {
     StoryPanelCard(
@@ -41,11 +41,11 @@ fun TabletActionCard(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
             )
-            WoodButton(
+            ActionButton(
                 text = buttonText,
                 modifier = buttonTag?.let(Modifier::testTag) ?: Modifier,
                 onClick = onClick,
-                containerColor = accent
+                role = role,
             )
         }
     }

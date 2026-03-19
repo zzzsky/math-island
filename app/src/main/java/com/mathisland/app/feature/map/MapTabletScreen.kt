@@ -1,7 +1,7 @@
 package com.mathisland.app.feature.map
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +29,7 @@ import com.mathisland.app.feature.island.IslandOverlaySheet
 import com.mathisland.app.feature.island.IslandViewModel
 import com.mathisland.app.ui.components.IslandMapCanvas
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 @Composable
 fun MapTabletScreen(
@@ -54,64 +54,30 @@ fun MapTabletScreen(
     }
     var dismissedFeedbackKey by remember { mutableStateOf<String?>(null) }
     val activeFeedback = state.feedback?.takeIf { feedbackKey != null && dismissedFeedbackKey != feedbackKey }
-    var animatedStarsTarget by remember(state.totalStars) { mutableIntStateOf(state.totalStars) }
-    var starsEmphasis by remember { mutableStateOf(false) }
-    var chestPulse by remember { mutableStateOf(false) }
-    val displayedStars by animateIntAsState(
-        targetValue = animatedStarsTarget,
-        animationSpec = tween(durationMillis = 600),
-        label = "map-total-stars"
-    )
-    val starsScale by animateFloatAsState(
-        targetValue = if (starsEmphasis) 1.08f else 1f,
-        animationSpec = tween(durationMillis = 180),
-        label = "map-stars-pill"
-    )
-    val chestScale by animateFloatAsState(
-        targetValue = if (chestPulse) 1.06f else 1f,
-        animationSpec = tween(durationMillis = 160),
-        label = "map-chest-pulse"
-    )
-    val chestPulseAlpha by animateFloatAsState(
-        targetValue = if (chestPulse) 1f else 0.35f,
-        animationSpec = tween(durationMillis = 160),
-        label = "map-chest-pulse-alpha"
-    )
+    val motionProgress = remember { Animatable(0f) }
+    val motionValue = motionProgress.value
+    val feedbackStars = activeFeedback?.starsEarned ?: 0
+    val displayedStars = when {
+        feedbackStars > 0 -> (state.totalStars - feedbackStars + (feedbackStars * motionValue).roundToInt())
+            .coerceAtMost(state.totalStars)
+        else -> state.totalStars
+    }
+    val starsScale = if (feedbackStars > 0) 1f + (motionValue * 0.12f) else 1f
+    val chestScale = if (activeFeedback?.chestReady == true) 1f + (motionValue * 0.08f) else 1f
+    val chestPulseAlpha = if (activeFeedback?.chestReady == true) 0.36f + (motionValue * 0.64f) else 0.35f
 
     LaunchedEffect(feedbackKey, dismissedFeedbackKey) {
         val feedback = activeFeedback ?: run {
-            animatedStarsTarget = state.totalStars
-            starsEmphasis = false
-            chestPulse = false
+            motionProgress.stop()
+            motionProgress.snapTo(0f)
             return@LaunchedEffect
         }
         feedback.highlightedIslandId?.let { selectedIslandId = it }
-        animatedStarsTarget = (state.totalStars - feedback.starsEarned).coerceAtLeast(0)
-        if (feedback.starsEarned > 0) {
-            delay(80)
-            starsEmphasis = true
-            animatedStarsTarget = state.totalStars
-            delay(360)
-            starsEmphasis = false
-        } else {
-            starsEmphasis = false
-        }
-        delay(if (feedback.starsEarned > 0) 1360 else 1800)
+        motionProgress.stop()
+        motionProgress.snapTo(0f)
+        motionProgress.animateTo(1f, tween(durationMillis = 260, easing = FastOutSlowInEasing))
+        delay(420)
         onConsumeFeedback()
-    }
-
-    LaunchedEffect(feedbackKey, dismissedFeedbackKey, activeFeedback?.chestReady) {
-        val feedback = activeFeedback
-        if (feedback?.chestReady != true) {
-            chestPulse = false
-            return@LaunchedEffect
-        }
-        repeat(3) {
-            chestPulse = true
-            delay(150)
-            chestPulse = false
-            delay(120)
-        }
     }
 
     val selectedIsland = state.islands.firstOrNull { island -> island.id == selectedIslandId }
@@ -142,13 +108,14 @@ fun MapTabletScreen(
             )
 
             activeFeedback?.let { feedback ->
-                MapProgressFeedback(feedback = feedback)
+                MapProgressFeedback(feedback = feedback, motionProgress = motionValue)
             }
 
             IslandMapCanvas(
                 islands = state.islands,
                 selectedIslandId = selectedIsland?.id,
                 highlightedIslandId = activeFeedback?.highlightedIslandId,
+                motionProgress = motionValue,
                 onSelectIsland = { islandId ->
                     selectedIslandId = islandId
                     if (state.feedback != null && feedbackKey != null) {

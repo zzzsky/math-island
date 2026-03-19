@@ -31,6 +31,7 @@ fun IslandMapCanvas(
     islands: List<MapTabletIslandUiState>,
     selectedIslandId: String?,
     highlightedIslandId: String? = null,
+    motionProgress: Float = 0f,
     onSelectIsland: (String) -> Unit,
     artSource: MapArtSource = MapArtRegistry
 ) {
@@ -64,6 +65,7 @@ fun IslandMapCanvas(
                             RoutePainter(
                                 islandId = island.id,
                                 highlighted = highlightedIslandId == island.id,
+                                motionProgress = motionProgress,
                                 modifier = Modifier.fillMaxWidth(),
                                 artSource = artSource
                             )
@@ -79,6 +81,7 @@ fun IslandMapCanvas(
                             island = island,
                             selected = selectedIslandId == island.id,
                             highlighted = highlightedIslandId == island.id,
+                            motionProgress = motionProgress,
                             artSource = artSource,
                             modifier = Modifier.fillMaxSize()
                         )

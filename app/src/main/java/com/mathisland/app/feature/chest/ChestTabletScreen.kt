@@ -4,14 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.theme.ActionRole
 
 @Composable
 fun ChestTabletScreen(
@@ -34,16 +34,17 @@ fun ChestTabletScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = onBackHome) {
-                Text("返回首页")
-            }
-            Button(
+            ActionButton(
+                text = "返回首页",
+                onClick = onBackHome,
+                role = ActionRole.OutlinedSecondary,
+            )
+            ActionButton(
+                text = "回到地图",
                 modifier = Modifier.testTag("chest-open-map"),
                 onClick = onOpenMap,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-            ) {
-                Text("回到地图")
-            }
+                role = ActionRole.Recommended,
+            )
         }
         Text(
             text = "宝箱收藏",

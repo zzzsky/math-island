@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.theme.ActionRole
 
 @Composable
 fun ParentGateScreen(
@@ -57,24 +57,19 @@ fun ParentGateScreen(
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     state.answers.forEach { answer ->
-                        Button(
+                        ActionButton(
+                            text = answer,
                             modifier = Modifier.testTag("parent-answer-$answer"),
                             onClick = { onAnswer(answer) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = Color(0xFF114B5F)
-                            )
-                        ) {
-                            Text(answer)
-                        }
+                            role = ActionRole.Primary,
+                        )
                     }
                 }
-                Button(
+                ActionButton(
+                    text = "返回首页",
                     onClick = onBackHome,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF40697A))
-                ) {
-                    Text("返回首页")
-                }
+                    role = ActionRole.OutlinedSecondary,
+                )
             }
         }
     }

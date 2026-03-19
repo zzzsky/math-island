@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,14 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mathisland.app.domain.usecase.HomeState
+import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.TabletActionCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
-import com.mathisland.app.ui.theme.TabletFoam
-import com.mathisland.app.ui.theme.TabletSand
-
-private val HomeCoral = Color(0xFFEE964B)
+import com.mathisland.app.ui.theme.ActionRole
 
 @Composable
 fun HomeTabletScreen(
@@ -104,7 +100,7 @@ fun HomeTabletScreen(
                 },
                 buttonText = "开始闯关",
                 buttonTag = "home-continue-adventure",
-                accent = TabletSand,
+                role = ActionRole.Recommended,
                 onClick = onContinue
             )
             TabletActionCard(
@@ -112,7 +108,7 @@ fun HomeTabletScreen(
                 subtitle = "查看主岛、节点进度和下一步可玩课程。",
                 buttonText = "打开地图",
                 buttonTag = "home-open-map",
-                accent = HomeCoral,
+                role = ActionRole.Primary,
                 onClick = onOpenMap
             )
             TabletActionCard(
@@ -120,19 +116,15 @@ fun HomeTabletScreen(
                 subtitle = "查看已经收集到的贴纸奖励和总星星。",
                 buttonText = "查看宝箱",
                 buttonTag = "home-open-chest",
-                accent = Color(0xFF98D9C2),
+                role = ActionRole.Secondary,
                 onClick = onOpenChest
             )
-            Button(
+            ActionButton(
+                text = "家长入口",
                 modifier = Modifier.testTag("home-open-parent"),
                 onClick = onOpenParent,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0x335A7B88),
-                    contentColor = TabletFoam
-                )
-            ) {
-                Text("家长入口")
-            }
+                role = ActionRole.OutlinedSecondary,
+            )
         }
     }
 }

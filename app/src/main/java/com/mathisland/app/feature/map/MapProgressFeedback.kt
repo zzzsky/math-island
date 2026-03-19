@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -33,13 +34,22 @@ data class MapFeedbackUiState(
 
 @Composable
 fun MapProgressFeedback(
-    feedback: MapFeedbackUiState
+    feedback: MapFeedbackUiState,
+    motionProgress: Float = 0f
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .graphicsLayer {
+                val pulseScale = 1f + (motionProgress * 0.012f)
+                scaleX = pulseScale
+                scaleY = pulseScale
+                alpha = 0.94f + (motionProgress * 0.06f)
+            }
             .testTag("map-progress-feedback"),
-        colors = CardDefaults.cardColors(containerColor = Color(0xCC215A6D)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xCC215A6D).copy(alpha = 0.88f + (motionProgress * 0.12f))
+        ),
         shape = RoundedCornerShape(22.dp)
     ) {
         Row(
@@ -51,7 +61,7 @@ fun MapProgressFeedback(
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.92f + (motionProgress * 0.08f))
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
