@@ -1,7 +1,15 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="128dp" android:height="96dp" android:viewportWidth="128" android:viewportHeight="96">
-    <path android:fillColor="#5D9C59" android:pathData="M8,24C20,8 42,2 72,6c24,3 38,10 48,22v44c-12,14 -29,18 -58,16C34,86 18,80 8,70Z"/>
-    <path android:fillColor="#DDEFD5" android:pathData="M20,34h26v18H20z"/>
-    <path android:fillColor="#B7DBAB" android:pathData="M50,34h26v18H50z"/>
-    <path android:fillColor="#F7D66C" android:pathData="M35,56h26v18H35z"/>
-    <path android:fillColor="#F1B34C" android:pathData="M65,56h26v18H65z"/>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="96dp"
+    android:viewportWidth="128"
+    android:viewportHeight="96">
+    <path android:fillColor="#315D37" android:fillAlpha="0.34" android:pathData="M14,34C26,18 46,10 72,11C92,12 108,18 118,32V72C108,84 91,89 66,89C41,89 24,84 14,74Z" />
+    <path android:fillColor="#5E9A5F" android:pathData="M10,28C22,13 42,6 69,7C91,8 108,14 118,28V68C107,82 89,88 64,88C39,88 22,82 10,70Z" />
+    <path android:fillColor="#A7D29A" android:fillAlpha="0.84" android:pathData="M18,30C29,19 46,14 67,14C86,14 101,20 110,30C97,38 82,42 64,42C48,42 32,38 18,30Z" />
+    <path android:fillColor="#F3E4BF" android:pathData="M24,36h20v14H24zM48,34h20v16H48zM72,36h20v14H72z" />
+    <path android:fillColor="#F4D176" android:pathData="M34,55h20v15H34z" />
+    <path android:fillColor="#E5A95E" android:pathData="M58,55h20v15H58z" />
+    <path android:fillColor="#D6E9CD" android:pathData="M82,55h14v15H82z" />
+    <path android:strokeColor="#5D7546" android:strokeAlpha="0.45" android:strokeWidth="1.4" android:pathData="M24,36h20v14H24zM48,34h20v16H48zM72,36h20v14H72zM34,55h20v15H34zM58,55h20v15H58zM82,55h14v15H82z" />
+    <path android:strokeColor="#FDF5D9" android:strokeAlpha="0.48" android:strokeLineCap="round" android:strokeWidth="1.4" android:pathData="M28,20C41,14 54,12 67,12C80,12 92,15 103,20" />
 </vector>

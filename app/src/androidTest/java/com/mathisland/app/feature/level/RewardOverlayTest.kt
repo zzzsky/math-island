@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollTo
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.RewardSummary
 import org.junit.Rule
@@ -47,8 +48,10 @@ class RewardOverlayTest {
             }
         }
 
-        composeRule.onNodeWithText("整备评级").assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-next-step-card").assertIsDisplayed()
+        composeRule.onNodeWithText("本次表现").assertIsDisplayed()
+        composeRule.onNodeWithText("整备评级").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("继续航线").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-step-card").performScrollTo().assertIsDisplayed()
         composeRule.onAllNodesWithTag("reward-return-map").assertCountEquals(1)
     }
 }

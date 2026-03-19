@@ -67,6 +67,8 @@ class LevelTabletScreenTest {
 
         composeRule.onNodeWithText("海图冲刺赛").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-flow-hint").assertIsDisplayed()
         composeRule.onNodeWithTag("level-answer-pane").assertIsDisplayed()
     }
 }

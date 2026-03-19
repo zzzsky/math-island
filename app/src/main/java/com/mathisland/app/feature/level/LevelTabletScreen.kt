@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -24,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
+import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.SurfaceLevel
 import kotlinx.coroutines.delay
 
@@ -67,64 +68,86 @@ fun LevelTabletScreen(
         SurfaceCard(
             modifier = Modifier.weight(1f),
             level = SurfaceLevel.Page,
-            containerColor = Color(0xCC153C4A)
+            containerColor = Color(0xC31A4150)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(22.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Row(
+                StoryPanelCard(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    level = SurfaceLevel.Secondary,
+                    containerColor = Color.White.copy(alpha = 0.05f),
+                    shape = RoundedCornerShape(28.dp)
                 ) {
-                    TabletChipLabel(text = if (lesson.isReview) "小海鸥求助" else lesson.focus)
-                    if (lesson.timeLimitSeconds != null) {
-                        TabletChipLabel(
-                            text = "限时 ${formatCountdown(remainingSeconds)}",
-                            modifier = Modifier.testTag("lesson-timer")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TabletChipLabel(text = if (lesson.isReview) "小海鸥求助" else lesson.focus)
+                            if (lesson.timeLimitSeconds != null) {
+                                TabletChipLabel(
+                                    text = "限时 ${formatCountdown(remainingSeconds)}",
+                                    modifier = Modifier.testTag("lesson-timer")
+                                )
+                            } else {
+                                Text(
+                                    text = "总星星 ${state.totalStars}",
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                                )
+                            }
+                        }
+                        Text(
+                            text = lesson.title,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
                         )
-                    } else {
-                        Text("总星星 ${state.totalStars}")
+                        LinearProgressIndicator(
+                            progress = { (state.questionIndex + 1).toFloat() / state.totalQuestions.toFloat() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(10.dp)
+                                .clip(RoundedCornerShape(999.dp)),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = Color.White.copy(alpha = 0.12f)
+                        )
+                        Text(
+                            text = "第 ${state.questionIndex + 1} / ${state.totalQuestions} 题",
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                        )
+                        if (lesson.timeLimitSeconds != null) {
+                            Text(
+                                text = "倒计时结束会直接结算，本轮作为冲刺练习不计通关。",
+                                color = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.testTag("lesson-timer-note")
+                            )
+                        }
                     }
                 }
-                Text(
-                    text = lesson.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                LinearProgressIndicator(
-                    progress = { (state.questionIndex + 1).toFloat() / state.totalQuestions.toFloat() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp)
-                        .clip(RoundedCornerShape(999.dp)),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = Color.White.copy(alpha = 0.12f)
-                )
-                Text(
-                    text = "第 ${state.questionIndex + 1} / ${state.totalQuestions} 题",
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-                )
-                if (lesson.timeLimitSeconds != null) {
-                    Text(
-                        text = "倒计时结束会直接结算，本轮作为冲刺练习不计通关。",
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.testTag("lesson-timer-note")
+
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    TabletChipLabel(text = "线索与问题")
+                    TabletInfoCard(
+                        title = "流程提示",
+                        subtitle = "完成后会发生什么",
+                        body = state.flowHint,
+                        modifier = Modifier.testTag("lesson-flow-hint")
+                    )
+                    TabletInfoCard(
+                        title = "题目",
+                        subtitle = question.prompt,
+                        body = question.hint
                     )
                 }
-                TabletInfoCard(
-                    title = "流程提示",
-                    subtitle = "完成后会发生什么",
-                    body = state.flowHint,
-                    modifier = Modifier.testTag("lesson-flow-hint")
-                )
-                TabletInfoCard(
-                    title = "题目",
-                    subtitle = question.prompt,
-                    body = question.hint
-                )
+
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = onQuit,
