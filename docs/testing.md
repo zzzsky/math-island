@@ -12,6 +12,8 @@
 ./gradlew.bat testDebugUnitTest
 ```
 
+This is the default milestone check during iterative development.
+
 Focused examples:
 
 ```powershell
@@ -22,6 +24,8 @@ Focused examples:
 The active lesson renderer implementations now live under `app/src/main/java/com/mathisland/app/feature/level/renderers`.
 
 ## Device Tests
+
+Use device tests for milestone acceptance, route-contract changes, or before pushing a larger UX batch.
 
 Run the tablet end-to-end suite:
 
@@ -41,6 +45,8 @@ Run one focused flow:
 ./gradlew.bat assembleDebug
 ```
 
+This is the default build check paired with `testDebugUnitTest` during day-to-day development.
+
 ## What The Main Device Suite Covers
 
 - Home -> map -> lesson -> reward happy path
@@ -54,3 +60,13 @@ Run one focused flow:
 
 - End-to-end lesson entry should target `panel-start-<lessonId>` from the island overlay.
 - Plain `start-<lessonId>` tags are treated as local map/list affordances and should not be the primary flow anchor in instrumentation.
+- Home shell contracts are `home-continue-adventure`, `home-open-map`, `home-open-chest`, and `home-open-parent`.
+- Parent gate answers are `parent-answer-<value>`.
+- Chest navigation back to map uses `chest-open-map`.
+
+## Current UI Structure
+
+- `feature/home/*` now uses extracted hero/action modules.
+- `feature/chest/*` now uses extracted header, empty-state, and sticker collection modules.
+- `feature/parent/*` now uses extracted gate and summary presentation modules.
+- `feature/level/renderers/*` holds the active lesson answer panes and renderer support surfaces.
