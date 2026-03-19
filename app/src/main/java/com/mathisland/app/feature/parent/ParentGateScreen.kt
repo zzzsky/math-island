@@ -1,6 +1,5 @@
 package com.mathisland.app.feature.parent
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 fun ParentGateScreen(
@@ -44,7 +45,7 @@ fun ParentGateScreen(
                     .padding(28.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                ParentChipLabel(text = state.chipLabel)
+                StatusChip(text = state.chipLabel, variant = StatusVariant.Recommended)
                 Text(
                     text = state.title,
                     style = MaterialTheme.typography.headlineMedium,
@@ -91,7 +92,7 @@ private fun ParentInfoCard(
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ParentChipLabel(text = title)
+            StatusChip(text = title, variant = StatusVariant.Neutral)
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.titleLarge,
@@ -102,20 +103,5 @@ private fun ParentInfoCard(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
             )
         }
-    }
-}
-
-@Composable
-internal fun ParentChipLabel(text: String) {
-    Box(
-        modifier = Modifier
-            .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(999.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.88f),
-            style = MaterialTheme.typography.labelLarge
-        )
     }
 }

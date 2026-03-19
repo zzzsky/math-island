@@ -23,9 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandPanelTokens
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.map.MapArtRegistry
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -104,7 +105,10 @@ fun MapIslandListCard(
                         color = IslandPanelTokens.DescriptionText
                     )
                 }
-                TabletChipLabel(text = islandStatusLabel(island, selected))
+                StatusChip(
+                    text = islandStatusLabel(island, selected),
+                    variant = islandStatusVariant(island, selected)
+                )
             }
 
             LinearProgressIndicator(
@@ -134,4 +138,14 @@ private fun islandStatusLabel(
     island.completed -> "已完成"
     island.unlocked -> "已解锁"
     else -> "等待前岛完成"
+}
+
+private fun islandStatusVariant(
+    island: MapTabletIslandUiState,
+    selected: Boolean
+): StatusVariant = when {
+    selected -> StatusVariant.Highlight
+    island.completed -> StatusVariant.Success
+    island.unlocked -> StatusVariant.Recommended
+    else -> StatusVariant.Caution
 }

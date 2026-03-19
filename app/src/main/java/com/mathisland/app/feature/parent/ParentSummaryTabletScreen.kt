@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 fun ParentSummaryTabletScreen(
@@ -89,7 +91,7 @@ private fun ParentSummaryCard(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            ParentChipLabel(text = title)
+            StatusChip(text = title, variant = StatusVariant.Neutral)
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleLarge,

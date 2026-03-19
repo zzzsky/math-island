@@ -15,10 +15,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.map.MapTabletLessonUiState
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.WoodButton
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -65,7 +66,10 @@ fun IslandLessonCard(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
-                TabletChipLabel(text = lessonStatusLabel(lesson, isPrimary))
+                StatusChip(
+                    text = lessonStatusLabel(lesson, isPrimary),
+                    variant = lessonStatusVariant(lesson, isPrimary)
+                )
             }
             Text(
                 text = lesson.summary,
@@ -110,4 +114,14 @@ private fun lessonActionLabel(
     lesson.completed -> "再次练习"
     isPrimary -> "推荐开始"
     else -> "进入课程"
+}
+
+private fun lessonStatusVariant(
+    lesson: MapTabletLessonUiState,
+    isPrimary: Boolean
+): StatusVariant = when {
+    lesson.completed -> StatusVariant.Success
+    isPrimary -> StatusVariant.Recommended
+    lesson.enabled -> StatusVariant.Highlight
+    else -> StatusVariant.Caution
 }

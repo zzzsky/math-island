@@ -27,12 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.RewardSummary
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -192,7 +193,10 @@ private fun RewardSummaryHeader(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    TabletChipLabel(text = if (reward.timedOut) "时间到" else "关卡完成")
+                    StatusChip(
+                        text = if (reward.timedOut) "时间到" else "关卡完成",
+                        variant = if (reward.timedOut) StatusVariant.Caution else StatusVariant.Success
+                    )
                     Text(
                         text = reward.lessonTitle,
                         style = MaterialTheme.typography.headlineMedium,

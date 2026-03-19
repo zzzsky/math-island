@@ -5,12 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -23,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.theme.StatusVariant
 
 data class MapFeedbackUiState(
     val title: String,
@@ -86,32 +85,18 @@ fun MapProgressFeedback(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (feedback.starsEarned > 0) {
-                        AssistChip(
+                        StatusChip(
+                            text = "+${feedback.starsEarned} 星星",
                             modifier = Modifier.testTag("map-feedback-stars-pill"),
-                            onClick = {},
-                            label = { Text("+${feedback.starsEarned} 星星") },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Star,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
-                                labelColor = MaterialTheme.colorScheme.onSurface
-                            )
+                            variant = StatusVariant.Recommended,
+                            leadingIcon = Icons.Default.Star,
                         )
                     }
                     if (feedback.chestReady) {
-                        AssistChip(
+                        StatusChip(
+                            text = "宝箱有新收藏",
                             modifier = Modifier.testTag("map-feedback-chest-pill"),
-                            onClick = {},
-                            label = { Text("宝箱有新收藏") },
-                            colors = AssistChipDefaults.assistChipColors(
-                                containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.16f),
-                                labelColor = MaterialTheme.colorScheme.onSurface
-                            )
+                            variant = StatusVariant.Highlight,
                         )
                     }
                 }

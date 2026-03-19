@@ -1,8 +1,6 @@
 package com.mathisland.app.feature.chest
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +19,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 fun ChestTabletScreen(
@@ -79,7 +79,7 @@ fun ChestTabletScreen(
                                 .padding(18.dp),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
-                            ChestChipLabel(text = "Island Sticker")
+                            StatusChip(text = "Island Sticker", variant = StatusVariant.Recommended)
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Text(
                                     text = sticker,
@@ -115,7 +115,7 @@ private fun ChestInfoCard(
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ChestChipLabel(text = title)
+            StatusChip(text = title, variant = StatusVariant.Neutral)
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.titleLarge,
@@ -126,20 +126,5 @@ private fun ChestInfoCard(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
             )
         }
-    }
-}
-
-@Composable
-private fun ChestChipLabel(text: String) {
-    Box(
-        modifier = Modifier
-            .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(999.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.88f),
-            style = MaterialTheme.typography.labelLarge
-        )
     }
 }

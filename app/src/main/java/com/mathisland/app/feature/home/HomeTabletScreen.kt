@@ -20,9 +20,10 @@ import androidx.compose.ui.unit.sp
 import com.mathisland.app.domain.usecase.HomeState
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.TabletActionCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
+import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.ActionRole
 
 @Composable
@@ -49,7 +50,7 @@ fun HomeTabletScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    TabletChipLabel(text = "TABLET MVP")
+                    StatusChip(text = "TABLET MVP", variant = StatusVariant.Neutral)
                     Text(
                         text = "数学岛",
                         fontSize = 42.sp,

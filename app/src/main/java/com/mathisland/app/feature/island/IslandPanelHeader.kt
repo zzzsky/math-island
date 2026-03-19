@@ -22,9 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.map.MapTabletIslandUiState
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.map.MapArtRegistry
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -67,7 +68,10 @@ fun IslandPanelHeader(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TabletChipLabel(text = if (island.completed) "本岛完成" else "岛屿面板")
+                StatusChip(
+                    text = if (island.completed) "本岛完成" else "岛屿面板",
+                    variant = if (island.completed) StatusVariant.Success else StatusVariant.Highlight
+                )
                 Text(
                     text = island.title,
                     style = MaterialTheme.typography.headlineMedium,

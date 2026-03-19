@@ -26,11 +26,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SurfaceCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 import kotlinx.coroutines.delay
 
@@ -92,11 +93,15 @@ fun LevelTabletScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            TabletChipLabel(text = if (lesson.isReview) "小海鸥求助" else lesson.focus)
+                            StatusChip(
+                                text = if (lesson.isReview) "小海鸥求助" else lesson.focus,
+                                variant = if (lesson.isReview) StatusVariant.Caution else StatusVariant.Highlight
+                            )
                             if (lesson.timeLimitSeconds != null) {
-                                TabletChipLabel(
+                                StatusChip(
                                     text = "限时 ${formatCountdown(remainingSeconds)}",
-                                    modifier = Modifier.testTag("lesson-timer")
+                                    modifier = Modifier.testTag("lesson-timer"),
+                                    variant = StatusVariant.Caution
                                 )
                             } else {
                                 Text(
@@ -134,7 +139,10 @@ fun LevelTabletScreen(
                 }
 
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    TabletChipLabel(text = "线索与问题")
+                    StatusChip(
+                        text = "线索与问题",
+                        variant = StatusVariant.Neutral
+                    )
                     TabletInfoCard(
                         title = "流程提示",
                         subtitle = "完成后会发生什么",
