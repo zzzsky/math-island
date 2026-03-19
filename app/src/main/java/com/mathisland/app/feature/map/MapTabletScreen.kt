@@ -111,6 +111,10 @@ fun MapTabletScreen(
 
             activeFeedback?.let { feedback ->
                 MapProgressFeedback(feedback = feedback, motionProgress = motionValue)
+                MapReturnSummaryCard(
+                    feedback = feedback,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
             IslandMapCanvas(

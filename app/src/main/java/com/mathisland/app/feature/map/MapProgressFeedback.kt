@@ -30,7 +30,10 @@ data class MapFeedbackUiState(
     val body: String,
     val highlightedIslandId: String? = null,
     val starsEarned: Int = 0,
-    val chestReady: Boolean = false
+    val chestReady: Boolean = false,
+    val summaryTitle: String = title,
+    val summaryBody: String = body,
+    val summaryLabel: String = "回到地图"
 )
 
 @Composable
@@ -106,4 +109,18 @@ fun MapProgressFeedback(
             }
         }
     }
+}
+
+@Composable
+fun MapReturnSummaryCard(
+    feedback: MapFeedbackUiState,
+    modifier: Modifier = Modifier
+) {
+    com.mathisland.app.ui.components.SummarySpotlightCard(
+        modifier = modifier.testTag("map-return-summary"),
+        label = feedback.summaryLabel,
+        title = feedback.summaryTitle,
+        body = feedback.summaryBody,
+        accent = MaterialTheme.colorScheme.primary
+    )
 }

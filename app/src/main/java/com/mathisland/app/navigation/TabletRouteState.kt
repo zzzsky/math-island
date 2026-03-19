@@ -129,6 +129,27 @@ private fun RewardSummary.toMapFeedback(): MapFeedbackUiState? {
         body = body,
         highlightedIslandId = newIslandId,
         starsEarned = starsEarned,
-        chestReady = newStickerName != null
+        chestReady = newStickerName != null,
+        summaryLabel = "继续航线",
+        summaryTitle = mapFeedbackSummaryTitle(),
+        summaryBody = mapFeedbackSummaryBody()
     )
 }
+
+private fun RewardSummary.mapFeedbackSummaryTitle(): String =
+    when {
+        timedOut -> "先看回放，再决定是否重新冲刺"
+        newIslandTitle != null -> "新主线已经准备好"
+        newStickerName != null -> "宝箱里有新的收藏"
+        gradeLabel != null -> gradeLabel
+        else -> "继续当前推荐航线"
+    }
+
+private fun RewardSummary.mapFeedbackSummaryBody(): String =
+    when {
+        timedOut -> "地图会优先保留综合挑战的回放与练习入口，方便你先消化本轮结果。"
+        newIslandTitle != null -> "$newIslandTitle 已经成为当前焦点，右侧面板会直接显示下一节推荐课程。"
+        newStickerName != null -> "宝箱按钮会高亮提示新贴纸，回地图后可以直接打开查看。"
+        gradeDescription != null -> gradeDescription
+        else -> "地图会保留当前推荐路线，继续按钮对应的下一步已经在右侧面板准备好。"
+    }
