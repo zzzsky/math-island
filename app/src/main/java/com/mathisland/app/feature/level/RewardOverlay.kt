@@ -1,6 +1,5 @@
 package com.mathisland.app.feature.level
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,8 +31,10 @@ import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
@@ -55,14 +55,14 @@ fun RewardOverlay(
             modifier = Modifier.fillMaxWidth(0.72f),
             level = SurfaceLevel.Page,
             containerColor = panelColor,
-            shape = RoundedCornerShape(32.dp)
+            shape = RadiusTokens.Sheet
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(30.dp)
+                    .padding(SpacingTokens.Sheet)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
             ) {
                 RewardSummaryHeader(
                     reward = reward,
@@ -76,7 +76,7 @@ fun RewardOverlay(
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     TabletStatTile(
                         modifier = Modifier.weight(1f),
@@ -106,15 +106,15 @@ fun RewardOverlay(
                 )
                 StoryPanelCard(
                     level = SurfaceLevel.Secondary,
-                    shape = RoundedCornerShape(28.dp),
+                    shape = RadiusTokens.CardLg,
                     containerColor = Color.White.copy(alpha = 0.06f),
                     borderColor = accentGold.copy(alpha = 0.22f)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                            .padding(SpacingTokens.Xl),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                     ) {
                         TabletInfoCard(
                             title = "下一步",
@@ -165,14 +165,14 @@ private fun RewardSummaryHeader(
 ) {
     StoryPanelCard(
         level = SurfaceLevel.Primary,
-        shape = RoundedCornerShape(30.dp),
+        shape = RadiusTokens.Sheet,
         containerColor = Color.White.copy(alpha = 0.03f),
         borderColor = Color.White.copy(alpha = 0.14f)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(30.dp))
+                .clip(RadiusTokens.Sheet)
                 .background(
                     Brush.linearGradient(
                         listOf(
@@ -182,12 +182,12 @@ private fun RewardSummaryHeader(
                         )
                     )
                 )
-                .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(30.dp))
-                .padding(22.dp)
+                .border(1.dp, Color.White.copy(alpha = 0.08f), RadiusTokens.Sheet)
+                .padding(SpacingTokens.Xxl)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(18.dp),
+                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Lg),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
@@ -212,10 +212,10 @@ private fun RewardSummaryHeader(
                 Column(
                     modifier = Modifier
                         .width(150.dp)
-                        .clip(RoundedCornerShape(24.dp))
+                        .clip(RadiusTokens.CardMd)
                         .background(Color.White.copy(alpha = 0.08f))
-                        .padding(horizontal = 16.dp, vertical = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                        .padding(horizontal = SpacingTokens.Md, vertical = SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
@@ -257,7 +257,7 @@ private fun RewardHighlights(
         title = "奖励与进展",
         body = "把这轮最重要的变化单独收拢成卡片，回地图前先看清楚收获和提醒。"
     )
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
         if (reward.timedOut) {
             TabletInfoCard(
                 title = "冲刺结果",

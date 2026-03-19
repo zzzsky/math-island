@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -16,10 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.TypographyTokens
 
@@ -30,7 +30,7 @@ fun ParentSummaryTabletScreen(
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -48,7 +48,7 @@ fun ParentSummaryTabletScreen(
                 role = ActionRole.Completed,
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)) {
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "今日学习",
@@ -60,7 +60,7 @@ fun ParentSummaryTabletScreen(
                 value = state.weakTopicsText
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)) {
             ParentSummaryCard(
                 modifier = Modifier.weight(1f),
                 title = "连续学习",
@@ -84,13 +84,13 @@ private fun ParentSummaryCard(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color(0xCC173C4C)),
-        shape = RoundedCornerShape(24.dp)
+        shape = RadiusTokens.CardMd
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(SpacingTokens.Xl),
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
         ) {
             StatusChip(text = title, variant = StatusVariant.Neutral)
             Text(

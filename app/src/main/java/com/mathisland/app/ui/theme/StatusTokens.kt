@@ -2,7 +2,6 @@ package com.mathisland.app.ui.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 
 @Immutable
 enum class StatusVariant {
@@ -21,9 +20,8 @@ data class StatusColorSet(
 )
 
 object StatusTokens {
-    val CornerRadius = 999.dp
-    val HorizontalPadding = 12.dp
-    val VerticalPadding = 6.dp
+    val HorizontalPadding = SpacingTokens.Sm
+    val VerticalPadding = SpacingTokens.Xs
 
     fun colors(variant: StatusVariant): StatusColorSet = when (variant) {
         StatusVariant.Neutral -> StatusColorSet(

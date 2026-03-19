@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandOverlaySheet
 import com.mathisland.app.feature.island.IslandViewModel
 import com.mathisland.app.ui.components.IslandMapCanvas
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
@@ -86,11 +87,11 @@ fun MapTabletScreen(
 
     Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(18.dp)
+        horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
     ) {
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
         ) {
             MapTopBar(
                 totalStars = displayedStars,
@@ -141,7 +142,7 @@ fun MapTabletScreen(
                     .fillMaxWidth()
                     .heightIn(min = 220.dp)
                     .testTag("map-islands-list"),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
                 items(state.islands) { island ->
                     MapIslandListCard(

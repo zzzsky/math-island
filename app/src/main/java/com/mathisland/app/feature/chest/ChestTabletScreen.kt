@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.TypographyTokens
 
@@ -32,9 +33,9 @@ fun ChestTabletScreen(
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
             ActionButton(
                 text = "返回首页",
                 onClick = onBackHome,
@@ -65,23 +66,23 @@ fun ChestTabletScreen(
         } else {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
             ) {
                 state.stickers.forEach { sticker ->
                     Card(
                         modifier = Modifier.weight(1f),
                         colors = CardDefaults.cardColors(containerColor = Color(0xCC1C4D5F)),
-                        shape = RoundedCornerShape(24.dp)
+                        shape = RadiusTokens.CardMd
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(190.dp)
-                                .padding(18.dp),
+                                .padding(SpacingTokens.Lg),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             StatusChip(text = "Island Sticker", variant = StatusVariant.Recommended)
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)) {
                                 Text(
                                     text = sticker,
                                     style = MaterialTheme.typography.headlineSmall,
@@ -108,13 +109,13 @@ private fun ChestInfoCard(
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color(0x80244C5E)),
-        shape = RoundedCornerShape(24.dp)
+        shape = RadiusTokens.CardMd
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(SpacingTokens.Lg),
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
         ) {
             StatusChip(text = title, variant = StatusVariant.Neutral)
             Text(

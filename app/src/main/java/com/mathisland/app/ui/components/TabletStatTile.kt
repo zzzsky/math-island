@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -34,21 +35,21 @@ fun TabletStatTile(
         level = SurfaceLevel.Secondary,
         containerColor = accent.copy(alpha = 0.12f).compositeOver(MaterialTheme.colorScheme.surface),
         borderColor = accent.copy(alpha = 0.28f),
-        shape = RoundedCornerShape(24.dp)
+        shape = RadiusTokens.CardMd
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp)
+                .padding(SpacingTokens.Lg)
         ) {
             Row {
                 Box(
                     modifier = Modifier
                         .size(12.dp)
-                        .clip(RoundedCornerShape(99.dp))
+                        .clip(RadiusTokens.Pill)
                         .background(accent)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(SpacingTokens.Xs))
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f),
@@ -60,13 +61,13 @@ fun TabletStatTile(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Black,
                 color = accent,
-                modifier = Modifier.padding(top = 14.dp)
+                modifier = Modifier.padding(top = SpacingTokens.Sm)
             )
             Box(
                 modifier = Modifier
-                    .padding(top = 14.dp)
+                    .padding(top = SpacingTokens.Sm)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(999.dp))
+                    .clip(RadiusTokens.Pill)
                     .background(
                         Brush.horizontalGradient(
                             listOf(

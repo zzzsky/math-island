@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -15,16 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.usecase.HomeState
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.TabletActionCard
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 import com.mathisland.app.ui.theme.StatusVariant
-import com.mathisland.app.ui.theme.ActionRole
 
 @Composable
 fun HomeTabletScreen(
@@ -36,20 +36,20 @@ fun HomeTabletScreen(
 ) {
     Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(20.dp)
+        horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xl)
     ) {
         Card(
             modifier = Modifier.weight(1.3f),
             colors = CardDefaults.cardColors(containerColor = Color(0xCC113B4A)),
-            shape = RoundedCornerShape(28.dp)
+            shape = RadiusTokens.CardLg
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(28.dp),
+                    .padding(SpacingTokens.Section),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)) {
                     StatusChip(text = "TABLET MVP", variant = StatusVariant.Neutral)
                     Text(
                         text = "数学岛",
@@ -71,7 +71,7 @@ fun HomeTabletScreen(
                     }
                 }
 
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
                     TabletStatTile(
                         modifier = Modifier.weight(1f),
                         title = "星星",
@@ -90,7 +90,7 @@ fun HomeTabletScreen(
 
         Column(
             modifier = Modifier.weight(0.9f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
         ) {
             TabletActionCard(
                 title = "继续冒险",

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,8 +30,10 @@ import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 
@@ -65,7 +66,7 @@ fun LevelTabletScreen(
 
     Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(18.dp)
+        horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
     ) {
         SurfaceCard(
             modifier = Modifier.weight(1f),
@@ -75,20 +76,20 @@ fun LevelTabletScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(22.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                    .padding(SpacingTokens.Xxl),
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
                 StoryPanelCard(
                     modifier = Modifier.fillMaxWidth(),
                     level = SurfaceLevel.Secondary,
                     containerColor = Color.White.copy(alpha = 0.05f),
-                    shape = RoundedCornerShape(28.dp)
+                    shape = RadiusTokens.CardLg
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 18.dp, vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                            .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Md),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -121,7 +122,7 @@ fun LevelTabletScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(10.dp)
-                                .clip(RoundedCornerShape(999.dp)),
+                                .clip(RadiusTokens.Pill),
                             color = MaterialTheme.colorScheme.secondary,
                             trackColor = Color.White.copy(alpha = 0.12f)
                         )
@@ -139,7 +140,7 @@ fun LevelTabletScreen(
                     }
                 }
 
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
                     StatusChip(
                         text = "线索与问题",
                         variant = StatusVariant.Neutral
@@ -170,7 +171,7 @@ fun LevelTabletScreen(
 
         Column(
             modifier = Modifier.weight(0.95f),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
         ) {
             answerPane()
         }

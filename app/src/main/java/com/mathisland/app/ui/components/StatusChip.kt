@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusTokens
 import com.mathisland.app.ui.theme.StatusVariant
 
@@ -30,17 +31,17 @@ fun StatusChip(
             .border(
                 width = if (colors.borderColor.alpha > 0f) 1.dp else 0.dp,
                 color = colors.borderColor,
-                shape = RoundedCornerShape(StatusTokens.CornerRadius)
+                shape = RadiusTokens.Pill
             )
             .background(
                 color = colors.containerColor,
-                shape = RoundedCornerShape(StatusTokens.CornerRadius)
+                shape = RadiusTokens.Pill
             )
             .padding(
                 horizontal = StatusTokens.HorizontalPadding,
                 vertical = StatusTokens.VerticalPadding
             ),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs),
         verticalAlignment = Alignment.CenterVertically
     ) {
         leadingIcon?.let { icon ->

@@ -14,6 +14,7 @@ import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.SpacingTokens
 
 @Composable
 fun IslandOverlaySheet(
@@ -34,8 +35,8 @@ fun IslandOverlaySheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(SpacingTokens.Xxl),
+            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
         ) {
             IslandPanelHeader(island = island)
             IslandStoryCard(island = island)
@@ -56,7 +57,7 @@ fun IslandOverlaySheet(
                 )
             }
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm),
                 modifier = Modifier.testTag("panel-lessons-list")
             ) {
                 items(island.lessons) { lesson ->

@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -29,7 +29,7 @@ fun TabletActionCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(SpacingTokens.Xl)
         ) {
             Text(
                 text = title,
@@ -39,7 +39,7 @@ fun TabletActionCard(
             Text(
                 text = subtitle,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
+                modifier = Modifier.padding(top = SpacingTokens.Xs, bottom = SpacingTokens.Xs)
             )
             ActionButton(
                 text = buttonText,
