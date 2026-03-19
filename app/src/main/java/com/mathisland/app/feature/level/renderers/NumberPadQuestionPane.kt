@@ -120,6 +120,10 @@ fun NumberPadQuestionPane(
                         .padding(SpacingTokens.Lg),
                     verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionRowGap)
                 ) {
+                    RendererSectionHeader(
+                        title = actionState.sectionTitle(),
+                        body = actionState.sectionBody()
+                    )
                     keypadRows.forEach { row ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),

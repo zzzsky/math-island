@@ -27,6 +27,20 @@ data class RendererActionState(
         RendererActionPhase.Confirmed -> ActionRole.Completed
         RendererActionPhase.Locked -> ActionRole.Secondary
     }
+
+    fun sectionTitle(): String = when (phase) {
+        RendererActionPhase.Ready -> "开始作答"
+        RendererActionPhase.Retry -> "重新尝试"
+        RendererActionPhase.Confirmed -> "答案已确认"
+        RendererActionPhase.Locked -> "正在检查"
+    }
+
+    fun sectionBody(): String = when (phase) {
+        RendererActionPhase.Ready -> "选一个你认为正确的答案。"
+        RendererActionPhase.Retry -> "结合提示再判断一次，不用着急。"
+        RendererActionPhase.Confirmed -> "系统正在推进到下一步。"
+        RendererActionPhase.Locked -> "请稍等片刻，马上可以继续操作。"
+    }
 }
 
 fun rendererActionStateFor(

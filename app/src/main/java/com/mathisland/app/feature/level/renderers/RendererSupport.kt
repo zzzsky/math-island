@@ -76,6 +76,10 @@ internal fun RendererOptionsColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionGroupGap)
         ) {
+            RendererSectionHeader(
+                title = actionState.sectionTitle(),
+                body = actionState.sectionBody()
+            )
             question.choices.forEach { choice ->
                 StoryPanelCard(
                     level = SurfaceLevel.Secondary,
