@@ -1,8 +1,12 @@
 package com.mathisland.app.feature.level.renderers
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 object RendererTokens {
+    val SectionGap = 20.dp
+    val ActionGroupGap = 14.dp
+    val ActionRowGap = 10.dp
     val HelperSurface = Color(0x662C647A)
     val OptionSurface = Color(0xCC225267)
     val NumberPadSurface = Color(0x663F536B)

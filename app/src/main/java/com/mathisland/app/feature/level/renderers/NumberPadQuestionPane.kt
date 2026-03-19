@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,99 +52,124 @@ fun NumberPadQuestionPane(
         modifier = Modifier
             .fillMaxWidth()
             .testTag("renderer-number-pad"),
-        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
+        verticalArrangement = Arrangement.spacedBy(RendererTokens.SectionGap)
     ) {
-        StoryPanelCard(
-            level = SurfaceLevel.Secondary,
-            containerColor = RendererTokens.NumberPadSurface,
-            shape = RadiusTokens.CardMd
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SpacingTokens.Lg),
-                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-            ) {
-                TabletChipLabel(text = "数字键盘")
-                Text(
-                    text = "可输入答案：${question.choices.joinToString(" / ")}",
-                    style = TypographyTokens.Caption,
-                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-                )
+        val submitActionRole = actionState.resolveRole(ActionRole.Recommended)
+        val submitLabel = actionState.resolveLabel("提交")
+
+        RendererPanelStack(
+            rendererTag = "renderer-number-pad",
+            context = {
                 StoryPanelCard(
-                    level = SurfaceLevel.Primary,
-                    containerColor = RendererTokens.NumberPadDisplaySurface,
+                    level = SurfaceLevel.Secondary,
+                    containerColor = RendererTokens.HelperSurface,
                     shape = RadiusTokens.CardMd
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl)
-                            .testTag("number-pad-display"),
-                        contentAlignment = Alignment.CenterStart
+                            .padding(SpacingTokens.Lg),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                     ) {
+                        TabletChipLabel(text = "数字键盘")
                         Text(
-                            text = enteredAnswer.ifEmpty { "请输入答案" },
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
+                            text = "可输入答案：${question.choices.joinToString(" / ")}",
+                            style = TypographyTokens.Caption,
+                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                         )
                     }
                 }
-            }
-            if (feedback != null) {
-                AnswerFeedbackBanner(state = feedback)
-            }
-        }
-
-        val submitActionRole = actionState.resolveRole(ActionRole.Recommended)
-        val submitLabel = actionState.resolveLabel("提交")
-        keypadRows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-            ) {
-                row.forEach { key ->
-                    val tag = when (key) {
-                        "清除" -> "number-pad-clear"
-                        "提交" -> "number-pad-submit"
-                        else -> "number-pad-key-$key"
-                    }
-                    ActionButton(
-                        text = if (key == "提交") submitLabel else key,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(68.dp)
-                            .testTag(tag),
-                        onClick = {
-                            when (key) {
-                                "清除" -> enteredAnswer = ""
-                                "提交" -> onAnswer(enteredAnswer)
-                                else -> enteredAnswer += key
-                            }
-                        },
-                        enabled = if (key == "提交") {
-                            actionState.enabled && enteredAnswer.isNotEmpty()
-                        } else {
-                            actionState.enabled
-                        },
-                        role = if (key == "提交") submitActionRole else ActionRole.Secondary,
-                        containerColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
-                            TabletSand
-                        } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
-                            null
-                        } else {
-                            RendererTokens.OptionSurface
-                        },
-                        contentColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
-                            TabletDeepWater
-                        } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
-                            null
-                        } else {
-                            TabletFoam
-                        },
-                        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            },
+            feedback = feedback,
+            affordance = {
+                StoryPanelCard(
+                    level = SurfaceLevel.Secondary,
+                    containerColor = RendererTokens.NumberPadSurface,
+                    shape = RadiusTokens.CardMd
+                ) {
+                    StoryPanelCard(
+                        level = SurfaceLevel.Primary,
+                        containerColor = RendererTokens.NumberPadDisplaySurface,
                         shape = RadiusTokens.CardMd
-                    )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl)
+                                .testTag("number-pad-display"),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                text = enteredAnswer.ifEmpty { "请输入答案" },
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+        ) {
+            StoryPanelCard(
+                level = SurfaceLevel.Secondary,
+                containerColor = RendererTokens.OptionSurface,
+                shape = RadiusTokens.CardMd
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionRowGap)
+                ) {
+                    keypadRows.forEach { row ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                        ) {
+                            row.forEach { key ->
+                                val tag = when (key) {
+                                    "清除" -> "number-pad-clear"
+                                    "提交" -> "number-pad-submit"
+                                    else -> "number-pad-key-$key"
+                                }
+                                ActionButton(
+                                    text = if (key == "提交") submitLabel else key,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(68.dp)
+                                        .testTag(tag),
+                                    onClick = {
+                                        when (key) {
+                                            "清除" -> enteredAnswer = ""
+                                            "提交" -> onAnswer(enteredAnswer)
+                                            else -> enteredAnswer += key
+                                        }
+                                    },
+                                    enabled = if (key == "提交") {
+                                        actionState.enabled && enteredAnswer.isNotEmpty()
+                                    } else {
+                                        actionState.enabled
+                                    },
+                                    role = if (key == "提交") submitActionRole else ActionRole.Secondary,
+                                    containerColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
+                                        TabletSand
+                                    } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                                        null
+                                    } else {
+                                        RendererTokens.OptionSurface
+                                    },
+                                    contentColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
+                                        TabletDeepWater
+                                    } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                                        null
+                                    } else {
+                                        TabletFoam
+                                    },
+                                    textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                    shape = RadiusTokens.CardMd
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

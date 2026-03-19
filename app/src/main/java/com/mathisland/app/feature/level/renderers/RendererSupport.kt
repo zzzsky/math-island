@@ -40,65 +40,69 @@ internal fun RendererOptionsColumn(
     buttonLabel: String,
     onAnswer: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(rendererTag),
-        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
-    ) {
-        if (header != null && helper != null) {
-            StoryPanelCard(
-                level = SurfaceLevel.Secondary,
-                containerColor = RendererTokens.HelperSurface,
-                shape = RadiusTokens.CardMd
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(SpacingTokens.Lg),
-                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+    RendererPanelStack(
+        rendererTag = rendererTag,
+        context = if (header != null && helper != null) {
+            {
+                StoryPanelCard(
+                    level = SurfaceLevel.Secondary,
+                    containerColor = RendererTokens.HelperSurface,
+                    shape = RadiusTokens.CardMd
                 ) {
-                    TabletChipLabel(text = header)
-                    Text(
-                        text = helper,
-                        style = TypographyTokens.Caption,
-                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(SpacingTokens.Lg),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                    ) {
+                        TabletChipLabel(text = header)
+                        Text(
+                            text = helper,
+                            style = TypographyTokens.Caption,
+                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
+                        )
+                    }
                 }
             }
-        }
-        if (feedback != null) {
-            AnswerFeedbackBanner(state = feedback)
-        }
-        affordance?.invoke()
+        } else {
+            null
+        },
+        feedback = feedback,
+        affordance = affordance,
+    ) {
         val resolvedButtonLabel = actionState.resolveLabel(buttonLabel)
         val resolvedRole = actionState.resolveRole(ActionRole.Primary)
-        question.choices.forEach { choice ->
-            StoryPanelCard(
-                level = SurfaceLevel.Secondary,
-                containerColor = RendererTokens.OptionSurface,
-                shape = RadiusTokens.CardMd
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(SpacingTokens.Lg),
-                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionGroupGap)
+        ) {
+            question.choices.forEach { choice ->
+                StoryPanelCard(
+                    level = SurfaceLevel.Secondary,
+                    containerColor = RendererTokens.OptionSurface,
+                    shape = RadiusTokens.CardMd
                 ) {
-                    Text(
-                        text = choice,
-                        style = TypographyTokens.FeatureTitle,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    ActionButton(
-                        modifier = Modifier.testTag("answer-$choice"),
-                        text = resolvedButtonLabel,
-                        onClick = { onAnswer(choice) },
-                        enabled = actionState.enabled,
-                        role = resolvedRole,
-                        containerColor = if (resolvedRole == ActionRole.Primary) accent else null,
-                        contentColor = if (resolvedRole == ActionRole.Primary) TabletDeepWater else null
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(SpacingTokens.Lg),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                    ) {
+                        Text(
+                            text = choice,
+                            style = TypographyTokens.FeatureTitle,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        ActionButton(
+                            modifier = Modifier.testTag("answer-$choice"),
+                            text = resolvedButtonLabel,
+                            onClick = { onAnswer(choice) },
+                            enabled = actionState.enabled,
+                            role = resolvedRole,
+                            containerColor = if (resolvedRole == ActionRole.Primary) accent else null,
+                            contentColor = if (resolvedRole == ActionRole.Primary) TabletDeepWater else null
+                        )
+                    }
                 }
             }
         }
