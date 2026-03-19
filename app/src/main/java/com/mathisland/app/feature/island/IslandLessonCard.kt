@@ -18,6 +18,7 @@ import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -76,6 +77,11 @@ fun IslandLessonCard(
                 onClick = { onStartLesson(lesson.id) },
                 modifier = Modifier.testTag("panel-start-${lesson.id}"),
                 enabled = lesson.enabled,
+                role = when {
+                    lesson.completed -> ActionRole.Completed
+                    isPrimary -> ActionRole.Recommended
+                    else -> ActionRole.Secondary
+                },
                 containerColor = when {
                     lesson.completed -> IslandPanelTokens.CompletedButton
                     isPrimary -> IslandPanelTokens.RecommendedButton

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,10 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.StoryPanelCard
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 import kotlinx.coroutines.delay
 
@@ -149,12 +149,13 @@ fun LevelTabletScreen(
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
-                Button(
+                ActionButton(
+                    text = "返回地图",
                     onClick = onQuit,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF40697A))
-                ) {
-                    Text("返回地图")
-                }
+                    role = ActionRole.Secondary,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary
+                )
             }
         }
 

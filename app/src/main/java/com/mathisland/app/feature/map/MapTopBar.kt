@@ -19,8 +19,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandPanelTokens
+import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -51,6 +53,7 @@ fun MapTopBar(
             WoodButton(
                 text = "返回首页",
                 onClick = onBackHome,
+                role = ActionRole.Secondary,
                 containerColor = IslandPanelTokens.DefaultButton
             )
             Box(
@@ -62,6 +65,7 @@ fun MapTopBar(
                     text = "打开宝箱",
                     onClick = onOpenChest,
                     modifier = Modifier.testTag("map-open-chest"),
+                    role = ActionRole.Recommended,
                     containerColor = IslandPanelTokens.RecommendedButton
                 )
                 if (showChestPulse) {

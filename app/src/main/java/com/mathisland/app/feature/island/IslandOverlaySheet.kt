@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -46,6 +47,7 @@ fun IslandOverlaySheet(
                         .testTag("island-primary-action"),
                     enabled = lesson.enabled,
                     onClick = { onStartLesson(lesson.id) },
+                    role = if (lesson.completed) ActionRole.Completed else ActionRole.Recommended,
                     containerColor = if (lesson.completed) {
                         IslandPanelTokens.CompletedButton
                     } else {

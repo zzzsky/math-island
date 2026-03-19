@@ -1,5 +1,6 @@
 package com.mathisland.app.feature.level
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,11 +26,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.RewardSummary
+import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
@@ -126,28 +126,26 @@ fun RewardOverlay(
                         ) {
                             reward.secondaryActionLabel?.let { label ->
                                 onSecondaryAction?.let { action ->
-                                    OutlinedButton(
+                                    ActionButton(
+                                        text = label,
                                         modifier = Modifier
                                             .testTag("reward-retry-sprint")
                                             .padding(end = 12.dp),
                                         onClick = action,
-                                        colors = ButtonDefaults.outlinedButtonColors(
-                                            contentColor = MaterialTheme.colorScheme.secondary
-                                        )
-                                    ) {
-                                        Text(label)
-                                    }
+                                        role = ActionRole.OutlinedSecondary,
+                                        contentColor = MaterialTheme.colorScheme.secondary,
+                                        borderColor = MaterialTheme.colorScheme.secondary
+                                    )
                                 }
                             }
-                            Button(
+                            ActionButton(
+                                text = state.continueLabel,
                                 modifier = Modifier.testTag("reward-return-map"),
                                 onClick = onContinue,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary
-                                )
-                            ) {
-                                Text(state.continueLabel)
-                            }
+                                role = ActionRole.Primary,
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     }
                 }
