@@ -14,4 +14,16 @@ object TypographyTokens {
 
     val FeatureTitle: TextStyle
         get() = MathIslandTypography.titleLarge
+
+    val BodyLead: TextStyle
+        get() = MathIslandTypography.bodyLarge
+
+    val BodyPrimary: TextStyle
+        get() = MathIslandTypography.bodyMedium
+
+    val BodySecondary: TextStyle
+        get() = MathIslandTypography.bodyMedium
+
+    val SupportingLabel: TextStyle
+        get() = MathIslandTypography.labelLarge
 }

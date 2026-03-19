@@ -12,6 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun TabletActionCard(
@@ -38,7 +40,8 @@ fun TabletActionCard(
             )
             Text(
                 text = subtitle,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
+                style = TypographyTokens.BodySecondary,
+                color = TextToneTokens.low(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier.padding(top = SpacingTokens.Xs, bottom = SpacingTokens.Xs)
             )
             ActionButton(

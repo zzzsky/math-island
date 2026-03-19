@@ -23,6 +23,7 @@ import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusVariant
+import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
@@ -55,7 +56,8 @@ fun ChestTabletScreen(
         )
         Text(
             text = state.summaryText,
-            style = MaterialTheme.typography.titleMedium
+            style = TypographyTokens.BodyLead,
+            color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
         )
         if (state.stickers.isEmpty()) {
             ChestInfoCard(
@@ -90,7 +92,8 @@ fun ChestTabletScreen(
                                 )
                                 Text(
                                     text = "已收入宝箱",
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                                    style = TypographyTokens.BodySecondary,
+                                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                                 )
                             }
                         }
@@ -125,7 +128,8 @@ private fun ChestInfoCard(
             )
             Text(
                 text = body,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                style = TypographyTokens.BodyPrimary,
+                color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface)
             )
         }
     }

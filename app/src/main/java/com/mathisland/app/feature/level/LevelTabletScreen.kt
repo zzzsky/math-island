@@ -34,6 +34,7 @@ import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 
@@ -108,7 +109,8 @@ fun LevelTabletScreen(
                             } else {
                                 Text(
                                     text = "总星星 ${state.totalStars}",
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                                    style = TypographyTokens.SupportingLabel,
+                                    color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
                                 )
                             }
                         }
@@ -128,12 +130,14 @@ fun LevelTabletScreen(
                         )
                         Text(
                             text = "第 ${state.questionIndex + 1} / ${state.totalQuestions} 题",
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                            style = TypographyTokens.BodySecondary,
+                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                         )
                         if (lesson.timeLimitSeconds != null) {
                             Text(
                                 text = "倒计时结束会直接结算，本轮作为冲刺练习不计通关。",
-                                color = MaterialTheme.colorScheme.secondary,
+                                style = TypographyTokens.BodyPrimary,
+                                color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface),
                                 modifier = Modifier.testTag("lesson-timer-note")
                             )
                         }

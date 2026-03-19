@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.StatusVariant
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 data class MapFeedbackUiState(
     val title: String,
@@ -71,13 +73,14 @@ fun MapProgressFeedback(
                 )
                 Text(
                     text = feedback.body,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.84f),
+                    style = TypographyTokens.BodyPrimary,
+                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                     modifier = Modifier.testTag("map-feedback-body")
                 )
                 if (feedback.starsEarned > 0 || feedback.chestReady) {
                     Text(
                         text = "本次推进",
-                        style = MaterialTheme.typography.labelLarge,
+                        style = TypographyTokens.SupportingLabel,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.testTag("map-feedback-summary")

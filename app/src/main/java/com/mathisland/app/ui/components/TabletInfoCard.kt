@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun TabletInfoCard(
@@ -51,7 +53,8 @@ fun TabletInfoCard(
             )
             Text(
                 text = body,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
+                style = TypographyTokens.BodyPrimary,
+                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier.padding(top = SpacingTokens.Xs)
             )
         }

@@ -35,6 +35,7 @@ import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
@@ -205,8 +206,8 @@ private fun RewardSummaryHeader(
                     )
                     Text(
                         text = rewardHeaderSummary(reward),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f),
-                        style = MaterialTheme.typography.bodyLarge
+                        style = TypographyTokens.BodyLead,
+                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                     )
                 }
                 Column(
@@ -220,8 +221,8 @@ private fun RewardSummaryHeader(
                 ) {
                     Text(
                         text = "总星星",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+                        style = TypographyTokens.SupportingLabel,
+                        color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface)
                     )
                     Text(
                         text = totalStars.toString(),
@@ -231,8 +232,8 @@ private fun RewardSummaryHeader(
                     )
                     Text(
                         text = if (reward.timedOut) "复习优先级已更新" else "进度已写入航线",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                        style = TypographyTokens.BodySecondary,
+                        color = TextToneTokens.low(MaterialTheme.colorScheme.onSurface)
                     )
                 }
             }
@@ -302,8 +303,8 @@ private fun RewardSectionHeader(
         )
         Text(
             text = body,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.78f)
+            style = TypographyTokens.BodySecondary,
+            color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface)
         )
     }
 }

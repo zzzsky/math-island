@@ -16,6 +16,8 @@ import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun IslandStoryCard(
@@ -39,13 +41,13 @@ fun IslandStoryCard(
             TabletChipLabel(text = "探索提示")
             Text(
                 text = island.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = IslandPanelTokens.DescriptionText
+                style = TypographyTokens.BodyLead,
+                color = TextToneTokens.high(IslandPanelTokens.DescriptionText)
             )
             Text(
                 text = "当前主题：${island.subtitle}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = IslandPanelTokens.SummaryText
+                style = TypographyTokens.SupportingLabel,
+                color = TextToneTokens.supporting(IslandPanelTokens.SummaryText)
             )
         }
     }

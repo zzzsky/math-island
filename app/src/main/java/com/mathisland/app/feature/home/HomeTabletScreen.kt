@@ -23,6 +23,7 @@ import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 import com.mathisland.app.ui.theme.StatusVariant
 
@@ -58,8 +59,8 @@ fun HomeTabletScreen(
                     )
                     Text(
                         text = "短回合数学冒险，把今天的 3 到 5 分钟变成一段可见的地图推进。",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                        style = TypographyTokens.BodyLead,
+                        color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
                     )
                     state.nextLessonTitle?.let { lessonTitle ->
                         TabletInfoCard(
