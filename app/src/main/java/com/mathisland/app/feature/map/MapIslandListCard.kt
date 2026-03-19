@@ -129,6 +129,24 @@ fun MapIslandListCard(
                 style = TypographyTokens.Caption,
                 modifier = Modifier.testTag("map-list-card-surface-${island.id}")
             )
+            if (island.handoffBadge != null && island.handoffBody != null) {
+                StatusChip(
+                    text = island.handoffBadge,
+                    variant = when (island.handoffBadge) {
+                        "主线推荐" -> StatusVariant.Recommended
+                        "宝箱优先" -> StatusVariant.Highlight
+                        "回放优先" -> StatusVariant.Caution
+                        else -> StatusVariant.Highlight
+                    },
+                    modifier = Modifier.testTag("map-list-handoff-badge-${island.id}")
+                )
+                Text(
+                    text = island.handoffBody,
+                    color = TextToneTokens.medium(IslandPanelTokens.DescriptionText),
+                    style = TypographyTokens.Caption,
+                    modifier = Modifier.testTag("map-list-handoff-body-${island.id}")
+                )
+            }
         }
     }
 }

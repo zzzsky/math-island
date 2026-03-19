@@ -19,7 +19,9 @@ data class MapTabletIslandUiState(
     val unlocked: Boolean,
     val completed: Boolean,
     val progress: Float,
-    val lessons: List<MapTabletLessonUiState>
+    val lessons: List<MapTabletLessonUiState>,
+    val handoffBadge: String? = null,
+    val handoffBody: String? = null
 )
 
 data class MapTabletUiState(
@@ -41,6 +43,11 @@ object MapViewModel {
         val islands = controller.islands.map { island ->
             val unlocked = progress.unlockedIslandIds.contains(island.id)
             val completed = island.lessons.all { lesson -> controller.lessonCompleted(progress, lesson) }
+            val handoffBadge = islandHandoffBadge(
+                islandId = island.id,
+                recommendedIslandId = controller.recommendedLesson(progress)?.islandId,
+                feedback = feedback
+            )
             MapTabletIslandUiState(
                 id = island.id,
                 title = island.title,
@@ -57,7 +64,9 @@ object MapViewModel {
                         completed = controller.lessonCompleted(progress, lesson),
                         enabled = unlocked
                     )
-                }
+                },
+                handoffBadge = handoffBadge,
+                handoffBody = handoffBody(handoffBadge)
             )
         }
         val recommendedIslandId = controller.recommendedLesson(progress)?.islandId
@@ -70,5 +79,36 @@ object MapViewModel {
             feedback = feedback,
             islands = islands
         )
+    }
+
+    private fun islandHandoffBadge(
+        islandId: String,
+        recommendedIslandId: String?,
+        feedback: MapFeedbackUiState?
+    ): String? {
+        val kind = feedback?.kind ?: return null
+        val appliesToIsland = when (kind) {
+            MapFeedbackKind.NewIsland -> feedback.highlightedIslandId == islandId
+            MapFeedbackKind.Chest,
+            MapFeedbackKind.Replay,
+            MapFeedbackKind.Progress -> recommendedIslandId == islandId
+        }
+        if (!appliesToIsland) {
+            return null
+        }
+        return when (kind) {
+            MapFeedbackKind.NewIsland -> "主线推荐"
+            MapFeedbackKind.Chest -> "宝箱优先"
+            MapFeedbackKind.Replay -> "回放优先"
+            MapFeedbackKind.Progress -> "继续推进"
+        }
+    }
+
+    private fun handoffBody(handoffBadge: String?): String? = when (handoffBadge) {
+        "主线推荐" -> "下一节主线课程已经准备好"
+        "宝箱优先" -> "先看收藏，再继续当前课程"
+        "回放优先" -> "先处理回放，再决定是否继续冲刺"
+        "继续推进" -> "当前推荐课程已经整理好"
+        else -> null
     }
 }

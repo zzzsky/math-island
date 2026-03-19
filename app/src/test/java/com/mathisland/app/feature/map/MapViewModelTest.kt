@@ -8,6 +8,7 @@ import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.domain.model.ReviewTask
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class MapViewModelTest {
@@ -60,6 +61,91 @@ class MapViewModelTest {
         )
 
         assertEquals(true, state.islands.single().completed)
+    }
+
+    @Test
+    fun uiState_marksNewIslandHandoffOnHighlightedIsland() {
+        val controller = MathIslandGameController(
+            islands = listOf(
+                island(id = "calculation-island", title = "计算岛", lessonId = "calc-01"),
+                island(id = "measurement-island", title = "测量与图形岛", lessonId = "measure-01")
+            )
+        )
+
+        val state = MapViewModel.uiState(
+            controller = controller,
+            progress = progress(
+                unlockedIslandIds = setOf("calculation-island", "measurement-island"),
+                completedLessonIds = setOf("calc-01")
+            ),
+            feedback = MapFeedbackUiState(
+                kind = MapFeedbackKind.NewIsland,
+                title = "新岛已解锁",
+                body = "测量与图形岛已开放。",
+                highlightedIslandId = "measurement-island",
+                summaryLabel = "继续主线"
+            )
+        )
+
+        val highlighted = state.islands.single { it.id == "measurement-island" }
+        assertEquals("主线推荐", highlighted.handoffBadge)
+        assertEquals("下一节主线课程已经准备好", highlighted.handoffBody)
+    }
+
+    @Test
+    fun uiState_marksChestHandoffOnRecommendedIsland() {
+        val controller = MathIslandGameController(
+            islands = listOf(
+                island(id = "calculation-island", title = "计算岛", lessonId = "calc-01")
+            )
+        )
+
+        val state = MapViewModel.uiState(
+            controller = controller,
+            progress = progress(
+                unlockedIslandIds = setOf("calculation-island"),
+                completedLessonIds = emptySet()
+            ),
+            feedback = MapFeedbackUiState(
+                kind = MapFeedbackKind.Chest,
+                title = "宝箱有新收藏",
+                body = "Bridge Builder 已收入宝箱。",
+                summaryLabel = "打开宝箱"
+            )
+        )
+
+        val island = state.islands.single()
+        assertEquals("宝箱优先", island.handoffBadge)
+        assertEquals("先看收藏，再继续当前课程", island.handoffBody)
+    }
+
+    @Test
+    fun uiState_leavesOtherIslandsNeutralWhenHandoffTargetsDifferentIsland() {
+        val controller = MathIslandGameController(
+            islands = listOf(
+                island(id = "calculation-island", title = "计算岛", lessonId = "calc-01"),
+                island(id = "measurement-island", title = "测量与图形岛", lessonId = "measure-01")
+            )
+        )
+
+        val state = MapViewModel.uiState(
+            controller = controller,
+            progress = progress(
+                unlockedIslandIds = setOf("calculation-island", "measurement-island"),
+                completedLessonIds = setOf("calc-01")
+            ),
+            feedback = MapFeedbackUiState(
+                kind = MapFeedbackKind.NewIsland,
+                title = "新岛已解锁",
+                body = "测量与图形岛已开放。",
+                highlightedIslandId = "measurement-island",
+                summaryLabel = "继续主线"
+            )
+        )
+
+        val neutral = state.islands.single { it.id == "calculation-island" }
+        assertNull(neutral.handoffBadge)
+        assertNull(neutral.handoffBody)
     }
 
     private fun island(
