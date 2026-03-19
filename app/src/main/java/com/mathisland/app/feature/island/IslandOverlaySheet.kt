@@ -40,10 +40,11 @@ fun IslandOverlaySheet(
         ) {
             IslandPanelHeader(island = island)
             if (state.handoffLabel != null && state.handoffTitle != null && state.handoffBody != null) {
-                IslandHandoffCard(
-                    label = state.handoffLabel,
-                    title = state.handoffTitle,
-                    body = state.handoffBody
+            IslandHandoffCard(
+                kind = state.handoffKind,
+                label = state.handoffLabel,
+                title = state.handoffTitle,
+                body = state.handoffBody
                 )
             }
             IslandStoryCard(island = island)

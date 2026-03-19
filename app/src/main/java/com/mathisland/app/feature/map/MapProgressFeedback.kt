@@ -25,7 +25,15 @@ import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
+enum class MapFeedbackKind {
+    NewIsland,
+    Chest,
+    Replay,
+    Progress
+}
+
 data class MapFeedbackUiState(
+    val kind: MapFeedbackKind = MapFeedbackKind.Progress,
     val title: String,
     val body: String,
     val highlightedIslandId: String? = null,
@@ -41,6 +49,12 @@ fun MapProgressFeedback(
     feedback: MapFeedbackUiState,
     motionProgress: Float = 0f
 ) {
+    val accent = when (feedback.kind) {
+        MapFeedbackKind.NewIsland -> Color(0xFFF2D48B)
+        MapFeedbackKind.Chest -> Color(0xFFE8B86D)
+        MapFeedbackKind.Replay -> Color(0xFF7FC2D8)
+        MapFeedbackKind.Progress -> MaterialTheme.colorScheme.primary
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,7 +79,7 @@ fun MapProgressFeedback(
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.92f + (motionProgress * 0.08f))
+                tint = accent.copy(alpha = 0.92f + (motionProgress * 0.08f))
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
@@ -85,7 +99,7 @@ fun MapProgressFeedback(
                         text = "本次推进",
                         style = TypographyTokens.SupportingLabel,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = accent,
                         modifier = Modifier.testTag("map-feedback-summary")
                     )
                 }
@@ -116,11 +130,17 @@ fun MapReturnSummaryCard(
     feedback: MapFeedbackUiState,
     modifier: Modifier = Modifier
 ) {
+    val accent = when (feedback.kind) {
+        MapFeedbackKind.NewIsland -> Color(0xFFF2D48B)
+        MapFeedbackKind.Chest -> Color(0xFFE8B86D)
+        MapFeedbackKind.Replay -> Color(0xFF7FC2D8)
+        MapFeedbackKind.Progress -> MaterialTheme.colorScheme.primary
+    }
     com.mathisland.app.ui.components.SummarySpotlightCard(
         modifier = modifier.testTag("map-return-summary"),
         label = feedback.summaryLabel,
         title = feedback.summaryTitle,
         body = feedback.summaryBody,
-        accent = MaterialTheme.colorScheme.primary
+        accent = accent
     )
 }
