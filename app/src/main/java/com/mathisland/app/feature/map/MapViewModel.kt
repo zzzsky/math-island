@@ -29,6 +29,9 @@ data class MapTabletUiState(
     val islands: List<MapTabletIslandUiState>
 )
 
+fun MapTabletUiState.islandById(id: String?): MapTabletIslandUiState? =
+    islands.firstOrNull { it.id == id }
+
 object MapViewModel {
     fun uiState(
         controller: MathIslandGameController,

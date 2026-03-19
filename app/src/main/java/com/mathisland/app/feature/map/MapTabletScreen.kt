@@ -84,6 +84,7 @@ fun MapTabletScreen(
 
     val selectedIsland = state.islands.firstOrNull { island -> island.id == selectedIslandId }
         ?: state.islands.firstOrNull()
+    val preferredOverlayIslandId = activeFeedback?.highlightedIslandId ?: selectedIslandId
 
     Row(
         modifier = Modifier.fillMaxSize(),
@@ -171,7 +172,7 @@ fun MapTabletScreen(
                 IslandOverlaySheet(
                     state = IslandViewModel.uiState(
                         mapState = state,
-                        selectedIslandId = selectedIslandId
+                        selectedIslandId = preferredOverlayIslandId
                     ),
                     onStartLesson = onStartLesson
                 )
