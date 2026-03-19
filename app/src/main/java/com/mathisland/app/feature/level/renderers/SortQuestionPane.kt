@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +19,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.ui.components.StoryPanelCard
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TypographyTokens
 import com.mathisland.app.ui.theme.TabletSand
 
 @Composable
@@ -36,34 +38,36 @@ fun SortQuestionPane(
         header = "灯塔排序板",
         helper = "比较大小或顺序后，点亮正确信号灯。",
         affordance = {
-            Card(
+            StoryPanelCard(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0x55B79C66)),
-                shape = RoundedCornerShape(22.dp)
+                level = SurfaceLevel.Secondary,
+                containerColor = RendererTokens.SortSurface,
+                shape = RadiusTokens.CardMd
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                        .padding(SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     Text(
                         text = "排序信号灯",
                         modifier = Modifier.testTag("sort-signal-lights"),
+                        style = TypographyTokens.FeatureTitle,
                         fontWeight = FontWeight.Bold
                     )
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(34.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         listOf(Color(0xFFEF476F), Color(0xFFFFD166), Color(0xFF06D6A0)).forEach { light ->
                             Box(
                                 modifier = Modifier
                                     .size(34.dp)
-                                    .clip(RoundedCornerShape(99.dp))
+                                    .clip(RadiusTokens.Pill)
                                     .background(light)
                             )
                         }

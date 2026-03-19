@@ -7,11 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +21,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TabletDeepWater
 import com.mathisland.app.ui.theme.TabletFoam
 import com.mathisland.app.ui.theme.TabletSand
@@ -50,17 +51,18 @@ fun NumberPadQuestionPane(
         modifier = Modifier
             .fillMaxWidth()
             .testTag("renderer-number-pad"),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color(0x663F536B)),
-            shape = RoundedCornerShape(24.dp)
+        StoryPanelCard(
+            level = SurfaceLevel.Secondary,
+            containerColor = RendererTokens.NumberPadSurface,
+            shape = RadiusTokens.CardMd
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .padding(SpacingTokens.Lg),
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
                 TabletChipLabel(text = "数字键盘")
                 Text(
@@ -68,14 +70,15 @@ fun NumberPadQuestionPane(
                     style = TypographyTokens.Caption,
                     color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                 )
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = Color(0xCC173C4C)),
-                    shape = RoundedCornerShape(20.dp)
+                StoryPanelCard(
+                    level = SurfaceLevel.Primary,
+                    containerColor = RendererTokens.NumberPadDisplaySurface,
+                    shape = RadiusTokens.CardMd
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 18.dp, vertical = 20.dp)
+                            .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl)
                             .testTag("number-pad-display"),
                         contentAlignment = Alignment.CenterStart
                     ) {
@@ -92,7 +95,7 @@ fun NumberPadQuestionPane(
         keypadRows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
                 row.forEach { key ->
                     val tag = when (key) {
@@ -100,7 +103,8 @@ fun NumberPadQuestionPane(
                         "提交" -> "number-pad-submit"
                         else -> "number-pad-key-$key"
                     }
-                    Button(
+                    ActionButton(
+                        text = key,
                         modifier = Modifier
                             .weight(1f)
                             .height(68.dp)
@@ -113,18 +117,12 @@ fun NumberPadQuestionPane(
                             }
                         },
                         enabled = key != "提交" || enteredAnswer.isNotEmpty(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (key == "提交") TabletSand else Color(0xCC225267),
-                            contentColor = if (key == "提交") TabletDeepWater else TabletFoam
-                        ),
-                        shape = RoundedCornerShape(22.dp)
-                    ) {
-                        Text(
-                            text = key,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                        role = if (key == "提交") ActionRole.Recommended else ActionRole.Secondary,
+                        containerColor = if (key == "提交") TabletSand else RendererTokens.OptionSurface,
+                        contentColor = if (key == "提交") TabletDeepWater else TabletFoam,
+                        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        shape = RadiusTokens.CardMd
+                    )
                 }
             }
         }

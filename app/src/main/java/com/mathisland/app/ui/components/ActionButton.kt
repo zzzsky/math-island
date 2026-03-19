@@ -10,10 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.ActionColorSet
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.ActionTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun ActionButton(
@@ -25,6 +28,8 @@ fun ActionButton(
     containerColor: Color? = null,
     contentColor: Color? = null,
     borderColor: Color? = null,
+    textStyle: TextStyle = TypographyTokens.SupportingLabel,
+    shape: Shape = RoundedCornerShape(ActionTokens.CornerRadius),
 ) {
     val colors = resolveColors(
         role = role,
@@ -32,7 +37,6 @@ fun ActionButton(
         contentColor = contentColor,
         borderColor = borderColor,
     )
-    val shape = RoundedCornerShape(ActionTokens.CornerRadius)
     val contentPadding = PaddingValues(
         horizontal = ActionTokens.HorizontalPadding,
         vertical = ActionTokens.VerticalPadding,
@@ -51,7 +55,7 @@ fun ActionButton(
                 contentColor = colors.contentColor,
             ),
         ) {
-            Text(text)
+            Text(text = text, style = textStyle)
         }
     } else {
         Button(
@@ -65,7 +69,7 @@ fun ActionButton(
                 contentColor = colors.contentColor,
             ),
         ) {
-            Text(text)
+            Text(text = text, style = textStyle)
         }
     }
 }

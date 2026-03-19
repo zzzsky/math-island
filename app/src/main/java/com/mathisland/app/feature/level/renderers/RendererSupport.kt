@@ -4,11 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.RadiusTokens
+import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TabletDeepWater
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
@@ -42,18 +42,19 @@ internal fun RendererOptionsColumn(
         modifier = Modifier
             .fillMaxWidth()
             .testTag(rendererTag),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
         if (header != null && helper != null) {
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0x662C647A)),
-                shape = RoundedCornerShape(24.dp)
+            StoryPanelCard(
+                level = SurfaceLevel.Secondary,
+                containerColor = RendererTokens.HelperSurface,
+                shape = RadiusTokens.CardMd
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                 ) {
                     TabletChipLabel(text = header)
                     Text(
@@ -66,31 +67,30 @@ internal fun RendererOptionsColumn(
         }
         affordance?.invoke()
         question.choices.forEach { choice ->
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xCC225267)),
-                shape = RoundedCornerShape(24.dp)
+            StoryPanelCard(
+                level = SurfaceLevel.Secondary,
+                containerColor = RendererTokens.OptionSurface,
+                shape = RadiusTokens.CardMd
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     Text(
                         text = choice,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = TypographyTokens.FeatureTitle,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Button(
+                    ActionButton(
                         modifier = Modifier.testTag("answer-$choice"),
+                        text = buttonLabel,
                         onClick = { onAnswer(choice) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = accent,
-                            contentColor = TabletDeepWater
-                        )
-                    ) {
-                        Text(buttonLabel)
-                    }
+                        role = ActionRole.Primary,
+                        containerColor = accent,
+                        contentColor = TabletDeepWater
+                    )
                 }
             }
         }
