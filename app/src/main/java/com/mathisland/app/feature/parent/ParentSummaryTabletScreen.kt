@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
@@ -22,7 +25,7 @@ fun ParentSummaryTabletScreen(
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
+        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -40,6 +43,19 @@ fun ParentSummaryTabletScreen(
                 role = ActionRole.Completed,
             )
         }
-        ParentSummarySections(state = state)
+        SurfaceCard(
+            modifier = Modifier.fillMaxWidth(),
+            level = SurfaceLevel.Page
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(SpacingTokens.Xxl),
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
+            ) {
+                ParentSummaryHeroPanel(state = state)
+                ParentSummarySections(state = state)
+            }
+        }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.RewardSummary
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletInfoCard
@@ -98,6 +99,12 @@ fun RewardOverlay(
                         accent = accentMint
                     )
                 }
+                SummarySpotlightCard(
+                    label = "本轮结论",
+                    title = rewardSpotlightTitle(reward),
+                    body = rewardSpotlightBody(reward),
+                    accent = accentGold
+                )
                 RewardHighlights(
                     reward = reward
                 )
@@ -316,4 +323,22 @@ private fun rewardHeaderSummary(reward: RewardSummary): String =
         reward.newStickerName != null -> "本次奖励已经收入宝箱，回地图后可以顺手查看收藏。"
         reward.gradeLabel != null -> "成绩与推荐路线已经整理好，继续前先快速看一眼报告。"
         else -> "本次结果已经结算完毕，继续按钮会按当前推荐路线推进。"
+    }
+
+private fun rewardSpotlightTitle(reward: RewardSummary): String =
+    when {
+        reward.timedOut -> "这轮先记为练习"
+        reward.newIslandTitle != null -> "新岛已经解锁"
+        reward.newStickerName != null -> "贴纸已经收入宝箱"
+        reward.gradeLabel != null -> reward.gradeLabel
+        else -> "本轮已顺利完成"
+    }
+
+private fun rewardSpotlightBody(reward: RewardSummary): String =
+    when {
+        reward.timedOut -> "先回地图查看回放与推荐路线，再决定是否立刻重新发起冲刺。"
+        reward.newIslandTitle != null -> "地图会把焦点切到新的主线岛屿，方便你继续往前推进。"
+        reward.newStickerName != null -> "奖励已经进入收藏，下次回地图时可以顺手打开宝箱查看。"
+        reward.gradeDescription != null -> reward.gradeDescription
+        else -> "继续按钮会按照当前推荐路线，带你回到地图继续探索。"
     }
