@@ -174,7 +174,14 @@ fun MapTabletScreen(
                         mapState = state,
                         selectedIslandId = preferredOverlayIslandId
                     ),
-                    onStartLesson = onStartLesson
+                    onStartLesson = onStartLesson,
+                    onOpenChest = {
+                        if (state.feedback != null && feedbackKey != null) {
+                            dismissedFeedbackKey = feedbackKey
+                            onConsumeFeedback()
+                        }
+                        onOpenChest()
+                    }
                 )
             }
         }

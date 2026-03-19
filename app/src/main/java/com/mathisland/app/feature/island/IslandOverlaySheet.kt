@@ -19,10 +19,12 @@ import com.mathisland.app.ui.theme.SpacingTokens
 @Composable
 fun IslandOverlaySheet(
     state: IslandUiState,
-    onStartLesson: (String) -> Unit
+    onStartLesson: (String) -> Unit,
+    onOpenChest: () -> Unit = {}
 ) {
     val island = state.island
-    val primaryLesson = island.lessons.firstOrNull { lesson -> lesson.enabled && !lesson.completed }
+    val primaryLesson = island.lessons.firstOrNull { lesson -> lesson.id == state.primaryLessonId }
+        ?: island.lessons.firstOrNull { lesson -> lesson.enabled && !lesson.completed }
         ?: island.lessons.firstOrNull()
 
     SurfaceCard(
@@ -40,24 +42,37 @@ fun IslandOverlaySheet(
         ) {
             IslandPanelHeader(island = island)
             if (state.handoffLabel != null && state.handoffTitle != null && state.handoffBody != null) {
-            IslandHandoffCard(
-                kind = state.handoffKind,
-                label = state.handoffLabel,
-                title = state.handoffTitle,
-                body = state.handoffBody
+                IslandHandoffCard(
+                    kind = state.handoffKind,
+                    label = state.handoffLabel,
+                    title = state.handoffTitle,
+                    body = state.handoffBody
                 )
             }
             IslandStoryCard(island = island)
-            primaryLesson?.let { lesson ->
+            state.primaryActionLabel?.let { label ->
                 WoodButton(
-                    text = if (lesson.completed) "再次练习 ${lesson.title}" else "继续 ${lesson.title}",
+                    text = label,
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("island-primary-action"),
-                    enabled = lesson.enabled,
-                    onClick = { onStartLesson(lesson.id) },
-                    role = if (lesson.completed) ActionRole.Completed else ActionRole.Recommended,
-                    containerColor = if (lesson.completed) {
+                    enabled = state.primaryActionMode == IslandPrimaryActionMode.OpenChest || primaryLesson?.enabled == true,
+                    onClick = {
+                        when (state.primaryActionMode) {
+                            IslandPrimaryActionMode.StartLesson -> primaryLesson?.let { onStartLesson(it.id) }
+                            IslandPrimaryActionMode.OpenChest -> onOpenChest()
+                        }
+                    },
+                    role = if (state.primaryActionMode == IslandPrimaryActionMode.OpenChest) {
+                        ActionRole.Recommended
+                    } else if (primaryLesson?.completed == true) {
+                        ActionRole.Completed
+                    } else {
+                        ActionRole.Recommended
+                    },
+                    containerColor = if (primaryLesson?.completed == true &&
+                        state.primaryActionMode == IslandPrimaryActionMode.StartLesson
+                    ) {
                         IslandPanelTokens.CompletedButton
                     } else {
                         IslandPanelTokens.RecommendedButton
@@ -72,6 +87,7 @@ fun IslandOverlaySheet(
                     IslandLessonCard(
                         lesson = lesson,
                         isPrimary = lesson.id == primaryLesson?.id,
+                        handoffKind = state.handoffKind,
                         onStartLesson = onStartLesson
                     )
                 }
