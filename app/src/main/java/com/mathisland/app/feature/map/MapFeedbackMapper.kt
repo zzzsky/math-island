@@ -30,10 +30,7 @@ fun rewardToMapFeedback(reward: RewardSummary): MapFeedbackUiState? {
     }
 
     val summaryLabel = when (kind) {
-        MapFeedbackKind.NewIsland -> "继续主线"
-        MapFeedbackKind.Chest -> "打开宝箱"
-        MapFeedbackKind.Replay -> "回放优先"
-        MapFeedbackKind.Progress -> "继续航线"
+        else -> mapReturnCopy(kind).summaryLabel
     }
 
     return MapFeedbackUiState(
@@ -51,18 +48,18 @@ fun rewardToMapFeedback(reward: RewardSummary): MapFeedbackUiState? {
 
 internal fun RewardSummary.mapFeedbackSummaryTitle(): String =
     when {
-        timedOut -> "先看回放，再决定是否重新冲刺"
-        newIslandTitle != null -> "新主线已经准备好"
-        newStickerName != null -> "宝箱里有新的收藏"
+        timedOut -> mapReturnCopy(MapFeedbackKind.Replay).summaryTitle
+        newIslandTitle != null -> mapReturnCopy(MapFeedbackKind.NewIsland).summaryTitle
+        newStickerName != null -> mapReturnCopy(MapFeedbackKind.Chest).summaryTitle
         gradeLabel != null -> gradeLabel
-        else -> "继续当前推荐航线"
+        else -> mapReturnCopy(MapFeedbackKind.Progress).summaryTitle
     }
 
 internal fun RewardSummary.mapFeedbackSummaryBody(): String =
     when {
-        timedOut -> "地图会优先保留综合挑战的回放与练习入口，方便你先消化本轮结果。"
-        newIslandTitle != null -> "$newIslandTitle 已经成为当前焦点，右侧面板会直接显示下一节推荐课程。"
-        newStickerName != null -> "宝箱按钮会高亮提示新贴纸，回地图后可以直接打开查看。"
+        timedOut -> mapReturnCopy(MapFeedbackKind.Replay).summaryBody
+        newIslandTitle != null -> mapReturnCopy(MapFeedbackKind.NewIsland).summaryBody
+        newStickerName != null -> mapReturnCopy(MapFeedbackKind.Chest).summaryBody
         gradeDescription != null -> gradeDescription
-        else -> "地图会保留当前推荐路线，继续按钮对应的下一步已经在右侧面板准备好。"
+        else -> mapReturnCopy(MapFeedbackKind.Progress).summaryBody
     }

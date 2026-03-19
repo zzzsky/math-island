@@ -55,9 +55,9 @@ class IslandViewModelTest {
                     kind = MapFeedbackKind.Chest,
                     title = "宝箱有新收藏",
                     body = "Bridge Builder 已收入宝箱。",
-                    summaryLabel = "打开宝箱",
-                    summaryTitle = "宝箱里有新的收藏",
-                    summaryBody = "回地图后可以直接打开查看。"
+                    summaryLabel = "先看收藏",
+                    summaryTitle = "宝箱收藏已更新",
+                    summaryBody = "先打开宝箱，再回到当前推荐课。"
                 ),
                 islands = listOf(
                     island(id = "calculation-island", title = "计算岛")
@@ -67,7 +67,7 @@ class IslandViewModelTest {
         )
 
         assertEquals(IslandPrimaryActionMode.OpenChest, state.primaryActionMode)
-        assertEquals("先打开宝箱", state.primaryActionLabel)
+        assertEquals("先看收藏", state.primaryActionLabel)
     }
 
     @Test
@@ -80,9 +80,9 @@ class IslandViewModelTest {
                     kind = MapFeedbackKind.Replay,
                     title = "回放路线已整理",
                     body = "综合挑战的回放与推荐路线已经整理好。",
-                    summaryLabel = "回放优先",
-                    summaryTitle = "先看回放，再决定是否重新冲刺",
-                    summaryBody = "地图会优先保留综合挑战的回放与练习入口。"
+                    summaryLabel = "先做回放",
+                    summaryTitle = "回放路线已就位",
+                    summaryBody = "先处理回放，再决定是否重新冲刺。"
                 ),
                 islands = listOf(
                     MapTabletIslandUiState(

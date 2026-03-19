@@ -4,6 +4,7 @@ import com.mathisland.app.feature.map.MapFeedbackKind
 import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.feature.map.MapTabletUiState
+import com.mathisland.app.feature.map.mapReturnCopy
 
 enum class IslandPrimaryActionMode {
     StartLesson,
@@ -80,7 +81,7 @@ object IslandViewModel {
         }
         return when (kind) {
             MapFeedbackKind.NewIsland -> lesson?.let { "开始主线 ${it.title}" }
-            MapFeedbackKind.Chest -> "先打开宝箱"
+            MapFeedbackKind.Chest -> mapReturnCopy(MapFeedbackKind.Chest).summaryLabel
             MapFeedbackKind.Replay -> lesson?.let { "先做回放 ${it.title}" }
             MapFeedbackKind.Progress, null -> lesson?.let {
                 if (it.completed) "再次练习 ${it.title}" else "继续 ${it.title}"

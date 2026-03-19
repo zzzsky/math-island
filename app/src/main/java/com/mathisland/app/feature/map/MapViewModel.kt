@@ -97,18 +97,15 @@ object MapViewModel {
             return null
         }
         return when (kind) {
-            MapFeedbackKind.NewIsland -> "主线推荐"
-            MapFeedbackKind.Chest -> "宝箱优先"
-            MapFeedbackKind.Replay -> "回放优先"
-            MapFeedbackKind.Progress -> "继续推进"
+            else -> mapReturnCopy(kind).listBadge
         }
     }
 
     private fun handoffBody(handoffBadge: String?): String? = when (handoffBadge) {
-        "主线推荐" -> "下一节主线课程已经准备好"
-        "宝箱优先" -> "先看收藏，再继续当前课程"
-        "回放优先" -> "先处理回放，再决定是否继续冲刺"
-        "继续推进" -> "当前推荐课程已经整理好"
+        mapReturnCopy(MapFeedbackKind.NewIsland).listBadge -> mapReturnCopy(MapFeedbackKind.NewIsland).listBody
+        mapReturnCopy(MapFeedbackKind.Chest).listBadge -> mapReturnCopy(MapFeedbackKind.Chest).listBody
+        mapReturnCopy(MapFeedbackKind.Replay).listBadge -> mapReturnCopy(MapFeedbackKind.Replay).listBody
+        mapReturnCopy(MapFeedbackKind.Progress).listBadge -> mapReturnCopy(MapFeedbackKind.Progress).listBody
         else -> null
     }
 }

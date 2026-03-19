@@ -83,13 +83,13 @@ class MapViewModelTest {
                 title = "新岛已解锁",
                 body = "测量与图形岛已开放。",
                 highlightedIslandId = "measurement-island",
-                summaryLabel = "继续主线"
+                summaryLabel = "主线继续"
             )
         )
 
         val highlighted = state.islands.single { it.id == "measurement-island" }
         assertEquals("主线推荐", highlighted.handoffBadge)
-        assertEquals("下一节主线课程已经准备好", highlighted.handoffBody)
+        assertEquals("下一节主线课已就位", highlighted.handoffBody)
     }
 
     @Test
@@ -110,13 +110,13 @@ class MapViewModelTest {
                 kind = MapFeedbackKind.Chest,
                 title = "宝箱有新收藏",
                 body = "Bridge Builder 已收入宝箱。",
-                summaryLabel = "打开宝箱"
+                summaryLabel = "先看收藏"
             )
         )
 
         val island = state.islands.single()
         assertEquals("宝箱优先", island.handoffBadge)
-        assertEquals("先看收藏，再继续当前课程", island.handoffBody)
+        assertEquals("先看收藏，再回到当前课程", island.handoffBody)
     }
 
     @Test
@@ -139,7 +139,7 @@ class MapViewModelTest {
                 title = "新岛已解锁",
                 body = "测量与图形岛已开放。",
                 highlightedIslandId = "measurement-island",
-                summaryLabel = "继续主线"
+                summaryLabel = "主线继续"
             )
         )
 
