@@ -33,6 +33,7 @@ import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 
 @Composable
@@ -112,7 +113,7 @@ fun LevelTabletScreen(
                         }
                         Text(
                             text = lesson.title,
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = TypographyTokens.SectionTitle,
                             fontWeight = FontWeight.Bold
                         )
                         LinearProgressIndicator(

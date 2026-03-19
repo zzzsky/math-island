@@ -27,6 +27,7 @@ import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.map.MapArtRegistry
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun IslandPanelHeader(
@@ -74,7 +75,7 @@ fun IslandPanelHeader(
                 )
                 Text(
                     text = island.title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = TypographyTokens.SectionTitle,
                     fontWeight = FontWeight.Black,
                     modifier = Modifier.testTag("panel-island-title")
                 )

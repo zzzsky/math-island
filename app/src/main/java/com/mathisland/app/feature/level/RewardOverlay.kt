@@ -35,6 +35,7 @@ import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun RewardOverlay(
@@ -199,7 +200,7 @@ private fun RewardSummaryHeader(
                     )
                     Text(
                         text = reward.lessonTitle,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = TypographyTokens.SectionTitle,
                         fontWeight = FontWeight.Black
                     )
                     Text(
@@ -296,7 +297,7 @@ private fun RewardSectionHeader(
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
+            style = TypographyTokens.FeatureTitle,
             fontWeight = FontWeight.Bold
         )
         Text(

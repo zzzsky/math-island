@@ -16,13 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mathisland.app.domain.usecase.HomeState
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.TabletActionCard
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.theme.TypographyTokens
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.ActionRole
 
@@ -53,7 +53,7 @@ fun HomeTabletScreen(
                     StatusChip(text = "TABLET MVP", variant = StatusVariant.Neutral)
                     Text(
                         text = "数学岛",
-                        fontSize = 42.sp,
+                        style = TypographyTokens.ScreenHero,
                         fontWeight = FontWeight.Black
                     )
                     Text(

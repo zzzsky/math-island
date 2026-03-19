@@ -22,6 +22,7 @@ import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.StatusVariant
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun ChestTabletScreen(
@@ -48,7 +49,7 @@ fun ChestTabletScreen(
         }
         Text(
             text = "宝箱收藏",
-            style = MaterialTheme.typography.headlineLarge,
+            style = TypographyTokens.ScreenTitle,
             fontWeight = FontWeight.Black
         )
         Text(

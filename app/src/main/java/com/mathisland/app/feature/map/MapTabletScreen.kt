@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandOverlaySheet
 import com.mathisland.app.feature.island.IslandViewModel
 import com.mathisland.app.ui.components.IslandMapCanvas
+import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
@@ -128,7 +129,7 @@ fun MapTabletScreen(
             selectedIsland?.let { island ->
                 Text(
                     text = "当前查看 ${island.title}",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = TypographyTokens.FeatureTitle,
                     fontWeight = FontWeight.Bold,
                     color = MapScreenTokens.SelectedTitle,
                     modifier = Modifier.testTag("map-selected-title")
