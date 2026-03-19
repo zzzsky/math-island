@@ -82,12 +82,12 @@ fun IslandPanelHeader(
                 Text(
                     text = island.subtitle,
                     color = IslandPanelTokens.DescriptionText,
-                    style = MaterialTheme.typography.titleMedium
+                    style = TypographyTokens.Caption
                 )
                 Text(
                     text = progressLabel(island),
                     color = IslandPanelTokens.SummaryText,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = TypographyTokens.Caption,
                     modifier = Modifier.testTag("panel-island-progress")
                 )
                 LinearProgressIndicator(

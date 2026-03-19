@@ -44,9 +44,19 @@ val MathIslandTypography = Typography(
         lineHeight = 22.sp,
         fontWeight = FontWeight.Normal
     ),
+    bodySmall = TextStyle(
+        fontSize = 13.sp,
+        lineHeight = 18.sp,
+        fontWeight = FontWeight.Normal
+    ),
     labelLarge = TextStyle(
         fontSize = 14.sp,
         lineHeight = 18.sp,
         fontWeight = FontWeight.SemiBold
+    ),
+    labelMedium = TextStyle(
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        fontWeight = FontWeight.Medium
     )
 )

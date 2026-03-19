@@ -30,6 +30,8 @@ import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.TabletDeepWater
 import com.mathisland.app.ui.theme.TabletFoam
 import com.mathisland.app.ui.theme.TabletSand
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun NumberPadQuestionPane(
@@ -63,7 +65,8 @@ fun NumberPadQuestionPane(
                 TabletChipLabel(text = "数字键盘")
                 Text(
                     text = "可输入答案：${question.choices.joinToString(" / ")}",
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.84f)
+                    style = TypographyTokens.Caption,
+                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                 )
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color(0xCC173C4C)),

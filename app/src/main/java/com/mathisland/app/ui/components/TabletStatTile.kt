@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun TabletStatTile(
@@ -52,8 +54,8 @@ fun TabletStatTile(
                 Spacer(modifier = Modifier.width(SpacingTokens.Xs))
                 Text(
                     text = title,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f),
-                    style = MaterialTheme.typography.labelLarge
+                    color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface),
+                    style = TypographyTokens.MicroLabel
                 )
             }
             Text(

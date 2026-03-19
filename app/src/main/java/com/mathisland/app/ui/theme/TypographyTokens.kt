@@ -26,4 +26,10 @@ object TypographyTokens {
 
     val SupportingLabel: TextStyle
         get() = MathIslandTypography.labelLarge
+
+    val Caption: TextStyle
+        get() = MathIslandTypography.bodySmall
+
+    val MicroLabel: TextStyle
+        get() = MathIslandTypography.labelMedium
 }

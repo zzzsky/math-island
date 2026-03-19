@@ -23,6 +23,8 @@ import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.StatusVariant
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun ParentGateScreen(
@@ -100,7 +102,8 @@ private fun ParentInfoCard(
             )
             Text(
                 text = body,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                style = TypographyTokens.Caption,
+                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
             )
         }
     }

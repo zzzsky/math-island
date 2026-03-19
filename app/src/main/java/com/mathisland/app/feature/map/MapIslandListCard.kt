@@ -28,6 +28,8 @@ import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.map.MapArtRegistry
 import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
 fun MapIslandListCard(
@@ -102,7 +104,8 @@ fun MapIslandListCard(
                     )
                     Text(
                         text = island.subtitle,
-                        color = IslandPanelTokens.DescriptionText
+                        color = TextToneTokens.medium(IslandPanelTokens.DescriptionText),
+                        style = TypographyTokens.Caption
                     )
                 }
                 StatusChip(
@@ -123,7 +126,7 @@ fun MapIslandListCard(
             Text(
                 text = "${island.lessons.count { it.completed }}/${island.lessons.size} 课程完成",
                 color = IslandPanelTokens.SummaryText,
-                style = MaterialTheme.typography.bodyMedium,
+                style = TypographyTokens.Caption,
                 modifier = Modifier.testTag("map-list-card-surface-${island.id}")
             )
         }

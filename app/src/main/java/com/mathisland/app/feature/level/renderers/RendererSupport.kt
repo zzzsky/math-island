@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.TabletDeepWater
+import com.mathisland.app.ui.theme.TextToneTokens
+import com.mathisland.app.ui.theme.TypographyTokens
 
 internal val TabletCoral = Color(0xFFEE964B)
 internal val TabletSky = Color(0xFF8ECae6)
@@ -56,7 +58,8 @@ internal fun RendererOptionsColumn(
                     TabletChipLabel(text = header)
                     Text(
                         text = helper,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.82f)
+                        style = TypographyTokens.Caption,
+                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                     )
                 }
             }
