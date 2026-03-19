@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,13 +37,18 @@ import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LevelTabletScreen(
     state: LevelUiState,
     onQuit: () -> Unit,
-    answerPane: @Composable () -> Unit,
+    onAnswer: (String) -> Unit,
+    answerPane: @Composable (AnswerFeedbackUiState?, Boolean, (String) -> Unit) -> Unit,
     onExpire: (() -> Unit)? = null
 ) {
     val lesson = state.lesson
@@ -51,8 +57,23 @@ fun LevelTabletScreen(
         mutableIntStateOf(lesson.timeLimitSeconds ?: 0)
     }
     var didExpire by remember(lesson.id) { mutableStateOf(false) }
+    var feedbackState by remember(lesson.id) { mutableStateOf(state.initialFeedback) }
+    var inputEnabled by remember(lesson.id, state.questionIndex) { mutableStateOf(true) }
+    var feedbackResetJob by remember(lesson.id) { mutableStateOf<Job?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    fun scheduleFeedbackReset(delayMillis: Long) {
+        feedbackResetJob?.cancel()
+        feedbackResetJob = coroutineScope.launch {
+            delay(delayMillis)
+            feedbackState = state.initialFeedback
+        }
+    }
 
     LaunchedEffect(lesson.id, lesson.timeLimitSeconds) {
+        didExpire = false
+        feedbackResetJob?.cancel()
+        feedbackState = state.initialFeedback
         val limitSeconds = lesson.timeLimitSeconds ?: return@LaunchedEffect
         remainingSeconds = limitSeconds
         while (!didExpire && remainingSeconds > 0) {
@@ -63,6 +84,46 @@ fun LevelTabletScreen(
             didExpire = true
             onExpire?.invoke()
         }
+    }
+
+    LaunchedEffect(lesson.id, state.questionIndex, question.prompt) {
+        inputEnabled = true
+        if (feedbackState?.kind != AnswerFeedbackKind.Correct) {
+            feedbackState = state.initialFeedback
+        } else {
+            scheduleFeedbackReset(delayMillis = 650)
+        }
+    }
+
+    val handleAnswer: (String) -> Unit = answerHandler@{ answer ->
+        if (!inputEnabled) return@answerHandler
+        val answeredCorrectly = answer == question.correctChoice
+        inputEnabled = false
+        feedbackState = if (answeredCorrectly) {
+            AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.Correct,
+                title = "答对了",
+                body = if (lesson.timeLimitSeconds != null) {
+                    "保持这个节奏，马上进入下一题。"
+                } else {
+                    "这题已经通过，继续往前推进。"
+                }
+            )
+        } else {
+            AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.Incorrect,
+                title = "再试一次",
+                body = question.hint.ifBlank { "看看题目线索，再重新判断一次。" }
+            )
+        }
+        if (!answeredCorrectly) {
+            scheduleFeedbackReset(delayMillis = 1_100)
+            coroutineScope.launch {
+                delay(450)
+                inputEnabled = true
+            }
+        }
+        onAnswer(answer)
     }
 
     Row(
@@ -177,9 +238,25 @@ fun LevelTabletScreen(
             modifier = Modifier.weight(0.95f),
             verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
         ) {
-            answerPane()
+            answerPane(feedbackState, inputEnabled, handleAnswer)
         }
     }
+}
+
+@Composable
+fun LevelTabletScreen(
+    state: LevelUiState,
+    onQuit: () -> Unit,
+    answerPane: @Composable () -> Unit,
+    onExpire: (() -> Unit)? = null
+) {
+    LevelTabletScreen(
+        state = state,
+        onQuit = onQuit,
+        onAnswer = {},
+        answerPane = { _, _, _ -> answerPane() },
+        onExpire = onExpire
+    )
 }
 
 private fun formatCountdown(totalSeconds: Int): String {

@@ -26,12 +26,16 @@ import com.mathisland.app.ui.theme.TypographyTokens
 @Composable
 fun GroupQuestionPane(
     question: Question,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
         question = question,
         rendererTag = "renderer-group",
         accent = TabletMint,
+        feedback = feedback,
+        inputEnabled = inputEnabled,
         header = "分组操作台",
         helper = "先想想该怎么分组或分类，再确认答案。",
         affordance = {

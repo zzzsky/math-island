@@ -29,12 +29,16 @@ import com.mathisland.app.ui.theme.TabletSand
 @Composable
 fun SortQuestionPane(
     question: Question,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
         question = question,
         rendererTag = "renderer-sort",
         accent = TabletSand,
+        feedback = feedback,
+        inputEnabled = inputEnabled,
         header = "灯塔排序板",
         helper = "比较大小或顺序后，点亮正确信号灯。",
         affordance = {

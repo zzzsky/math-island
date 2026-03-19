@@ -26,12 +26,16 @@ import com.mathisland.app.ui.theme.TypographyTokens
 @Composable
 fun RulerQuestionPane(
     question: Question,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
         question = question,
         rendererTag = "renderer-ruler",
         accent = TabletSky,
+        feedback = feedback,
+        inputEnabled = inputEnabled,
         header = "尺子工坊",
         helper = "拖动尺子观察刻度，再选择最合适的答案。",
         affordance = {

@@ -12,5 +12,7 @@ object RendererTokens {
     val GroupBasketSurface = Color(0x77498F81)
     val SortSurface = Color(0x55B79C66)
     val HandleTrack = Color.White.copy(alpha = 0.2f)
+    val FeedbackSuccessSurface = Color(0x664A7C67)
+    val FeedbackRetrySurface = Color(0x665F4B58)
+    val FeedbackWarningSurface = Color(0x66686B3D)
 }
-

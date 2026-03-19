@@ -32,6 +32,8 @@ internal fun RendererOptionsColumn(
     question: Question,
     rendererTag: String,
     accent: Color,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     header: String? = null,
     helper: String? = null,
     affordance: @Composable (() -> Unit)? = null,
@@ -65,7 +67,15 @@ internal fun RendererOptionsColumn(
                 }
             }
         }
+        if (feedback != null) {
+            AnswerFeedbackBanner(state = feedback)
+        }
         affordance?.invoke()
+        val resolvedButtonLabel = if (feedback?.kind == AnswerFeedbackKind.Incorrect) {
+            "再试一次"
+        } else {
+            buttonLabel
+        }
         question.choices.forEach { choice ->
             StoryPanelCard(
                 level = SurfaceLevel.Secondary,
@@ -85,8 +95,9 @@ internal fun RendererOptionsColumn(
                     )
                     ActionButton(
                         modifier = Modifier.testTag("answer-$choice"),
-                        text = buttonLabel,
+                        text = resolvedButtonLabel,
                         onClick = { onAnswer(choice) },
+                        enabled = inputEnabled,
                         role = ActionRole.Primary,
                         containerColor = accent,
                         contentColor = TabletDeepWater

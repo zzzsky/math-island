@@ -37,6 +37,8 @@ import com.mathisland.app.ui.theme.TypographyTokens
 @Composable
 fun NumberPadQuestionPane(
     question: Question,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     onAnswer: (String) -> Unit
 ) {
     var enteredAnswer by remember(question.prompt) { mutableStateOf("") }
@@ -57,15 +59,15 @@ fun NumberPadQuestionPane(
             level = SurfaceLevel.Secondary,
             containerColor = RendererTokens.NumberPadSurface,
             shape = RadiusTokens.CardMd
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SpacingTokens.Lg),
-                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
-                TabletChipLabel(text = "数字键盘")
-                Text(
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(SpacingTokens.Lg),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                ) {
+                    TabletChipLabel(text = "数字键盘")
+                    Text(
                     text = "可输入答案：${question.choices.joinToString(" / ")}",
                     style = TypographyTokens.Caption,
                     color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
@@ -89,6 +91,9 @@ fun NumberPadQuestionPane(
                         )
                     }
                 }
+            }
+            if (feedback != null) {
+                AnswerFeedbackBanner(state = feedback)
             }
         }
 
@@ -116,7 +121,7 @@ fun NumberPadQuestionPane(
                                 else -> enteredAnswer += key
                             }
                         },
-                        enabled = key != "提交" || enteredAnswer.isNotEmpty(),
+                        enabled = inputEnabled && (key != "提交" || enteredAnswer.isNotEmpty()),
                         role = if (key == "提交") ActionRole.Recommended else ActionRole.Secondary,
                         containerColor = if (key == "提交") TabletSand else RendererTokens.OptionSurface,
                         contentColor = if (key == "提交") TabletDeepWater else TabletFoam,

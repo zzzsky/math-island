@@ -25,12 +25,16 @@ import com.mathisland.app.ui.theme.TabletSand
 @Composable
 fun ChantQuestionPane(
     question: Question,
+    feedback: AnswerFeedbackUiState? = null,
+    inputEnabled: Boolean = true,
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
         question = question,
         rendererTag = "renderer-chant",
         accent = TabletCoral,
+        feedback = feedback,
+        inputEnabled = inputEnabled,
         header = "口诀回声",
         helper = "先大声念口诀，再点中正确答案。",
         affordance = {

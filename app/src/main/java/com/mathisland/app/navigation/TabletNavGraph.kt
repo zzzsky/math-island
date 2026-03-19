@@ -79,11 +79,14 @@ fun TabletNavGraph() {
                     LevelTabletScreen(
                         state = levelState,
                         onQuit = routeState::openMap,
+                        onAnswer = routeState::answer,
                         onExpire = routeState::expireLesson,
-                        answerPane = {
+                        answerPane = { feedback, inputEnabled, onAnswer ->
                             LevelAnswerPane(
                                 question = levelState.question,
-                                onAnswer = routeState::answer
+                                feedback = feedback,
+                                inputEnabled = inputEnabled,
+                                onAnswer = onAnswer
                             )
                         }
                     )
