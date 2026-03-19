@@ -8,7 +8,7 @@ import com.mathisland.app.domain.model.Question
 fun ChoiceQuestionPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
@@ -16,7 +16,7 @@ fun ChoiceQuestionPane(
         rendererTag = "renderer-choice",
         accent = MaterialTheme.colorScheme.primary,
         feedback = feedback,
-        inputEnabled = inputEnabled,
+        actionState = actionState,
         buttonLabel = "选择这个答案",
         onAnswer = onAnswer
     )

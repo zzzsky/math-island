@@ -33,7 +33,7 @@ internal fun RendererOptionsColumn(
     rendererTag: String,
     accent: Color,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     header: String? = null,
     helper: String? = null,
     affordance: @Composable (() -> Unit)? = null,
@@ -71,11 +71,8 @@ internal fun RendererOptionsColumn(
             AnswerFeedbackBanner(state = feedback)
         }
         affordance?.invoke()
-        val resolvedButtonLabel = if (feedback?.kind == AnswerFeedbackKind.Incorrect) {
-            "再试一次"
-        } else {
-            buttonLabel
-        }
+        val resolvedButtonLabel = actionState.resolveLabel(buttonLabel)
+        val resolvedRole = actionState.resolveRole(ActionRole.Primary)
         question.choices.forEach { choice ->
             StoryPanelCard(
                 level = SurfaceLevel.Secondary,
@@ -97,10 +94,10 @@ internal fun RendererOptionsColumn(
                         modifier = Modifier.testTag("answer-$choice"),
                         text = resolvedButtonLabel,
                         onClick = { onAnswer(choice) },
-                        enabled = inputEnabled,
-                        role = ActionRole.Primary,
-                        containerColor = accent,
-                        contentColor = TabletDeepWater
+                        enabled = actionState.enabled,
+                        role = resolvedRole,
+                        containerColor = if (resolvedRole == ActionRole.Primary) accent else null,
+                        contentColor = if (resolvedRole == ActionRole.Primary) TabletDeepWater else null
                     )
                 }
             }

@@ -38,7 +38,7 @@ import com.mathisland.app.ui.theme.TypographyTokens
 fun NumberPadQuestionPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
     var enteredAnswer by remember(question.prompt) { mutableStateOf("") }
@@ -59,15 +59,15 @@ fun NumberPadQuestionPane(
             level = SurfaceLevel.Secondary,
             containerColor = RendererTokens.NumberPadSurface,
             shape = RadiusTokens.CardMd
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(SpacingTokens.Lg),
+                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(SpacingTokens.Lg),
-                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-                ) {
-                    TabletChipLabel(text = "数字键盘")
-                    Text(
+                TabletChipLabel(text = "数字键盘")
+                Text(
                     text = "可输入答案：${question.choices.joinToString(" / ")}",
                     style = TypographyTokens.Caption,
                     color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
@@ -97,6 +97,8 @@ fun NumberPadQuestionPane(
             }
         }
 
+        val submitActionRole = actionState.resolveRole(ActionRole.Recommended)
+        val submitLabel = actionState.resolveLabel("提交")
         keypadRows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -109,7 +111,7 @@ fun NumberPadQuestionPane(
                         else -> "number-pad-key-$key"
                     }
                     ActionButton(
-                        text = key,
+                        text = if (key == "提交") submitLabel else key,
                         modifier = Modifier
                             .weight(1f)
                             .height(68.dp)
@@ -121,10 +123,26 @@ fun NumberPadQuestionPane(
                                 else -> enteredAnswer += key
                             }
                         },
-                        enabled = inputEnabled && (key != "提交" || enteredAnswer.isNotEmpty()),
-                        role = if (key == "提交") ActionRole.Recommended else ActionRole.Secondary,
-                        containerColor = if (key == "提交") TabletSand else RendererTokens.OptionSurface,
-                        contentColor = if (key == "提交") TabletDeepWater else TabletFoam,
+                        enabled = if (key == "提交") {
+                            actionState.enabled && enteredAnswer.isNotEmpty()
+                        } else {
+                            actionState.enabled
+                        },
+                        role = if (key == "提交") submitActionRole else ActionRole.Secondary,
+                        containerColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
+                            TabletSand
+                        } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                            null
+                        } else {
+                            RendererTokens.OptionSurface
+                        },
+                        contentColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
+                            TabletDeepWater
+                        } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                            null
+                        } else {
+                            TabletFoam
+                        },
                         textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         shape = RadiusTokens.CardMd
                     )

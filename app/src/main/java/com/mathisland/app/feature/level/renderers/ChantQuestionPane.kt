@@ -26,7 +26,7 @@ import com.mathisland.app.ui.theme.TabletSand
 fun ChantQuestionPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
@@ -34,7 +34,7 @@ fun ChantQuestionPane(
         rendererTag = "renderer-chant",
         accent = TabletCoral,
         feedback = feedback,
-        inputEnabled = inputEnabled,
+        actionState = actionState,
         header = "口诀回声",
         helper = "先大声念口诀，再点中正确答案。",
         affordance = {

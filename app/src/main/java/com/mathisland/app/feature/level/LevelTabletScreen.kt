@@ -37,8 +37,10 @@ import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
+import com.mathisland.app.feature.level.renderers.RendererActionState
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import com.mathisland.app.feature.level.renderers.rendererActionStateFor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,7 +50,7 @@ fun LevelTabletScreen(
     state: LevelUiState,
     onQuit: () -> Unit,
     onAnswer: (String) -> Unit,
-    answerPane: @Composable (AnswerFeedbackUiState?, Boolean, (String) -> Unit) -> Unit,
+    answerPane: @Composable (AnswerFeedbackUiState?, RendererActionState, (String) -> Unit) -> Unit,
     onExpire: (() -> Unit)? = null
 ) {
     val lesson = state.lesson
@@ -238,7 +240,14 @@ fun LevelTabletScreen(
             modifier = Modifier.weight(0.95f),
             verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
         ) {
-            answerPane(feedbackState, inputEnabled, handleAnswer)
+            answerPane(
+                feedbackState,
+                rendererActionStateFor(
+                    feedback = feedbackState,
+                    inputEnabled = inputEnabled
+                ),
+                handleAnswer
+            )
         }
     }
 }

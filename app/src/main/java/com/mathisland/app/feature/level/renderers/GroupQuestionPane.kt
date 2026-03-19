@@ -27,7 +27,7 @@ import com.mathisland.app.ui.theme.TypographyTokens
 fun GroupQuestionPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
@@ -35,7 +35,7 @@ fun GroupQuestionPane(
         rendererTag = "renderer-group",
         accent = TabletMint,
         feedback = feedback,
-        inputEnabled = inputEnabled,
+        actionState = actionState,
         header = "分组操作台",
         helper = "先想想该怎么分组或分类，再确认答案。",
         affordance = {

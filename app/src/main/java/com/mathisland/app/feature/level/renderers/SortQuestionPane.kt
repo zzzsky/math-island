@@ -30,7 +30,7 @@ import com.mathisland.app.ui.theme.TabletSand
 fun SortQuestionPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
     RendererOptionsColumn(
@@ -38,7 +38,7 @@ fun SortQuestionPane(
         rendererTag = "renderer-sort",
         accent = TabletSand,
         feedback = feedback,
-        inputEnabled = inputEnabled,
+        actionState = actionState,
         header = "灯塔排序板",
         helper = "比较大小或顺序后，点亮正确信号灯。",
         affordance = {

@@ -3,6 +3,7 @@ package com.mathisland.app.feature.level
 import androidx.compose.runtime.Composable
 import com.mathisland.app.QuestionRendererType
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.feature.level.renderers.RendererActionState
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.ChantQuestionPane
 import com.mathisland.app.feature.level.renderers.ChoiceQuestionPane
@@ -16,49 +17,52 @@ import com.mathisland.app.rendererTypeFor
 fun LevelAnswerPane(
     question: Question,
     feedback: AnswerFeedbackUiState? = null,
-    inputEnabled: Boolean = true,
+    actionState: RendererActionState = com.mathisland.app.feature.level.renderers.rendererActionStateFor(
+        feedback = feedback,
+        inputEnabled = true
+    ),
     onAnswer: (String) -> Unit
 ) {
     when (rendererTypeFor(question.family)) {
         QuestionRendererType.CHOICE -> ChoiceQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
 
         QuestionRendererType.NUMBER_PAD -> NumberPadQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
 
         QuestionRendererType.RULER -> RulerQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
 
         QuestionRendererType.CHANT -> ChantQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
 
         QuestionRendererType.GROUP -> GroupQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
 
         QuestionRendererType.SORT -> SortQuestionPane(
             question = question,
             feedback = feedback,
-            inputEnabled = inputEnabled,
+            actionState = actionState,
             onAnswer = onAnswer
         )
     }
