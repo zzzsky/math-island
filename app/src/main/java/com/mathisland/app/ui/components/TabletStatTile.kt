@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.ui.theme.TabletStatSurface
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun TabletStatTile(
@@ -26,7 +26,7 @@ fun TabletStatTile(
 ) {
     StoryPanelCard(
         modifier = modifier,
-        containerColor = TabletStatSurface
+        level = SurfaceLevel.Secondary
     ) {
         Column(
             modifier = Modifier

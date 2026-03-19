@@ -2,8 +2,6 @@ package com.mathisland.app.feature.island
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -12,7 +10,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun IslandOverlaySheet(
@@ -23,11 +23,12 @@ fun IslandOverlaySheet(
     val primaryLesson = island.lessons.firstOrNull { lesson -> lesson.enabled && !lesson.completed }
         ?: island.lessons.firstOrNull()
 
-    Card(
+    SurfaceCard(
         modifier = Modifier
             .fillMaxWidth()
             .testTag("island-overlay-sheet"),
-        colors = CardDefaults.cardColors(containerColor = IslandPanelTokens.OverlaySurface)
+        level = SurfaceLevel.Primary,
+        containerColor = IslandPanelTokens.OverlaySurface
     ) {
         Column(
             modifier = Modifier

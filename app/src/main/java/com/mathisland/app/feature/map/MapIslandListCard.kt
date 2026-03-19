@@ -1,7 +1,6 @@
 package com.mathisland.app.feature.map
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,8 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandPanelTokens
+import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.map.MapArtRegistry
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun MapIslandListCard(
@@ -50,13 +49,14 @@ fun MapIslandListCard(
         else -> IslandPanelTokens.LessonBorder
     }
 
-    Card(
+    StoryPanelCard(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, borderColor, RoundedCornerShape(24.dp))
             .clickable(onClick = onSelect)
             .testTag("select-island-${island.id}"),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
+        level = SurfaceLevel.Secondary,
+        containerColor = containerColor,
+        borderColor = borderColor,
         shape = RoundedCornerShape(24.dp)
     ) {
         Column(
@@ -80,7 +80,6 @@ fun MapIslandListCard(
                         modifier = Modifier
                             .matchParentSize()
                             .clip(CircleShape)
-                            .border(1.dp, borderColor.copy(alpha = 0.7f), CircleShape)
                     ) {
                     }
                     Image(

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.ui.theme.TabletInfoSurface
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun TabletInfoCard(
@@ -20,7 +20,7 @@ fun TabletInfoCard(
 ) {
     StoryPanelCard(
         modifier = modifier,
-        containerColor = TabletInfoSurface
+        level = SurfaceLevel.Secondary
     ) {
         Column(
             modifier = Modifier

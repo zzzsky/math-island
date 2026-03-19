@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mathisland.app.ui.theme.TabletPanelSurface
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun TabletActionCard(
@@ -24,7 +24,7 @@ fun TabletActionCard(
 ) {
     StoryPanelCard(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = TabletPanelSurface
+        level = SurfaceLevel.Primary
     ) {
         Column(
             modifier = Modifier

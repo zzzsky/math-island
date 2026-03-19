@@ -12,8 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.components.TabletStatTile
+import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TabletFoam
 
 @Composable
@@ -39,9 +39,10 @@ fun RewardOverlay(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Card(
+        SurfaceCard(
             modifier = Modifier.fillMaxWidth(0.72f),
-            colors = CardDefaults.cardColors(containerColor = Color(0xEE123847)),
+            level = SurfaceLevel.Page,
+            containerColor = Color(0xEE123847),
             shape = RoundedCornerShape(32.dp)
         ) {
             Column(

@@ -19,7 +19,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.island.IslandPanelTokens
+import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun MapTopBar(
@@ -32,54 +34,64 @@ fun MapTopBar(
     onOpenChest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    SurfaceCard(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        level = SurfaceLevel.Page,
+        containerColor = MapScreenTokens.TopBarSurface,
+        borderColor = MapScreenTokens.TopBarBorder,
+        shape = RoundedCornerShape(28.dp)
     ) {
-        WoodButton(
-            text = "返回首页",
-            onClick = onBackHome,
-            containerColor = IslandPanelTokens.DefaultButton
-        )
-        Box(
+        Row(
             modifier = Modifier
-                .scale(chestScale)
-                .testTag("map-open-chest-container")
+                .fillMaxWidth()
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             WoodButton(
-                text = "打开宝箱",
-                onClick = onOpenChest,
-                modifier = Modifier.testTag("map-open-chest"),
-                containerColor = IslandPanelTokens.RecommendedButton
+                text = "返回首页",
+                onClick = onBackHome,
+                containerColor = IslandPanelTokens.DefaultButton
             )
-            if (showChestPulse) {
-                Box(
+            Box(
+                modifier = Modifier
+                    .scale(chestScale)
+                    .testTag("map-open-chest-container")
+            ) {
+                WoodButton(
+                    text = "打开宝箱",
+                    onClick = onOpenChest,
+                    modifier = Modifier.testTag("map-open-chest"),
+                    containerColor = IslandPanelTokens.RecommendedButton
+                )
+                if (showChestPulse) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .border(
+                                width = 2.dp,
+                                color = MapScreenTokens.ChestPulseBorder.copy(alpha = chestPulseAlpha),
+                                shape = RoundedCornerShape(999.dp)
+                            )
+                            .testTag("map-open-chest-pulse")
+                    )
+                }
+            }
+            Card(
+                modifier = Modifier
+                    .scale(starsScale)
+                    .testTag("map-total-stars-pill"),
+                colors = CardDefaults.cardColors(containerColor = MapScreenTokens.StarsPillSurface),
+                shape = RoundedCornerShape(999.dp)
+            ) {
+                Text(
+                    text = "总星星 $totalStars",
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .border(
-                            width = 2.dp,
-                            color = MapScreenTokens.ChestPulseBorder.copy(alpha = chestPulseAlpha),
-                            shape = RoundedCornerShape(999.dp)
-                        )
-                        .testTag("map-open-chest-pulse")
+                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                        .testTag("map-total-stars")
                 )
             }
-        }
-        Card(
-            modifier = Modifier
-                .scale(starsScale)
-                .testTag("map-total-stars-pill"),
-            colors = CardDefaults.cardColors(containerColor = MapScreenTokens.StarsPillSurface),
-            shape = RoundedCornerShape(999.dp)
-        ) {
-            Text(
-                text = "总星星 $totalStars",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
-                    .testTag("map-total-stars")
-            )
         }
     }
 }

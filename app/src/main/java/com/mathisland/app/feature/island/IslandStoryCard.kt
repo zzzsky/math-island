@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun IslandStoryCard(
@@ -26,6 +27,7 @@ fun IslandStoryCard(
             .fillMaxWidth()
             .border(1.dp, IslandPanelTokens.StoryBorder, RoundedCornerShape(24.dp))
             .testTag("panel-story-card"),
+        level = SurfaceLevel.Secondary,
         containerColor = IslandPanelTokens.StorySurface
     ) {
         Column(

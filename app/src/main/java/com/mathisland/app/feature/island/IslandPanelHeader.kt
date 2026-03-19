@@ -2,7 +2,6 @@ package com.mathisland.app.feature.island
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.map.MapArtRegistry
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun IslandPanelHeader(
@@ -36,10 +36,11 @@ fun IslandPanelHeader(
     val iconPainter = islandArt.iconSlot.drawableResId?.let { painterResource(it) } ?: islandArt.iconArt
 
     StoryPanelCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, IslandPanelTokens.HeaderBorder, RoundedCornerShape(24.dp)),
-        containerColor = IslandPanelTokens.HeaderSurface
+        modifier = modifier.fillMaxWidth(),
+        level = SurfaceLevel.Secondary,
+        containerColor = IslandPanelTokens.HeaderSurface,
+        borderColor = IslandPanelTokens.HeaderBorder,
+        shape = RoundedCornerShape(24.dp)
     ) {
         Row(
             modifier = Modifier

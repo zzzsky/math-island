@@ -1,6 +1,5 @@
 package com.mathisland.app.feature.island
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,7 @@ import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.components.WoodButton
+import com.mathisland.app.ui.theme.SurfaceLevel
 
 @Composable
 fun IslandLessonCard(
@@ -41,9 +41,11 @@ fun IslandLessonCard(
     StoryPanelCard(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, borderColor, RoundedCornerShape(24.dp))
             .testTag("panel-lesson-card-${lesson.id}"),
-        containerColor = containerColor
+        level = SurfaceLevel.Secondary,
+        containerColor = containerColor,
+        borderColor = borderColor,
+        shape = RoundedCornerShape(24.dp)
     ) {
         Column(
             modifier = Modifier
