@@ -1,31 +1,12 @@
 package com.mathisland.app.feature.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.usecase.HomeState
-import com.mathisland.app.ui.components.ActionButton
-import com.mathisland.app.ui.components.TabletActionCard
-import com.mathisland.app.ui.components.TabletInfoCard
-import com.mathisland.app.ui.components.TabletStatTile
-import com.mathisland.app.ui.components.StatusChip
-import com.mathisland.app.ui.theme.ActionRole
-import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
-import com.mathisland.app.ui.theme.TextToneTokens
-import com.mathisland.app.ui.theme.TypographyTokens
-import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 fun HomeTabletScreen(
@@ -39,94 +20,17 @@ fun HomeTabletScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xl)
     ) {
-        Card(
-            modifier = Modifier.weight(1.3f),
-            colors = CardDefaults.cardColors(containerColor = Color(0xCC113B4A)),
-            shape = RadiusTokens.CardLg
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(SpacingTokens.Section),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)) {
-                    StatusChip(text = "TABLET MVP", variant = StatusVariant.Neutral)
-                    Text(
-                        text = "数学岛",
-                        style = TypographyTokens.ScreenHero,
-                        fontWeight = FontWeight.Black
-                    )
-                    Text(
-                        text = "短回合数学冒险，把今天的 3 到 5 分钟变成一段可见的地图推进。",
-                        style = TypographyTokens.BodyLead,
-                        color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
-                    )
-                    state.nextLessonTitle?.let { lessonTitle ->
-                        TabletInfoCard(
-                            title = if (state.isReview) "小海鸥求助" else "继续冒险",
-                            subtitle = listOfNotNull(lessonTitle, state.nextLessonFocus)
-                                .joinToString(" · "),
-                            body = state.nextLessonSummary.orEmpty()
-                        )
-                    }
-                }
-
-                Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
-                    TabletStatTile(
-                        modifier = Modifier.weight(1f),
-                        title = "星星",
-                        value = state.totalStars.toString(),
-                        accent = MaterialTheme.colorScheme.primary
-                    )
-                    TabletStatTile(
-                        modifier = Modifier.weight(1f),
-                        title = "贴纸",
-                        value = state.stickerCount.toString(),
-                        accent = MaterialTheme.colorScheme.secondary
-                    )
-                }
-            }
-        }
-
-        Column(
+        HomeHeroPanel(
+            state = state,
+            modifier = Modifier.weight(1.3f)
+        )
+        HomeActionColumn(
+            state = state,
             modifier = Modifier.weight(0.9f),
-            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
-        ) {
-            TabletActionCard(
-                title = "继续冒险",
-                subtitle = if (state.isReview) {
-                    "先完成 2 道同类型复习题，再回主线继续推进。"
-                } else {
-                    "从当前解锁的第一节继续出发。"
-                },
-                buttonText = "开始闯关",
-                buttonTag = "home-continue-adventure",
-                role = ActionRole.Recommended,
-                onClick = onContinue
-            )
-            TabletActionCard(
-                title = "地图",
-                subtitle = "查看主岛、节点进度和下一步可玩课程。",
-                buttonText = "打开地图",
-                buttonTag = "home-open-map",
-                role = ActionRole.Primary,
-                onClick = onOpenMap
-            )
-            TabletActionCard(
-                title = "宝箱",
-                subtitle = "查看已经收集到的贴纸奖励和总星星。",
-                buttonText = "查看宝箱",
-                buttonTag = "home-open-chest",
-                role = ActionRole.Secondary,
-                onClick = onOpenChest
-            )
-            ActionButton(
-                text = "家长入口",
-                modifier = Modifier.testTag("home-open-parent"),
-                onClick = onOpenParent,
-                role = ActionRole.OutlinedSecondary,
-            )
-        }
+            onContinue = onContinue,
+            onOpenMap = onOpenMap,
+            onOpenChest = onOpenChest,
+            onOpenParent = onOpenParent,
+        )
     }
 }
