@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -64,25 +63,10 @@ fun NumberPadQuestionPane(
         RendererPanelStack(
             rendererTag = "renderer-number-pad",
             context = {
-                StoryPanelCard(
-                    level = SurfaceLevel.Secondary,
-                    containerColor = RendererTokens.HelperSurface,
-                    shape = RadiusTokens.CardMd
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(SpacingTokens.Lg),
-                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
-                    ) {
-                        TabletChipLabel(text = "数字键盘")
-                        Text(
-                            text = "可输入答案：${question.choices.joinToString(" / ")}",
-                            style = TypographyTokens.Caption,
-                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-                        )
-                    }
-                }
+                RendererGuidanceCard(
+                    title = "数字键盘",
+                    body = "可输入答案：${question.choices.joinToString(" / ")}"
+                )
             },
             feedback = feedback,
             affordance = {
@@ -128,7 +112,7 @@ fun NumberPadQuestionPane(
                             }
                             Text(
                                 text = displayState.supportingText,
-                                style = TypographyTokens.Caption,
+                                style = TypographyTokens.BodySecondary,
                                 color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                                 modifier = Modifier.testTag("number-pad-status")
                             )

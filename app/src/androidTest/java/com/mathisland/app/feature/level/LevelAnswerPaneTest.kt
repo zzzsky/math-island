@@ -10,6 +10,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import com.mathisland.app.feature.level.renderers.rendererActionStateFor
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -70,6 +73,42 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("number-pad-submit").performClick()
 
         assertEquals("81", selectedAnswer)
+    }
+
+    @Test
+    fun challengeQuestion_usesSharedGuidanceCards() {
+        val question = Question(
+            prompt = "9 x 9 = ?",
+            choices = listOf("81", "72", "99"),
+            correctChoice = "81",
+            hint = "想想 9 个 9。",
+            family = "challenge"
+        )
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Incorrect,
+            title = "再试一次",
+            body = "先看提示，再判断一次。",
+            submittedAnswer = "72"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = true
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("renderer-guidance-card").assertCountEquals(2)
+        composeRule.onNodeWithTag("renderer-action-header").assertIsDisplayed()
+        composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
     }
 
     @Test

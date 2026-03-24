@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -44,25 +43,10 @@ internal fun RendererOptionsColumn(
         rendererTag = rendererTag,
         context = if (header != null && helper != null) {
             {
-                StoryPanelCard(
-                    level = SurfaceLevel.Secondary,
-                    containerColor = RendererTokens.HelperSurface,
-                    shape = RadiusTokens.CardMd
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(SpacingTokens.Lg),
-                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
-                    ) {
-                        TabletChipLabel(text = header)
-                        Text(
-                            text = helper,
-                            style = TypographyTokens.Caption,
-                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-                        )
-                    }
-                }
+                RendererGuidanceCard(
+                    title = header,
+                    body = helper
+                )
             }
         } else {
             null
