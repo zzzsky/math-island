@@ -38,8 +38,8 @@ object LevelViewModel {
             initialFeedback = if (lesson.timeLimitSeconds != null) {
                 AnswerFeedbackUiState(
                     kind = AnswerFeedbackKind.TimedWarning,
-                    title = "限时冲刺",
-                    body = "注意倒计时变化，优先快速提交，不要长时间停在同一道题。"
+                    title = "限时进行中",
+                    body = "注意倒计时，先交当前最有把握的答案。"
                 )
             } else {
                 null

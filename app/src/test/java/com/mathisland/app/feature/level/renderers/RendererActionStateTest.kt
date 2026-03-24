@@ -17,8 +17,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Primary, state.resolveRole(ActionRole.Primary))
-        assertEquals("开始作答", state.sectionTitle())
-        assertEquals("选一个你认为正确的答案。", state.sectionBody())
+        assertEquals("准备作答", state.sectionTitle())
+        assertEquals("先看题目，再提交这次答案。", state.sectionBody())
     }
 
     @Test
@@ -35,8 +35,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("再试一次", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
-        assertEquals("重新尝试", state.sectionTitle())
-        assertEquals("结合提示再判断一次，不用着急。", state.sectionBody())
+        assertEquals("正在重试", state.sectionTitle())
+        assertEquals("先看提示，再判断一次。", state.sectionBody())
     }
 
     @Test
@@ -53,8 +53,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已确认", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Completed, state.resolveRole(ActionRole.Primary))
-        assertEquals("答案已确认", state.sectionTitle())
-        assertEquals("系统正在推进到下一步。", state.sectionBody())
+        assertEquals("已确认", state.sectionTitle())
+        assertEquals("答案已确认，马上进入下一题。", state.sectionBody())
     }
 
     @Test
@@ -72,6 +72,6 @@ class RendererActionStateTest {
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
         assertEquals("正在检查", state.sectionTitle())
-        assertEquals("请稍等片刻，马上可以继续操作。", state.sectionBody())
+        assertEquals("这次提交正在检查，请稍等片刻。", state.sectionBody())
     }
 }
