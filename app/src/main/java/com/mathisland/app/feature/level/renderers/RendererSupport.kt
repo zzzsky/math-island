@@ -81,9 +81,19 @@ internal fun RendererOptionsColumn(
                 body = actionState.sectionBody()
             )
             question.choices.forEach { choice ->
+                val optionFeedback = optionFeedbackStateFor(choice, feedback)
                 StoryPanelCard(
                     level = SurfaceLevel.Secondary,
-                    containerColor = RendererTokens.OptionSurface,
+                    containerColor = when (optionFeedback.tone) {
+                        OptionFeedbackTone.Neutral -> RendererTokens.OptionSurface
+                        OptionFeedbackTone.Retry -> RendererTokens.OptionRetrySurface
+                        OptionFeedbackTone.Confirmed -> RendererTokens.OptionCorrectSurface
+                    },
+                    borderColor = when (optionFeedback.tone) {
+                        OptionFeedbackTone.Neutral -> null
+                        OptionFeedbackTone.Retry -> RendererTokens.OptionRetryBorder
+                        OptionFeedbackTone.Confirmed -> RendererTokens.OptionCorrectBorder
+                    },
                     shape = RadiusTokens.CardMd
                 ) {
                     Column(
@@ -97,6 +107,14 @@ internal fun RendererOptionsColumn(
                             style = TypographyTokens.FeatureTitle,
                             fontWeight = FontWeight.SemiBold
                         )
+                        optionFeedback.supportingText?.let { supportingText ->
+                            Text(
+                                text = supportingText,
+                                style = TypographyTokens.Caption,
+                                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                                modifier = Modifier.testTag("answer-state-$choice")
+                            )
+                        }
                         ActionButton(
                             modifier = Modifier.testTag("answer-$choice"),
                             text = resolvedButtonLabel,

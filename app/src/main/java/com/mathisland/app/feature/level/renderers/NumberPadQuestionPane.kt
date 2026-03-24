@@ -41,6 +41,10 @@ fun NumberPadQuestionPane(
     onAnswer: (String) -> Unit
 ) {
     var enteredAnswer by remember(question.prompt) { mutableStateOf("") }
+    val displayState = numberPadDisplayStateFor(
+        enteredAnswer = enteredAnswer,
+        feedback = feedback
+    )
     val keypadRows = listOf(
         listOf("1", "2", "3"),
         listOf("4", "5", "6"),
@@ -84,25 +88,49 @@ fun NumberPadQuestionPane(
             affordance = {
                 StoryPanelCard(
                     level = SurfaceLevel.Secondary,
-                    containerColor = RendererTokens.NumberPadSurface,
+                    containerColor = when (displayState.tone) {
+                        NumberPadDisplayTone.Idle,
+                        NumberPadDisplayTone.Ready,
+                        -> RendererTokens.NumberPadSurface
+                        NumberPadDisplayTone.Retry -> RendererTokens.OptionRetrySurface
+                        NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectSurface
+                    },
                     shape = RadiusTokens.CardMd
                 ) {
                     StoryPanelCard(
                         level = SurfaceLevel.Primary,
-                        containerColor = RendererTokens.NumberPadDisplaySurface,
+                        containerColor = when (displayState.tone) {
+                            NumberPadDisplayTone.Idle,
+                            NumberPadDisplayTone.Ready,
+                            -> RendererTokens.NumberPadDisplaySurface
+                            NumberPadDisplayTone.Retry -> RendererTokens.OptionRetryBorder
+                            NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectBorder
+                        },
                         shape = RadiusTokens.CardMd
                     ) {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl)
-                                .testTag("number-pad-display"),
-                            contentAlignment = Alignment.CenterStart
+                                .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl),
+                            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .testTag("number-pad-display"),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Text(
+                                    text = displayState.displayText,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                             Text(
-                                text = enteredAnswer.ifEmpty { "请输入答案" },
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold
+                                text = displayState.supportingText,
+                                style = TypographyTokens.Caption,
+                                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                                modifier = Modifier.testTag("number-pad-status")
                             )
                         }
                     }
@@ -149,6 +177,8 @@ fun NumberPadQuestionPane(
                                         }
                                     },
                                     enabled = if (key == "提交") {
+                                        actionState.enabled && enteredAnswer.isNotEmpty()
+                                    } else if (key == "清除") {
                                         actionState.enabled && enteredAnswer.isNotEmpty()
                                     } else {
                                         actionState.enabled

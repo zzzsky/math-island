@@ -109,13 +109,15 @@ fun LevelTabletScreen(
                     "保持这个节奏，马上进入下一题。"
                 } else {
                     "这题已经通过，继续往前推进。"
-                }
+                },
+                submittedAnswer = answer
             )
         } else {
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Incorrect,
                 title = "再试一次",
-                body = question.hint.ifBlank { "看看题目线索，再重新判断一次。" }
+                body = question.hint.ifBlank { "看看题目线索，再重新判断一次。" },
+                submittedAnswer = answer
             )
         }
         if (!answeredCorrectly) {

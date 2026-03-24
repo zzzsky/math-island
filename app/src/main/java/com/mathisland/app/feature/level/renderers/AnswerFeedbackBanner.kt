@@ -27,6 +27,7 @@ data class AnswerFeedbackUiState(
     val kind: AnswerFeedbackKind,
     val title: String,
     val body: String,
+    val submittedAnswer: String? = null,
 )
 
 @Composable
