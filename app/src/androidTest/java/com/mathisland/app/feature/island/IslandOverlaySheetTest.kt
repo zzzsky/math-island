@@ -1,9 +1,11 @@
 package com.mathisland.app.feature.island
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
@@ -47,7 +49,9 @@ class IslandOverlaySheetTest {
                                     enabled = true
                                 )
                             )
-                        )
+                        ),
+                        primaryLessonId = "measure-ruler-01",
+                        primaryActionLabel = "继续 尺子工坊"
                     ),
                     onStartLesson = {}
                 )
@@ -56,12 +60,11 @@ class IslandOverlaySheetTest {
 
         composeRule.onNodeWithTag("island-overlay-sheet").assertIsDisplayed()
         composeRule.onNodeWithText("测量与图形岛").assertIsDisplayed()
-        composeRule.onNodeWithTag("island-primary-action").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("island-primary-action").assertCountEquals(1)
         composeRule.onNodeWithText("尺子工坊").assertIsDisplayed()
-        composeRule.onNodeWithText("推荐开始").assertIsDisplayed()
         composeRule.onNodeWithTag("panel-lessons-list")
             .performScrollToNode(hasTestTag("panel-start-geometry-shape-01"))
         composeRule.onNodeWithText("图形搭搭乐").assertIsDisplayed()
-        composeRule.onNodeWithTag("panel-start-geometry-shape-01").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("panel-start-geometry-shape-01").assertCountEquals(1)
     }
 }

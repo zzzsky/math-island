@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.TabletStatTile
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -31,19 +32,25 @@ fun ParentSummaryHeroPanel(
             horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
         ) {
             TabletStatTile(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("parent-summary-today-stat"),
                 title = "今日学习",
                 value = state.todayCountText,
                 accent = Color(0xFF8ECae6)
             )
             TabletStatTile(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("parent-summary-streak-stat"),
                 title = "连续学习",
                 value = state.streakText,
                 accent = Color(0xFF9ADBC7)
             )
             TabletStatTile(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("parent-summary-weak-stat"),
                 title = "薄弱项",
                 value = state.weakTopicCountText,
                 accent = Color(0xFFF2D48B)

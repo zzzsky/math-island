@@ -52,9 +52,7 @@ fun NumberPadQuestionPane(
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("renderer-number-pad"),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(RendererTokens.SectionGap)
     ) {
         val submitActionRole = actionState.resolveRole(ActionRole.Recommended)

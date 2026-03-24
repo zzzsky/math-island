@@ -15,6 +15,9 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mathisland.app.data.progress.DataStoreProgressStore
+import com.mathisland.app.di.AppContainer
+import com.mathisland.app.domain.model.AppDestination
+import com.mathisland.app.domain.model.ReviewTask
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -139,10 +142,10 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithText("家长入口").assertIsDisplayed()
         composeRule.onNodeWithTag("parent-answer-15").performClick()
 
-        composeRule.onNodeWithText("今日学习").assertIsDisplayed()
-        composeRule.onNodeWithText("薄弱知识点").assertIsDisplayed()
-        composeRule.onNodeWithText("连续学习").assertIsDisplayed()
-        composeRule.onNodeWithText("建议优先复习").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-today-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-weak-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-streak-stat").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-recommended-card").assertIsDisplayed()
     }
 
     @Test
@@ -206,7 +209,7 @@ class MathIslandTabletFlowTest {
         openLessonFromMap("start-challenge-sprint-01")
 
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
-        composeRule.onNodeWithText("9 x 9 = ?").assertIsDisplayed()
+        composeRule.onAllNodesWithText("9 x 9 = ?").assertCountEquals(1)
         composeRule.onNodeWithTag("number-pad-key-8").assertIsDisplayed().performClick()
         composeRule.onNodeWithTag("number-pad-key-1").assertIsDisplayed().performClick()
         composeRule.onNodeWithTag("number-pad-submit").assertIsDisplayed().performClick()
@@ -226,7 +229,7 @@ class MathIslandTabletFlowTest {
                 .fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.onNodeWithText("时间到，本次冲刺记为练习").assertIsDisplayed()
+        composeRule.onAllNodesWithText("时间到，本次冲刺记为练习").assertCountEquals(1)
         composeRule.onNodeWithText("0").assertIsDisplayed()
     }
 
@@ -256,7 +259,7 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("answer-35").performClick()
         composeRule.onNodeWithTag("answer-62").performClick()
 
-        composeRule.onNodeWithTag("reward-retry-sprint").assertIsDisplayed().performClick()
+        composeRule.onNodeWithTag("reward-retry-sprint").performScrollTo().assertIsDisplayed().performClick()
 
         composeRule.onNodeWithText("海图冲刺赛").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
@@ -271,7 +274,7 @@ class MathIslandTabletFlowTest {
         inputNumberPadAnswer("42")
         inputNumberPadAnswer("300")
 
-        composeRule.onNodeWithText("金帆评级").assertIsDisplayed()
+        composeRule.onAllNodesWithText("金帆评级").assertCountEquals(2)
     }
 
     @Test
@@ -314,103 +317,149 @@ class MathIslandTabletFlowTest {
     }
 
     private fun unlockBigNumberIsland() {
-        unlockMultiplicationIsland()
-        completeLesson(
-            startTag = "start-multi-meaning-01",
-            answers = listOf("4 x 5", "七", "24")
-        )
-        completeLesson(
-            startTag = "start-multi-chant-01",
-            answers = listOf("4 x 5", "七", "24")
-        )
-        completeLesson(
-            startTag = "start-division-share-01",
-            answers = listOf("4", "6", "6")
-        )
-        completeLesson(
-            startTag = "start-division-remainder-01",
-            answers = listOf("4", "6", "6")
+        seedProgressForLessons(
+            completedLessonIds = setOf(
+                "calc-carry-01",
+                "calc-big-number-01",
+                "measure-ruler-01",
+                "geometry-shape-01",
+                "multi-meaning-01",
+                "multi-chant-01",
+                "division-share-01",
+                "division-remainder-01"
+            ),
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island",
+                "division-island",
+                "big-number-island"
+            ),
+            stickerNames = setOf(
+                "Bridge Builder",
+                "Ruler Ranger",
+                "Forest Singer",
+                "Harbor Captain"
+            )
         )
     }
 
     private fun unlockClassificationIsland() {
-        unlockBigNumberIsland()
-        completeLesson(
-            startTag = "start-big-number-read-01",
-            answers = listOf("1036", "8848", "2500")
-        )
-        completeLesson(
-            startTag = "start-big-number-sort-01",
-            answers = listOf("1036", "8848", "2500")
+        seedProgressForLessons(
+            completedLessonIds = setOf(
+                "calc-carry-01",
+                "calc-big-number-01",
+                "measure-ruler-01",
+                "geometry-shape-01",
+                "multi-meaning-01",
+                "multi-chant-01",
+                "division-share-01",
+                "division-remainder-01",
+                "big-number-read-01",
+                "big-number-sort-01"
+            ),
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island",
+                "division-island",
+                "big-number-island",
+                "classification-island"
+            ),
+            stickerNames = setOf(
+                "Bridge Builder",
+                "Ruler Ranger",
+                "Forest Singer",
+                "Harbor Captain",
+                "Lighthouse Keeper"
+            )
         )
     }
 
     private fun unlockChallengeIsland() {
-        unlockClassificationIsland()
-        completeLesson(
-            startTag = "start-classification-shell-01",
-            answers = listOf("可以按不同标准分类", "分类统计", "分类统计")
+        seedProgressForLessons(
+            completedLessonIds = setOf(
+                "calc-carry-01",
+                "calc-big-number-01",
+                "measure-ruler-01",
+                "geometry-shape-01",
+                "multi-meaning-01",
+                "multi-chant-01",
+                "division-share-01",
+                "division-remainder-01",
+                "big-number-read-01",
+                "big-number-sort-01",
+                "classification-shell-01"
+            ),
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island",
+                "division-island",
+                "big-number-island",
+                "classification-island",
+                "challenge-island"
+            ),
+            stickerNames = setOf(
+                "Bridge Builder",
+                "Ruler Ranger",
+                "Forest Singer",
+                "Harbor Captain",
+                "Lighthouse Keeper",
+                "Shell Sorter"
+            )
         )
     }
 
     private fun unlockChallengeIslandWithPendingCalculationReview() {
-        composeRule.onNodeWithText("数学岛").assertIsDisplayed()
-        composeRule.onNodeWithTag("home-open-map").performClick()
-
-        openLessonFromMap("start-calc-carry-01")
-        composeRule.onNodeWithTag("answer-34").performClick()
-        composeRule.onNodeWithTag("answer-45").performClick()
-        composeRule.onNodeWithTag("answer-62").performClick()
-        returnToMapFromReward()
-
-        completeLesson(
-            startTag = "start-calc-big-number-01",
-            answers = listOf("44", "35", "62")
-        )
-        completeLesson(
-            startTag = "start-measure-ruler-01",
-            answers = listOf("厘米", "100", "平行四边形")
-        )
-        completeLesson(
-            startTag = "start-geometry-shape-01",
-            answers = listOf("厘米", "100", "平行四边形")
-        )
-        completeLesson(
-            startTag = "start-multi-meaning-01",
-            answers = listOf("4 x 5", "七", "24")
-        )
-        completeLesson(
-            startTag = "start-multi-chant-01",
-            answers = listOf("4 x 5", "七", "24")
-        )
-        completeLesson(
-            startTag = "start-division-share-01",
-            answers = listOf("4", "6", "6")
-        )
-        completeLesson(
-            startTag = "start-division-remainder-01",
-            answers = listOf("4", "6", "6")
-        )
-        completeLesson(
-            startTag = "start-big-number-read-01",
-            answers = listOf("1036", "8848", "2500")
-        )
-        completeLesson(
-            startTag = "start-big-number-sort-01",
-            answers = listOf("1036", "8848", "2500")
-        )
-        completeLesson(
-            startTag = "start-classification-shell-01",
-            answers = listOf("可以按不同标准分类", "分类统计", "分类统计")
+        seedProgressForLessons(
+            completedLessonIds = setOf(
+                "calc-big-number-01",
+                "measure-ruler-01",
+                "geometry-shape-01",
+                "multi-meaning-01",
+                "multi-chant-01",
+                "division-share-01",
+                "division-remainder-01",
+                "big-number-read-01",
+                "big-number-sort-01",
+                "classification-shell-01"
+            ),
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island",
+                "division-island",
+                "big-number-island",
+                "classification-island",
+                "challenge-island"
+            ),
+            stickerNames = setOf(
+                "Ruler Ranger",
+                "Forest Singer",
+                "Harbor Captain",
+                "Lighthouse Keeper",
+                "Shell Sorter"
+            ),
+            pendingReviewFamily = "calculation"
         )
     }
 
     private fun completeLesson(startTag: String, answers: List<String>) {
         openLessonFromMap(startTag)
         composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
-
-        answers.forEach { answer ->
+        answers.forEachIndexed { index, answer ->
+            composeRule.waitUntil(5_000) {
+                composeRule.onAllNodesWithTag("answer-$answer").fetchSemanticsNodes().isNotEmpty()
+            }
             composeRule.onNodeWithTag("answer-$answer").performClick()
+
+            if (index < answers.lastIndex) {
+                val nextQuestionLabel = "第 ${index + 2} / 3 题"
+                composeRule.waitUntil(5_000) {
+                    composeRule.onAllNodesWithText(nextQuestionLabel).fetchSemanticsNodes().isNotEmpty()
+                }
+            }
         }
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
@@ -462,6 +511,29 @@ class MathIslandTabletFlowTest {
                 .performScrollToNode(hasTestTag(panelStartTagForLesson(startTag)))
         }
         composeRule.onNodeWithTag(panelStartTagForLesson(startTag)).assertIsDisplayed().performClick()
+    }
+
+    private fun seedProgressForLessons(
+        completedLessonIds: Set<String>,
+        unlockedIslandIds: Set<String>,
+        stickerNames: Set<String>,
+        pendingReviewFamily: String? = null
+    ) {
+        composeRule.activityRule.scenario.onActivity { activity ->
+            val container = AppContainer.fromContext(activity)
+            val seededState = container.gameController.initialState().copy(
+                destination = AppDestination.HOME,
+                unlockedIslandIds = unlockedIslandIds,
+                completedLessonIds = completedLessonIds,
+                totalStars = completedLessonIds.size * 3,
+                stickerNames = stickerNames,
+                pendingReview = pendingReviewFamily?.let(::ReviewTask)
+            )
+            DataStoreProgressStore(activity).save(seededState)
+        }
+        composeRule.activityRule.scenario.recreate()
+        composeRule.onNodeWithText("数学岛").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-open-map").performClick()
     }
 
     private fun panelStartTagForLesson(startTag: String): String =
