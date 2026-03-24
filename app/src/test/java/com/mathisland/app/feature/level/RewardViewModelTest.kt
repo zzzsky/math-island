@@ -49,7 +49,52 @@ class RewardViewModelTest {
 
         val uiState = RewardViewModel.uiState(progress)
 
-        assertEquals("前往新岛", uiState?.continueLabel)
-        assertEquals("下一步去测量与图形岛", uiState?.nextStepTitle)
+        assertEquals("主线继续", uiState?.continueLabel)
+        assertEquals("新主线已就位", uiState?.nextStepTitle)
+    }
+
+    @Test
+    fun uiState_buildsNextStepCopyForChestReward() {
+        val progress = controller.initialState().copy(
+            totalStars = 9,
+            pendingReward = RewardSummary(
+                lessonTitle = "修桥加减法",
+                starsEarned = 3,
+                correctAnswers = 3,
+                totalQuestions = 3,
+                newIslandId = null,
+                newIslandTitle = null,
+                newStickerName = "Bridge Builder"
+            )
+        )
+
+        val uiState = RewardViewModel.uiState(progress)
+
+        assertEquals("先看收藏", uiState?.continueLabel)
+        assertEquals("宝箱收藏已更新", uiState?.nextStepTitle)
+    }
+
+    @Test
+    fun uiState_buildsNextStepCopyForReplayFlow() {
+        val progress = controller.initialState().copy(
+            totalStars = 9,
+            pendingReward = RewardSummary(
+                lessonTitle = "海图冲刺赛",
+                starsEarned = 0,
+                correctAnswers = 1,
+                totalQuestions = 3,
+                newIslandId = null,
+                newIslandTitle = null,
+                newStickerName = null,
+                timedOut = true,
+                gradeLabel = "整备评级",
+                gradeDescription = "先回放再发起下一轮冲刺。"
+            )
+        )
+
+        val uiState = RewardViewModel.uiState(progress)
+
+        assertEquals("先做回放", uiState?.continueLabel)
+        assertEquals("回放路线已就位", uiState?.nextStepTitle)
     }
 }
