@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import com.mathisland.app.feature.level.LessonStatusTone
+import com.mathisland.app.feature.level.lessonStatusToneFor
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -35,15 +37,18 @@ fun AnswerFeedbackBanner(
     state: AnswerFeedbackUiState,
     modifier: Modifier = Modifier,
 ) {
+    val tone = lessonStatusToneFor(state)
     StoryPanelCard(
         modifier = modifier
             .fillMaxWidth()
             .testTag("answer-feedback-banner"),
         level = SurfaceLevel.Secondary,
-        containerColor = when (state.kind) {
-            AnswerFeedbackKind.Correct -> RendererTokens.FeedbackSuccessSurface
-            AnswerFeedbackKind.Incorrect -> RendererTokens.FeedbackRetrySurface
-            AnswerFeedbackKind.TimedWarning -> RendererTokens.FeedbackWarningSurface
+        containerColor = when (tone) {
+            LessonStatusTone.Confirmed -> RendererTokens.FeedbackSuccessSurface
+            LessonStatusTone.Retry -> RendererTokens.FeedbackRetrySurface
+            LessonStatusTone.Warning -> RendererTokens.FeedbackWarningSurface
+            LessonStatusTone.Highlight -> RendererTokens.FeedbackHighlightSurface
+            LessonStatusTone.Neutral -> RendererTokens.HelperSurface
         },
         shape = RadiusTokens.CardMd
     ) {

@@ -23,4 +23,5 @@ object RendererTokens {
     val FeedbackSuccessSurface = Color(0x664A7C67)
     val FeedbackRetrySurface = Color(0x665F4B58)
     val FeedbackWarningSurface = Color(0x66686B3D)
+    val FeedbackHighlightSurface = Color(0x66446580)
 }

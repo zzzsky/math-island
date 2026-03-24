@@ -1,9 +1,39 @@
 package com.mathisland.app.feature.level.renderers
 
+import com.mathisland.app.feature.level.LessonStatusTone
+import com.mathisland.app.feature.level.lessonStatusToneFor
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RendererFeedbackStateTest {
+    @Test
+    fun feedbackTone_usesRetryToneForIncorrectAnswers() {
+        val tone = lessonStatusToneFor(
+            feedback = AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.Incorrect,
+                title = "再试一次",
+                body = "提示",
+                submittedAnswer = "45"
+            )
+        )
+
+        assertEquals(LessonStatusTone.Retry, tone)
+    }
+
+    @Test
+    fun feedbackTone_usesConfirmedToneForCorrectAnswers() {
+        val tone = lessonStatusToneFor(
+            feedback = AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.Correct,
+                title = "答对了",
+                body = "继续推进",
+                submittedAnswer = "44"
+            )
+        )
+
+        assertEquals(LessonStatusTone.Confirmed, tone)
+    }
+
     @Test
     fun optionFeedback_marksIncorrectSubmittedChoice() {
         val state = optionFeedbackStateFor(

@@ -38,6 +38,7 @@ class LevelStatusCardStateTest {
             feedback = null
         )
 
+        assertEquals(LessonStatusTone.Neutral, state.tone)
         assertEquals("准备作答", state.subtitle)
         assertEquals("先看题目，再提交这次答案。", state.body)
     }
@@ -54,6 +55,7 @@ class LevelStatusCardStateTest {
             )
         )
 
+        assertEquals(LessonStatusTone.Retry, state.tone)
         assertEquals("正在重试", state.subtitle)
         assertEquals("先看题目线索，再重新判断一次。", state.body)
     }
@@ -70,6 +72,7 @@ class LevelStatusCardStateTest {
             )
         )
 
+        assertEquals(LessonStatusTone.Confirmed, state.tone)
         assertEquals("已确认", state.subtitle)
         assertEquals("这题已经通过，继续往前推进。", state.body)
     }
@@ -81,6 +84,7 @@ class LevelStatusCardStateTest {
             remainingSeconds = 2
         )
 
+        assertEquals(LessonStatusTone.Warning, state.tone)
         assertEquals("最后冲刺", state.subtitle)
         assertEquals("只剩 00:02，优先快速提交，不要停在这一题。", state.body)
     }

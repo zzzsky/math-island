@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.RadiusTokens
@@ -24,7 +25,8 @@ fun TabletInfoCard(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
-    body: String
+    body: String,
+    accentColor: Color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f)
 ) {
     StoryPanelCard(
         modifier = modifier,
@@ -41,7 +43,7 @@ fun TabletInfoCard(
                     .fillMaxWidth()
                     .height(2.dp)
                     .clip(RadiusTokens.Pill)
-                    .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f))
+                    .background(accentColor)
             )
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(SpacingTokens.Sm))
             TabletChipLabel(text = title)

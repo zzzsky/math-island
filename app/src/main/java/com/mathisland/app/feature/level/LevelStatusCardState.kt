@@ -5,6 +5,7 @@ import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 
 data class LevelStatusCardState(
+    val tone: LessonStatusTone,
     val title: String,
     val subtitle: String,
     val body: String
@@ -16,24 +17,28 @@ fun attemptStatusCardStateFor(
 ): LevelStatusCardState {
     return when (feedback?.kind) {
         AnswerFeedbackKind.Correct -> LevelStatusCardState(
+            tone = LessonStatusTone.Confirmed,
             title = "当前状态",
             subtitle = "已确认",
             body = feedback.body
         )
 
         AnswerFeedbackKind.Incorrect -> LevelStatusCardState(
+            tone = LessonStatusTone.Retry,
             title = "当前状态",
             subtitle = "正在重试",
             body = feedback.body
         )
 
         AnswerFeedbackKind.TimedWarning -> LevelStatusCardState(
+            tone = LessonStatusTone.Warning,
             title = "当前状态",
             subtitle = "限时进行中",
             body = feedback.body
         )
 
         null -> LevelStatusCardState(
+            tone = LessonStatusTone.Neutral,
             title = "当前状态",
             subtitle = if (lesson.isReview) "先看线索" else "准备作答",
             body = if (lesson.isReview) {
@@ -61,6 +66,11 @@ fun timerPressureCardStateFor(
         else -> "当前还剩 ${formatCountdownText(remainingSeconds)}，保持节奏继续推进。"
     }
     return LevelStatusCardState(
+        tone = when (subtitle) {
+            "最后冲刺" -> LessonStatusTone.Warning
+            "时间过半" -> LessonStatusTone.Highlight
+            else -> LessonStatusTone.Neutral
+        },
         title = "倒计时节奏",
         subtitle = subtitle,
         body = body

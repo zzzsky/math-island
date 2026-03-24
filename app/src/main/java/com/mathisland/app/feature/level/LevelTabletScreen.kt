@@ -231,6 +231,7 @@ fun LevelTabletScreen(
                         title = attemptStatus.title,
                         subtitle = attemptStatus.subtitle,
                         body = attemptStatus.body,
+                        accentColor = lessonStatusAccentColor(attemptStatus.tone),
                         modifier = Modifier.testTag("lesson-attempt-status")
                     )
                     if (timerStatus != null) {
@@ -238,6 +239,7 @@ fun LevelTabletScreen(
                             title = timerStatus.title,
                             subtitle = timerStatus.subtitle,
                             body = timerStatus.body,
+                            accentColor = lessonStatusAccentColor(timerStatus.tone),
                             modifier = Modifier.testTag("lesson-timer-status")
                         )
                     }
@@ -278,6 +280,17 @@ fun LevelTabletScreen(
                 handleAnswer
             )
         }
+    }
+}
+
+@Composable
+private fun lessonStatusAccentColor(tone: LessonStatusTone): Color {
+    return when (tone) {
+        LessonStatusTone.Neutral -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f)
+        LessonStatusTone.Highlight -> Color(0x809ADBC7)
+        LessonStatusTone.Retry -> Color(0x80F2B880)
+        LessonStatusTone.Confirmed -> Color(0x809ADBC7)
+        LessonStatusTone.Warning -> Color(0x80D9D48A)
     }
 }
 
