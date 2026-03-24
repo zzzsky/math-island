@@ -69,6 +69,8 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-flow-hint").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-timer-status").assertIsDisplayed()
         composeRule.onNodeWithTag("level-answer-pane").assertIsDisplayed()
     }
 }

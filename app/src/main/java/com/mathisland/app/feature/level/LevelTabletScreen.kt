@@ -130,6 +130,19 @@ fun LevelTabletScreen(
         onAnswer(answer)
     }
 
+    val attemptStatus = attemptStatusCardStateFor(
+        lesson = lesson,
+        feedback = feedbackState
+    )
+    val timerStatus = if (lesson.timeLimitSeconds != null) {
+        timerPressureCardStateFor(
+            lesson = lesson,
+            remainingSeconds = remainingSeconds
+        )
+    } else {
+        null
+    }
+
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
@@ -214,6 +227,20 @@ fun LevelTabletScreen(
                         text = "线索与问题",
                         variant = StatusVariant.Neutral
                     )
+                    TabletInfoCard(
+                        title = attemptStatus.title,
+                        subtitle = attemptStatus.subtitle,
+                        body = attemptStatus.body,
+                        modifier = Modifier.testTag("lesson-attempt-status")
+                    )
+                    if (timerStatus != null) {
+                        TabletInfoCard(
+                            title = timerStatus.title,
+                            subtitle = timerStatus.subtitle,
+                            body = timerStatus.body,
+                            modifier = Modifier.testTag("lesson-timer-status")
+                        )
+                    }
                     TabletInfoCard(
                         title = "流程提示",
                         subtitle = "完成后会发生什么",
