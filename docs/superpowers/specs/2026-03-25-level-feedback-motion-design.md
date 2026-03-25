@@ -74,7 +74,7 @@ Timed lessons should distinguish between warning and expiration:
 
 ### 1. Shared lesson motion model
 
-Add a compact presentation-layer timing model for lesson feedback. This should live near the level feature and expose named durations/thresholds rather than ad hoc delays in multiple files.
+Add a compact presentation-layer timing model for lesson feedback in `app/src/main/java/com/mathisland/app/feature/level/LevelMotionTokens.kt`. This file should expose named durations and thresholds only; it should not derive UI state or own lifecycle behavior.
 
 Responsibilities:
 
@@ -82,6 +82,14 @@ Responsibilities:
 - define retry relock / unlock timing
 - define timeout warning thresholds
 - keep motion decisions out of individual renderers
+
+Initial constants for this batch:
+
+- `CorrectConfirmWindowMillis = 650`
+- `RetryLockWindowMillis = 450`
+- `RetryBannerWindowMillis = 1_100`
+- `TimeoutWarningHalfThreshold = 0.5f`
+- `TimeoutWarningFinalSeconds = 2`
 
 ### 2. Level screen orchestration
 
@@ -92,6 +100,8 @@ It should:
 - own the short-lived feedback timing
 - map answer results into `correct / retry / timeout-warning / timeout-expired` rhythm
 - synchronize the left status cards and right renderer feedback window
+- create and cancel pending feedback reset jobs
+- reset transient feedback and lock state on lesson/question transitions
 
 It should not:
 
@@ -121,6 +131,29 @@ That means:
 - warning copy remains separate from retry copy
 - warning/expired visuals use warning tone, not retry tone
 - number-pad and choice renderers do not infer timeout from generic disablement alone
+
+## Lifecycle Rules
+
+`LevelTabletScreen` owns transient lesson-feedback lifecycle.
+
+Reset rules:
+
+- on lesson change: cancel pending feedback-reset work, reset input-enabled state, reset transient feedback state, reset timer state
+- on question change: cancel pending feedback-reset work, restore input-enabled state, clear non-confirmed transient feedback
+- on screen disposal or navigation away: cancel pending feedback-reset work
+
+Pending work rules:
+
+- only one feedback-reset job may exist at a time
+- scheduling a new reset cancels the previous one first
+- timeout-expired wins over retry/confirm timing; if timeout arrives during a pending retry/correct window, replace transient answer feedback with timeout presentation
+
+Submission rules:
+
+- rapid repeated submissions are ignored while `inputEnabled == false`
+- retry restores input after the retry lock window ends
+- correct keeps input locked through the confirmation window
+- timeout-expired keeps renderer actions disabled until lesson navigation exits
 
 ## File Boundaries
 
@@ -161,6 +194,11 @@ Use one explicit confirmation window for correct answers so all lesson surfaces 
 
 This should replace scattered delay assumptions where practical.
 
+Concrete timing:
+
+- `correct` lock + confirmation window: `650ms`
+- during that window, the lesson status card, feedback banner, and submitted-answer emphasis must remain synchronized
+
 ### Retry recovery window
 
 Retry should keep a short “checking” moment, then return control quickly.
@@ -171,16 +209,29 @@ The user experience should read as:
 2. retry guidance shown
 3. interaction restored
 
+Concrete timing:
+
+- `retry` temporary lock: `450ms`
+- `retry` banner/supporting emphasis lifetime: `1_100ms`
+- retry copy may outlive the lock window, but input returns immediately after the lock window finishes
+
 ### Timeout pressure window
 
 Timed lessons should continue to show pressure before expiry, but the copy and visual treatment should become more consistent:
 
-- neutral/steady
-- time over half
-- final sprint
-- expired
+- neutral/steady: remaining time is above half of the lesson limit
+- time over half: remaining time is at or below half of the lesson limit and above 2 seconds
+- final sprint: remaining time is 2 seconds or below and above 0
+- expired: remaining time is 0
 
 The first three are warning-pressure states. Only the last one is terminal for that question flow.
+
+Transition rules:
+
+- `steady -> time over half` when remaining time is `<= total * 0.5`
+- `time over half -> final sprint` when remaining time is `<= 2`
+- `final sprint -> expired` when remaining time reaches `0`
+- timeout-warning and timeout-expired never reuse retry wording or retry tone
 
 ## Copy Guidance
 
@@ -200,6 +251,8 @@ Use TDD for pure state derivation and motion mapping:
 - add or update unit tests for feedback/action/timer state transitions first
 - verify timeout warning and timeout-expired remain separate states
 - verify retry and confirmed states produce different action roles and copy
+- verify lifecycle cleanup on lesson/question transitions
+- verify timeout arriving during retry/confirm replaces transient answer feedback cleanly
 
 Then validate UI contracts:
 
