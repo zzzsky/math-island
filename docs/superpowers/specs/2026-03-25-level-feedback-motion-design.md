@@ -83,7 +83,7 @@ Ownership for timeout:
 
 ### 1. Shared lesson motion model
 
-Add a compact presentation-layer timing model for lesson feedback in `app/src/main/java/com/mathisland/app/feature/level/LevelMotionTokens.kt`. This file should expose named durations and thresholds only; it should not derive UI state or own lifecycle behavior.
+Add a compact presentation-layer timing model for lesson feedback in `app/src/main/java/com/mathisland/app/feature/level/LevelMotionTokens.kt`. This is the single canonical home for lesson feedback timing constants. It should expose named durations and thresholds only; it should not derive UI state or own lifecycle behavior.
 
 Responsibilities:
 
@@ -174,7 +174,7 @@ When timeout expires:
 Reset rules:
 
 - on lesson change: cancel pending feedback-reset work, reset input-enabled state, reset transient feedback state, reset timer state
-- on question change: cancel pending feedback-reset work, restore input-enabled state, clear non-confirmed transient feedback
+- on question change: cancel pending feedback-reset work, restore input-enabled state, and clear all transient feedback including confirmed state so the next question never inherits stale success or lock styling
 - on screen disposal or navigation away: cancel pending feedback-reset work
 
 Pending work rules:
@@ -216,7 +216,6 @@ Glue responsibilities:
 Reasonable new files:
 
 - `app/src/main/java/com/mathisland/app/feature/level/LevelMotionTokens.kt`
-- or `app/src/main/java/com/mathisland/app/feature/level/renderers/RendererMotionTokens.kt`
 
 Tests to extend:
 
@@ -281,6 +280,7 @@ Transition rules:
 - `final sprint -> expired` when remaining time reaches `0`
 - timeout-warning and timeout-expired never reuse retry wording or retry tone
 - timeout-expired is represented by `AnswerFeedbackKind.TimeoutExpired`, created by `LevelTabletScreen`, and consumed by the same lesson status / banner / renderer action mapping path as other feedback kinds
+- for short lesson timers where `floor(totalSeconds * 0.5) <= 2`, skip the `time over half` state and transition directly from `steady` to `final sprint`
 
 ## Copy Guidance
 
