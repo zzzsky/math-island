@@ -76,6 +76,8 @@ Ownership for timeout:
 - `LevelTabletScreen` is the sole owner that creates timeout-expired presentation state when the countdown reaches `0`
 - timeout-expired is carried by `AnswerFeedbackUiState` as a distinct `AnswerFeedbackKind.TimeoutExpired`
 - `LevelTabletScreen` also owns clearing timeout-expired when lesson navigation exits
+- `AnswerFeedbackKind.TimedWarning` remains the only pre-expiry warning state
+- `LevelStatusCardState` maps timeout-expired to warning tone with subtitle `已超时` and terminal body copy for the current lesson attempt
 
 ## Architecture
 
@@ -196,6 +198,7 @@ Primary implementation files:
 
 - `app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt`
+- `app/src/main/java/com/mathisland/app/feature/level/LevelAnswerPane.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelStatusCardState.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LessonStatusTone.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/AnswerFeedbackBanner.kt`
@@ -204,6 +207,11 @@ Primary implementation files:
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/RendererSupport.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/NumberPadQuestionPane.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/RendererTokens.kt`
+
+Glue responsibilities:
+
+- `LevelAnswerPane.kt` remains a pass-through integration surface that forwards the richer feedback/action state to concrete renderer panes
+- timeout-expired rendering rules are still owned by the shared state mappers, not by `LevelAnswerPane.kt`
 
 Reasonable new files:
 
