@@ -72,11 +72,13 @@ internal fun RendererOptionsColumn(
                         OptionFeedbackTone.Neutral -> RendererTokens.OptionSurface
                         OptionFeedbackTone.Retry -> RendererTokens.OptionRetrySurface
                         OptionFeedbackTone.Confirmed -> RendererTokens.OptionCorrectSurface
+                        OptionFeedbackTone.TimeoutExpired -> RendererTokens.OptionTimeoutSurface
                     },
                     borderColor = when (optionFeedback.tone) {
                         OptionFeedbackTone.Neutral -> null
                         OptionFeedbackTone.Retry -> RendererTokens.OptionRetryBorder
                         OptionFeedbackTone.Confirmed -> RendererTokens.OptionCorrectBorder
+                        OptionFeedbackTone.TimeoutExpired -> RendererTokens.OptionTimeoutBorder
                     },
                     shape = RadiusTokens.CardMd
                 ) {

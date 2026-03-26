@@ -20,6 +20,8 @@ object RendererTokens {
     val OptionCorrectBorder = Color(0xFF9ADBC7)
     val OptionRetrySurface = Color(0x665F4B58)
     val OptionRetryBorder = Color(0xFFF2B880)
+    val OptionTimeoutSurface = Color(0x66686B3D)
+    val OptionTimeoutBorder = Color(0xFFD9D48A)
     val FeedbackSuccessSurface = Color(0x664A7C67)
     val FeedbackRetrySurface = Color(0x665F4B58)
     val FeedbackWarningSurface = Color(0x66686B3D)

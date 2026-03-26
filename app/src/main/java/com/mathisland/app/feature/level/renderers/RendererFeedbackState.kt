@@ -3,7 +3,8 @@ package com.mathisland.app.feature.level.renderers
 enum class OptionFeedbackTone {
     Neutral,
     Retry,
-    Confirmed
+    Confirmed,
+    TimeoutExpired
 }
 
 data class OptionFeedbackState(
@@ -43,9 +44,12 @@ fun optionFeedbackStateFor(
             supportingText = "这就是本次提交"
         )
 
-        AnswerFeedbackKind.TimedWarning,
-        AnswerFeedbackKind.TimeoutExpired,
-        -> OptionFeedbackState(OptionFeedbackTone.Neutral)
+        AnswerFeedbackKind.TimeoutExpired -> OptionFeedbackState(
+            tone = OptionFeedbackTone.TimeoutExpired,
+            supportingText = "这次尝试已超时"
+        )
+
+        AnswerFeedbackKind.TimedWarning -> OptionFeedbackState(OptionFeedbackTone.Neutral)
     }
 }
 

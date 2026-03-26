@@ -69,7 +69,7 @@ class RendererFeedbackStateTest {
     }
 
     @Test
-    fun optionFeedback_staysNeutralForTimeoutExpiredSubmittedChoice() {
+    fun optionFeedback_marksTimeoutExpiredSubmittedChoice() {
         val state = optionFeedbackStateFor(
             choice = "45",
             feedback = AnswerFeedbackUiState(
@@ -80,8 +80,8 @@ class RendererFeedbackStateTest {
             )
         )
 
-        assertEquals(OptionFeedbackTone.Neutral, state.tone)
-        assertEquals(null, state.supportingText)
+        assertEquals(OptionFeedbackTone.TimeoutExpired, state.tone)
+        assertEquals("这次尝试已超时", state.supportingText)
     }
 
     @Test

@@ -148,6 +148,42 @@ class LevelAnswerPaneTest {
     }
 
     @Test
+    fun calculationQuestion_showsTimeoutExpiredChoiceState() {
+        val question = Question(
+            prompt = "26 + 18 = ?",
+            choices = listOf("44", "45", "34"),
+            correctChoice = "44",
+            hint = "先算个位，再算十位。",
+            family = "calculation"
+        )
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.TimeoutExpired,
+            title = "已超时",
+            body = "本轮冲刺已经结束，这题按当前结果结算。",
+            submittedAnswer = "45"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = false
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-choice").assertIsDisplayed()
+        composeRule.onNodeWithTag("answer-state-45").assertIsDisplayed()
+        composeRule.onNodeWithText("这次尝试已超时").assertIsDisplayed()
+        composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
+    }
+
+    @Test
     fun measurementQuestion_showsRulerAffordance() {
         val question = Question(
             prompt = "小船长约长多少？",
