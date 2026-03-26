@@ -112,6 +112,42 @@ class LevelAnswerPaneTest {
     }
 
     @Test
+    fun challengeQuestion_showsTimeoutExpiredNumberPadState() {
+        val question = Question(
+            prompt = "9 x 9 = ?",
+            choices = listOf("81", "72", "99"),
+            correctChoice = "81",
+            hint = "想想 9 个 9。",
+            family = "challenge"
+        )
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.TimeoutExpired,
+            title = "已超时",
+            body = "本轮冲刺已经结束，这题按当前结果结算。",
+            submittedAnswer = "72"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = false
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
+        composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
+        composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
+        composeRule.onNodeWithText("本题已超时，请直接看下一题。").assertIsDisplayed()
+    }
+
+    @Test
     fun measurementQuestion_showsRulerAffordance() {
         val question = Question(
             prompt = "小船长约长多少？",

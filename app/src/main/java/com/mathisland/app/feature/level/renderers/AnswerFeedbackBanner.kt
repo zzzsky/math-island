@@ -1,5 +1,8 @@
 package com.mathisland.app.feature.level.renderers
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,18 +41,23 @@ fun AnswerFeedbackBanner(
     modifier: Modifier = Modifier,
 ) {
     val tone = answerFeedbackBannerToneFor(state)
-    StoryPanelCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .testTag("answer-feedback-banner"),
-        level = SurfaceLevel.Secondary,
-        containerColor = when (tone) {
+    val animatedContainerColor = animateColorAsState(
+        targetValue = when (tone) {
             LessonStatusTone.Confirmed -> RendererTokens.FeedbackSuccessSurface
             LessonStatusTone.Retry -> RendererTokens.FeedbackRetrySurface
             LessonStatusTone.Warning -> RendererTokens.FeedbackWarningSurface
             LessonStatusTone.Highlight -> RendererTokens.FeedbackHighlightSurface
             LessonStatusTone.Neutral -> RendererTokens.HelperSurface
         },
+        animationSpec = tween(durationMillis = 220),
+        label = "answer-feedback-container"
+    )
+    StoryPanelCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("answer-feedback-banner"),
+        level = SurfaceLevel.Secondary,
+        containerColor = animatedContainerColor.value,
         shape = RadiusTokens.CardMd
     ) {
         Column(
@@ -65,12 +73,17 @@ fun AnswerFeedbackBanner(
                 color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier.testTag("answer-feedback-title")
             )
-            Text(
-                text = state.body,
-                style = TypographyTokens.Caption,
-                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
-                modifier = Modifier.testTag("answer-feedback-body")
-            )
+            AnimatedContent(
+                targetState = state.body,
+                label = "answer-feedback-body"
+            ) { animatedBody ->
+                Text(
+                    text = animatedBody,
+                    style = TypographyTokens.Caption,
+                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier.testTag("answer-feedback-body")
+                )
+            }
         }
     }
 }

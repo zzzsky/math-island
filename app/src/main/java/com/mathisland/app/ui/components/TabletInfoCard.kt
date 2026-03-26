@@ -1,5 +1,8 @@
 package com.mathisland.app.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +31,11 @@ fun TabletInfoCard(
     body: String,
     accentColor: Color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f)
 ) {
+    val animatedAccentColor = animateColorAsState(
+        targetValue = accentColor,
+        animationSpec = tween(durationMillis = 240),
+        label = "tablet-info-card-accent"
+    )
     StoryPanelCard(
         modifier = modifier,
         level = SurfaceLevel.Secondary,
@@ -43,22 +51,32 @@ fun TabletInfoCard(
                     .fillMaxWidth()
                     .height(2.dp)
                     .clip(RadiusTokens.Pill)
-                    .background(accentColor)
+                    .background(animatedAccentColor.value)
             )
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(SpacingTokens.Sm))
             TabletChipLabel(text = title)
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = SpacingTokens.Xs)
-            )
-            Text(
-                text = body,
-                style = TypographyTokens.BodyPrimary,
-                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
-                modifier = Modifier.padding(top = SpacingTokens.Xs)
-            )
+            AnimatedContent(
+                targetState = subtitle,
+                label = "tablet-info-card-subtitle"
+            ) { animatedSubtitle ->
+                Text(
+                    text = animatedSubtitle,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = SpacingTokens.Xs)
+                )
+            }
+            AnimatedContent(
+                targetState = body,
+                label = "tablet-info-card-body"
+            ) { animatedBody ->
+                Text(
+                    text = animatedBody,
+                    style = TypographyTokens.BodyPrimary,
+                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier.padding(top = SpacingTokens.Xs)
+                )
+            }
         }
     }
 }

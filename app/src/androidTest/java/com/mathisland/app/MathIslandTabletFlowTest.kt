@@ -44,10 +44,7 @@ class MathIslandTabletFlowTest {
         composeRule.onAllNodesWithText("计算岛").onFirst().assertIsDisplayed()
         openLessonFromMap("start-calc-carry-01")
 
-        composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
-        composeRule.onNodeWithTag("answer-44").performClick()
-        composeRule.onNodeWithTag("answer-35").performClick()
-        composeRule.onNodeWithTag("answer-62").performClick()
+        answerChoiceSequence(listOf("44", "35", "62"))
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
         composeRule.onNodeWithText("本关星星").assertIsDisplayed()
@@ -119,9 +116,7 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("home-open-map").performClick()
         openLessonFromMap("start-calc-carry-01")
 
-        composeRule.onNodeWithTag("answer-34").performClick()
-        composeRule.onNodeWithTag("answer-45").performClick()
-        composeRule.onNodeWithTag("answer-62").performClick()
+        answerChoiceSequence(listOf("34", "45", "62"))
 
         returnToMapFromReward()
         composeRule.onNodeWithText("返回首页").performClick()
@@ -255,9 +250,7 @@ class MathIslandTabletFlowTest {
         unlockChallengeIslandWithPendingCalculationReview()
 
         openLessonFromMap("start-challenge-review-01")
-        composeRule.onNodeWithTag("answer-44").performClick()
-        composeRule.onNodeWithTag("answer-35").performClick()
-        composeRule.onNodeWithTag("answer-62").performClick()
+        answerChoiceSequence(listOf("44", "35", "62"))
 
         composeRule.onNodeWithTag("reward-retry-sprint").performScrollTo().assertIsDisplayed().performClick()
 
@@ -447,20 +440,7 @@ class MathIslandTabletFlowTest {
 
     private fun completeLesson(startTag: String, answers: List<String>) {
         openLessonFromMap(startTag)
-        composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
-        answers.forEachIndexed { index, answer ->
-            composeRule.waitUntil(5_000) {
-                composeRule.onAllNodesWithTag("answer-$answer").fetchSemanticsNodes().isNotEmpty()
-            }
-            composeRule.onNodeWithTag("answer-$answer").performClick()
-
-            if (index < answers.lastIndex) {
-                val nextQuestionLabel = "第 ${index + 2} / 3 题"
-                composeRule.waitUntil(5_000) {
-                    composeRule.onAllNodesWithText(nextQuestionLabel).fetchSemanticsNodes().isNotEmpty()
-                }
-            }
-        }
+        answerChoiceSequence(answers)
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
         returnToMapFromReward()
@@ -475,6 +455,9 @@ class MathIslandTabletFlowTest {
     }
 
     private fun inputNumberPadAnswer(answer: String) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("number-pad-submit").fetchSemanticsNodes().isNotEmpty()
+        }
         answer.forEach { digit ->
             composeRule.onNodeWithTag("number-pad-key-$digit").performClick()
         }
@@ -511,6 +494,26 @@ class MathIslandTabletFlowTest {
                 .performScrollToNode(hasTestTag(panelStartTagForLesson(startTag)))
         }
         composeRule.onNodeWithTag(panelStartTagForLesson(startTag)).assertIsDisplayed().performClick()
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("lesson-attempt-status").fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    private fun answerChoiceSequence(answers: List<String>) {
+        composeRule.onNodeWithText("第 1 / 3 题").assertIsDisplayed()
+        answers.forEachIndexed { index, answer ->
+            composeRule.waitUntil(5_000) {
+                composeRule.onAllNodesWithTag("answer-$answer").fetchSemanticsNodes().isNotEmpty()
+            }
+            composeRule.onNodeWithTag("answer-$answer").performClick()
+
+            if (index < answers.lastIndex) {
+                val nextQuestionLabel = "第 ${index + 2} / 3 题"
+                composeRule.waitUntil(5_000) {
+                    composeRule.onAllNodesWithText(nextQuestionLabel).fetchSemanticsNodes().isNotEmpty()
+                }
+            }
+        }
     }
 
     private fun seedProgressForLessons(

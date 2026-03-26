@@ -1,5 +1,8 @@
 package com.mathisland.app.feature.level.renderers
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +58,30 @@ fun NumberPadQuestionPane(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(RendererTokens.SectionGap)
     ) {
+        val animatedOuterSurface = animateColorAsState(
+            targetValue = when (displayState.tone) {
+                NumberPadDisplayTone.Idle,
+                NumberPadDisplayTone.Ready,
+                -> RendererTokens.NumberPadSurface
+                NumberPadDisplayTone.Retry -> RendererTokens.OptionRetrySurface
+                NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectSurface
+                NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
+            },
+            animationSpec = tween(durationMillis = 220),
+            label = "number-pad-outer-surface"
+        )
+        val animatedInnerSurface = animateColorAsState(
+            targetValue = when (displayState.tone) {
+                NumberPadDisplayTone.Idle,
+                NumberPadDisplayTone.Ready,
+                -> RendererTokens.NumberPadDisplaySurface
+                NumberPadDisplayTone.Retry -> RendererTokens.OptionRetryBorder
+                NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectBorder
+                NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
+            },
+            animationSpec = tween(durationMillis = 220),
+            label = "number-pad-inner-surface"
+        )
         val submitActionRole = actionState.resolveRole(ActionRole.Recommended)
         val submitLabel = actionState.resolveLabel("提交")
 
@@ -68,30 +95,16 @@ fun NumberPadQuestionPane(
             },
             feedback = feedback,
             affordance = {
-                        StoryPanelCard(
-                            level = SurfaceLevel.Secondary,
-                            containerColor = when (displayState.tone) {
-                                NumberPadDisplayTone.Idle,
-                                NumberPadDisplayTone.Ready,
-                                -> RendererTokens.NumberPadSurface
-                                NumberPadDisplayTone.Retry -> RendererTokens.OptionRetrySurface
-                                NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectSurface
-                                NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
-                            },
-                            shape = RadiusTokens.CardMd
-                        ) {
-                            StoryPanelCard(
-                                level = SurfaceLevel.Primary,
-                                containerColor = when (displayState.tone) {
-                                    NumberPadDisplayTone.Idle,
-                                    NumberPadDisplayTone.Ready,
-                                    -> RendererTokens.NumberPadDisplaySurface
-                                    NumberPadDisplayTone.Retry -> RendererTokens.OptionRetryBorder
-                                    NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectBorder
-                                    NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
-                                },
-                                shape = RadiusTokens.CardMd
-                            ) {
+                StoryPanelCard(
+                    level = SurfaceLevel.Secondary,
+                    containerColor = animatedOuterSurface.value,
+                    shape = RadiusTokens.CardMd
+                ) {
+                    StoryPanelCard(
+                        level = SurfaceLevel.Primary,
+                        containerColor = animatedInnerSurface.value,
+                        shape = RadiusTokens.CardMd
+                    ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -104,18 +117,28 @@ fun NumberPadQuestionPane(
                                     .testTag("number-pad-display"),
                                 contentAlignment = Alignment.CenterStart
                             ) {
+                                AnimatedContent(
+                                    targetState = displayState.displayText,
+                                    label = "number-pad-display-text"
+                                ) { animatedDisplayText ->
+                                    Text(
+                                        text = animatedDisplayText,
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                            AnimatedContent(
+                                targetState = displayState.supportingText,
+                                label = "number-pad-supporting-text"
+                            ) { animatedSupportingText ->
                                 Text(
-                                    text = displayState.displayText,
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    fontWeight = FontWeight.Bold
+                                    text = animatedSupportingText,
+                                    style = TypographyTokens.BodySecondary,
+                                    color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                                    modifier = Modifier.testTag("number-pad-status")
                                 )
                             }
-                            Text(
-                                text = displayState.supportingText,
-                                style = TypographyTokens.BodySecondary,
-                                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
-                                modifier = Modifier.testTag("number-pad-status")
-                            )
                         }
                     }
                 }

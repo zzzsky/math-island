@@ -56,6 +56,7 @@ fun LevelTabletScreen(
 ) {
     val lesson = state.lesson
     val question = state.question
+    val isTimedLesson = lesson.timeLimitSeconds != null
     var remainingSeconds by remember(lesson.id) {
         mutableIntStateOf(lesson.timeLimitSeconds ?: 0)
     }
@@ -116,7 +117,7 @@ fun LevelTabletScreen(
     }
 
     val handleAnswer: (String) -> Unit = answerHandler@{ answer ->
-        if (!inputEnabled || didExpire || remainingSeconds == 0) return@answerHandler
+        if (!inputEnabled || didExpire || (isTimedLesson && remainingSeconds == 0)) return@answerHandler
         val answeredCorrectly = answer == question.correctChoice
         inputEnabled = false
         feedbackState = if (answeredCorrectly) {
@@ -142,7 +143,7 @@ fun LevelTabletScreen(
             scheduleFeedbackReset(delayMillis = LevelMotionTokens.RetryBannerWindowMillis)
             coroutineScope.launch {
                 delay(LevelMotionTokens.RetryLockWindowMillis)
-                if (!didExpire && remainingSeconds > 0) {
+                if (!didExpire && (!isTimedLesson || remainingSeconds > 0)) {
                     inputEnabled = true
                 }
             }
