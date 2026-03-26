@@ -16,6 +16,7 @@ fun lessonStatusToneFor(feedback: AnswerFeedbackUiState?): LessonStatusTone {
         AnswerFeedbackKind.Correct -> LessonStatusTone.Confirmed
         AnswerFeedbackKind.Incorrect -> LessonStatusTone.Retry
         AnswerFeedbackKind.TimedWarning -> LessonStatusTone.Warning
+        AnswerFeedbackKind.TimeoutExpired -> LessonStatusTone.Warning
         null -> LessonStatusTone.Neutral
     }
 }

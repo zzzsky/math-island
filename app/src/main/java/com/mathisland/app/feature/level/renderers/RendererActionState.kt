@@ -7,6 +7,7 @@ enum class RendererActionPhase {
     Retry,
     Confirmed,
     Locked,
+    TimeoutExpired,
 }
 
 data class RendererActionState(
@@ -16,6 +17,7 @@ data class RendererActionState(
     fun resolveLabel(defaultLabel: String): String = when (phase) {
         RendererActionPhase.Retry -> "再试一次"
         RendererActionPhase.Confirmed -> "已确认"
+        RendererActionPhase.TimeoutExpired -> "已超时"
         RendererActionPhase.Ready,
         RendererActionPhase.Locked,
         -> defaultLabel
@@ -26,6 +28,7 @@ data class RendererActionState(
         RendererActionPhase.Retry -> ActionRole.Secondary
         RendererActionPhase.Confirmed -> ActionRole.Completed
         RendererActionPhase.Locked -> ActionRole.Secondary
+        RendererActionPhase.TimeoutExpired -> ActionRole.Secondary
     }
 
     fun sectionTitle(): String = when (phase) {
@@ -33,6 +36,7 @@ data class RendererActionState(
         RendererActionPhase.Retry -> "正在重试"
         RendererActionPhase.Confirmed -> "已确认"
         RendererActionPhase.Locked -> "正在检查"
+        RendererActionPhase.TimeoutExpired -> "已超时"
     }
 
     fun sectionBody(): String = when (phase) {
@@ -40,6 +44,7 @@ data class RendererActionState(
         RendererActionPhase.Retry -> "先看提示，再判断一次。"
         RendererActionPhase.Confirmed -> "答案已确认，马上进入下一题。"
         RendererActionPhase.Locked -> "这次提交正在检查，请稍等片刻。"
+        RendererActionPhase.TimeoutExpired -> "本题时间已到，请直接进入下一题。"
     }
 }
 
@@ -47,6 +52,11 @@ fun rendererActionStateFor(
     feedback: AnswerFeedbackUiState?,
     inputEnabled: Boolean,
 ): RendererActionState = when {
+    feedback?.kind == AnswerFeedbackKind.TimeoutExpired -> RendererActionState(
+        phase = RendererActionPhase.TimeoutExpired,
+        enabled = false
+    )
+
     !inputEnabled && feedback?.kind == AnswerFeedbackKind.Correct -> RendererActionState(
         phase = RendererActionPhase.Confirmed,
         enabled = false

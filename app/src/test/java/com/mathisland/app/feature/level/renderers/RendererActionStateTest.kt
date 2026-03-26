@@ -7,6 +7,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class RendererActionStateTest {
+    private val timeoutExpiredKind = AnswerFeedbackKind.valueOf("TimeoutExpired")
+
     @Test
     fun readyState_keepsDefaultLabelAndRole() {
         val state = rendererActionStateFor(
@@ -73,5 +75,23 @@ class RendererActionStateTest {
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
         assertEquals("正在检查", state.sectionTitle())
         assertEquals("这次提交正在检查，请稍等片刻。", state.sectionBody())
+    }
+
+    @Test
+    fun timeoutExpiredState_isDisabledAndTerminal() {
+        val state = rendererActionStateFor(
+            feedback = AnswerFeedbackUiState(
+                kind = timeoutExpiredKind,
+                title = "已超时",
+                body = "本题时间已到"
+            ),
+            inputEnabled = false
+        )
+
+        assertFalse(state.enabled)
+        assertEquals("已超时", state.resolveLabel("选择这个答案"))
+        assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
+        assertEquals("已超时", state.sectionTitle())
+        assertEquals("本题时间已到，请直接进入下一题。", state.sectionBody())
     }
 }

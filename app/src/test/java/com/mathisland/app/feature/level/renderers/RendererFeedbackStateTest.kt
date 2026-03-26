@@ -6,6 +6,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RendererFeedbackStateTest {
+    private val timeoutExpiredKind = AnswerFeedbackKind.valueOf("TimeoutExpired")
+
     @Test
     fun feedbackTone_usesRetryToneForIncorrectAnswers() {
         val tone = lessonStatusToneFor(
@@ -67,6 +69,22 @@ class RendererFeedbackStateTest {
     }
 
     @Test
+    fun optionFeedback_staysNeutralForTimeoutExpiredSubmittedChoice() {
+        val state = optionFeedbackStateFor(
+            choice = "45",
+            feedback = AnswerFeedbackUiState(
+                kind = timeoutExpiredKind,
+                title = "已超时",
+                body = "本题时间已到",
+                submittedAnswer = "45"
+            )
+        )
+
+        assertEquals(OptionFeedbackTone.Neutral, state.tone)
+        assertEquals(null, state.supportingText)
+    }
+
+    @Test
     fun numberPadDisplay_prefersSubmittedAnswerDuringRetry() {
         val state = numberPadDisplayStateFor(
             enteredAnswer = "4",
@@ -93,5 +111,22 @@ class RendererFeedbackStateTest {
         assertEquals(NumberPadDisplayTone.Ready, state.tone)
         assertEquals("81", state.displayText)
         assertEquals("已输入 2 位，准备提交", state.supportingText)
+    }
+
+    @Test
+    fun numberPadDisplay_showsTimeoutExpiredSubmittedValueAndCopy() {
+        val state = numberPadDisplayStateFor(
+            enteredAnswer = "",
+            feedback = AnswerFeedbackUiState(
+                kind = timeoutExpiredKind,
+                title = "已超时",
+                body = "本题时间已到",
+                submittedAnswer = "45"
+            )
+        )
+
+        assertEquals(NumberPadDisplayTone.TimeoutExpired, state.tone)
+        assertEquals("45", state.displayText)
+        assertEquals("本题已超时，请直接看下一题。", state.supportingText)
     }
 }

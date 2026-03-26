@@ -78,6 +78,9 @@ Ownership for timeout:
 - `LevelTabletScreen` also owns clearing timeout-expired when lesson navigation exits
 - `AnswerFeedbackKind.TimedWarning` remains the only pre-expiry warning state
 - `LevelStatusCardState` maps timeout-expired to warning tone with subtitle `已超时` and terminal body copy for the current lesson attempt
+- `lessonStatusToneFor` and the `AnswerFeedbackBanner` tone mapping must treat `TimeoutExpired` as a dedicated warning/terminal tone path rather than falling through to generic warning copy
+- `optionFeedbackStateFor` must render `TimeoutExpired` as passive neutral context with no retry/confirmed emphasis
+- `numberPadDisplayStateFor` must render `TimeoutExpired` as a dedicated timeout display state that keeps the latest entered or submitted value visible while showing timeout-expired supporting copy
 
 ## Architecture
 
@@ -175,7 +178,7 @@ Reset rules:
 
 - on lesson change: cancel pending feedback-reset work, reset input-enabled state, reset transient feedback state, reset timer state
 - on question change: cancel pending feedback-reset work, restore input-enabled state, and clear all transient feedback including confirmed state so the next question never inherits stale success or lock styling
-- on screen disposal or navigation away: cancel pending feedback-reset work
+- on screen disposal or navigation away: cancel pending feedback-reset work and drop transient lesson-feedback state
 
 Pending work rules:
 
@@ -191,6 +194,7 @@ Submission rules:
 - correct keeps input locked through the confirmation window
 - timeout-expired keeps renderer actions disabled until lesson navigation exits
 - once remaining time reaches `0`, all further `onAnswer(...)` attempts are ignored
+- `onExpire` handling in `LevelTabletScreen` must first cancel pending feedback-reset work, then force `inputEnabled = false`, then publish timeout-expired presentation state, then invoke the existing expiry callback
 
 ## File Boundaries
 
@@ -212,6 +216,8 @@ Glue responsibilities:
 
 - `LevelAnswerPane.kt` remains a pass-through integration surface that forwards the richer feedback/action state to concrete renderer panes
 - timeout-expired rendering rules are still owned by the shared state mappers, not by `LevelAnswerPane.kt`
+- `RendererSupport.kt` must route timeout-expired through shared choice-style renderer feedback without introducing renderer-specific timeout rules
+- `NumberPadQuestionPane.kt` must own only the timeout display rendering, not timeout lifecycle or timer decisions
 
 Reasonable new files:
 

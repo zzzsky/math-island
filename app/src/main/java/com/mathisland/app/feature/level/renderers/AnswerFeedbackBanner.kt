@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.feature.level.LessonStatusTone
-import com.mathisland.app.feature.level.lessonStatusToneFor
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -23,6 +22,7 @@ enum class AnswerFeedbackKind {
     Correct,
     Incorrect,
     TimedWarning,
+    TimeoutExpired,
 }
 
 data class AnswerFeedbackUiState(
@@ -37,7 +37,7 @@ fun AnswerFeedbackBanner(
     state: AnswerFeedbackUiState,
     modifier: Modifier = Modifier,
 ) {
-    val tone = lessonStatusToneFor(state)
+    val tone = answerFeedbackBannerToneFor(state)
     StoryPanelCard(
         modifier = modifier
             .fillMaxWidth()
@@ -72,5 +72,15 @@ fun AnswerFeedbackBanner(
                 modifier = Modifier.testTag("answer-feedback-body")
             )
         }
+    }
+}
+
+private fun answerFeedbackBannerToneFor(state: AnswerFeedbackUiState): LessonStatusTone {
+    return when (state.kind) {
+        AnswerFeedbackKind.Correct -> LessonStatusTone.Confirmed
+        AnswerFeedbackKind.Incorrect -> LessonStatusTone.Retry
+        AnswerFeedbackKind.TimedWarning,
+        AnswerFeedbackKind.TimeoutExpired,
+        -> LessonStatusTone.Warning
     }
 }

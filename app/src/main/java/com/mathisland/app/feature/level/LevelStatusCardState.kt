@@ -37,6 +37,13 @@ fun attemptStatusCardStateFor(
             body = feedback.body
         )
 
+        AnswerFeedbackKind.TimeoutExpired -> LevelStatusCardState(
+            tone = LessonStatusTone.Warning,
+            title = "当前状态",
+            subtitle = "已超时",
+            body = feedback.body
+        )
+
         null -> LevelStatusCardState(
             tone = LessonStatusTone.Neutral,
             title = "当前状态",
@@ -55,9 +62,10 @@ fun timerPressureCardStateFor(
     remainingSeconds: Int
 ): LevelStatusCardState {
     val totalSeconds = lesson.timeLimitSeconds ?: remainingSeconds
+    val halfThreshold = kotlin.math.floor(totalSeconds * 0.5f).toInt()
     val subtitle = when {
-        remainingSeconds <= 2 -> "最后冲刺"
-        remainingSeconds <= (totalSeconds / 2) -> "时间过半"
+        remainingSeconds <= LevelMotionTokens.TimeoutWarningFinalSeconds -> "最后冲刺"
+        halfThreshold > LevelMotionTokens.TimeoutWarningFinalSeconds && remainingSeconds <= halfThreshold -> "时间过半"
         else -> "保持节奏"
     }
     val body = when (subtitle) {

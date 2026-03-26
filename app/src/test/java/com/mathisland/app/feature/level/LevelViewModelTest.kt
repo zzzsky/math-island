@@ -4,9 +4,11 @@ import com.mathisland.app.MathIslandGameController
 import com.mathisland.app.domain.model.Island
 import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.sampleIslands
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LevelViewModelTest {
@@ -67,5 +69,47 @@ class LevelViewModelTest {
         assertEquals("冲刺结束后会显示评级，并决定是否优先进入错题回放。", uiState?.flowHint)
         assertEquals("限时进行中", uiState?.initialFeedback?.title)
         assertEquals("注意倒计时，先交当前最有把握的答案。", uiState?.initialFeedback?.body)
+        assertEquals(AnswerFeedbackKind.TimedWarning, uiState?.initialFeedback?.kind)
+    }
+
+    @Test
+    fun uiState_doesNotSeedTimeoutExpiredFeedback() {
+        val sprintLesson = Lesson(
+            id = "challenge-sprint-01",
+            islandId = "challenge",
+            title = "海图冲刺赛",
+            focus = "综合挑战",
+            summary = "3 题限时冲刺",
+            questions = listOf(
+                Question(
+                    prompt = "9 x 9 = ?",
+                    choices = listOf("81", "72", "99"),
+                    correctChoice = "81",
+                    hint = "九九八十一。",
+                    family = "challenge"
+                )
+            ),
+            timeLimitSeconds = 4
+        )
+        val sprintController = MathIslandGameController(
+            sampleIslands() + Island(
+                id = "challenge",
+                title = "综合挑战岛",
+                subtitle = "冲刺与回放",
+                description = "最后的冒险站",
+                rewardSticker = "Challenge Badge",
+                lessons = listOf(sprintLesson)
+            )
+        )
+        val initialState = sprintController.initialState().copy(
+            unlockedIslandIds = sprintController.initialState().unlockedIslandIds + "challenge"
+        )
+        val lessonState = sprintController.startLesson(initialState, sprintLesson.id)
+
+        val uiState = LevelViewModel.uiState(sprintController, lessonState)
+
+        assertNotNull(uiState)
+        assertEquals(AnswerFeedbackKind.TimedWarning, uiState?.initialFeedback?.kind)
+        assertNull(uiState?.initialFeedback?.submittedAnswer)
     }
 }

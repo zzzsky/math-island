@@ -68,28 +68,30 @@ fun NumberPadQuestionPane(
             },
             feedback = feedback,
             affordance = {
-                StoryPanelCard(
-                    level = SurfaceLevel.Secondary,
-                    containerColor = when (displayState.tone) {
-                        NumberPadDisplayTone.Idle,
-                        NumberPadDisplayTone.Ready,
-                        -> RendererTokens.NumberPadSurface
-                        NumberPadDisplayTone.Retry -> RendererTokens.OptionRetrySurface
-                        NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectSurface
-                    },
-                    shape = RadiusTokens.CardMd
-                ) {
-                    StoryPanelCard(
-                        level = SurfaceLevel.Primary,
-                        containerColor = when (displayState.tone) {
-                            NumberPadDisplayTone.Idle,
-                            NumberPadDisplayTone.Ready,
-                            -> RendererTokens.NumberPadDisplaySurface
-                            NumberPadDisplayTone.Retry -> RendererTokens.OptionRetryBorder
-                            NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectBorder
-                        },
-                        shape = RadiusTokens.CardMd
-                    ) {
+                        StoryPanelCard(
+                            level = SurfaceLevel.Secondary,
+                            containerColor = when (displayState.tone) {
+                                NumberPadDisplayTone.Idle,
+                                NumberPadDisplayTone.Ready,
+                                -> RendererTokens.NumberPadSurface
+                                NumberPadDisplayTone.Retry -> RendererTokens.OptionRetrySurface
+                                NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectSurface
+                                NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
+                            },
+                            shape = RadiusTokens.CardMd
+                        ) {
+                            StoryPanelCard(
+                                level = SurfaceLevel.Primary,
+                                containerColor = when (displayState.tone) {
+                                    NumberPadDisplayTone.Idle,
+                                    NumberPadDisplayTone.Ready,
+                                    -> RendererTokens.NumberPadDisplaySurface
+                                    NumberPadDisplayTone.Retry -> RendererTokens.OptionRetryBorder
+                                    NumberPadDisplayTone.Confirmed -> RendererTokens.OptionCorrectBorder
+                                    NumberPadDisplayTone.TimeoutExpired -> RendererTokens.FeedbackWarningSurface
+                                },
+                                shape = RadiusTokens.CardMd
+                            ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()

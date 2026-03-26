@@ -78,6 +78,23 @@ class LevelStatusCardStateTest {
     }
 
     @Test
+    fun attemptStatusCardState_usesTimeoutExpiredCopyAfterTimerRunsOut() {
+        val state = attemptStatusCardStateFor(
+            lesson = timedLesson,
+            feedback = AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.TimeoutExpired,
+                title = "已超时",
+                body = "本轮冲刺已经结束，这题按当前结果结算。",
+                submittedAnswer = "72"
+            )
+        )
+
+        assertEquals(LessonStatusTone.Warning, state.tone)
+        assertEquals("已超时", state.subtitle)
+        assertEquals("本轮冲刺已经结束，这题按当前结果结算。", state.body)
+    }
+
+    @Test
     fun timerPressureCardState_highlightsFinalSprintWhenTimeIsLow() {
         val state = timerPressureCardStateFor(
             lesson = timedLesson,
@@ -87,5 +104,18 @@ class LevelStatusCardStateTest {
         assertEquals(LessonStatusTone.Warning, state.tone)
         assertEquals("最后冲刺", state.subtitle)
         assertEquals("只剩 00:02，优先快速提交，不要停在这一题。", state.body)
+    }
+
+    @Test
+    fun timerPressureCardState_skipsHalfwayStageForShortTimers() {
+        val shortTimedLesson = timedLesson.copy(timeLimitSeconds = 4)
+
+        val state = timerPressureCardStateFor(
+            lesson = shortTimedLesson,
+            remainingSeconds = 2
+        )
+
+        assertEquals(LessonStatusTone.Warning, state.tone)
+        assertEquals("最后冲刺", state.subtitle)
     }
 }

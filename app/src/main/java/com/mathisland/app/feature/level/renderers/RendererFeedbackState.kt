@@ -15,7 +15,8 @@ enum class NumberPadDisplayTone {
     Idle,
     Ready,
     Retry,
-    Confirmed
+    Confirmed,
+    TimeoutExpired
 }
 
 data class NumberPadDisplayState(
@@ -42,7 +43,9 @@ fun optionFeedbackStateFor(
             supportingText = "这就是本次提交"
         )
 
-        AnswerFeedbackKind.TimedWarning -> OptionFeedbackState(OptionFeedbackTone.Neutral)
+        AnswerFeedbackKind.TimedWarning,
+        AnswerFeedbackKind.TimeoutExpired,
+        -> OptionFeedbackState(OptionFeedbackTone.Neutral)
     }
 }
 
@@ -62,6 +65,12 @@ fun numberPadDisplayStateFor(
             tone = NumberPadDisplayTone.Retry,
             displayText = submittedAnswer ?: enteredAnswer.ifEmpty { "请输入答案" },
             supportingText = "先检查刚才的输入，再试一次"
+        )
+
+        AnswerFeedbackKind.TimeoutExpired -> NumberPadDisplayState(
+            tone = NumberPadDisplayTone.TimeoutExpired,
+            displayText = submittedAnswer ?: enteredAnswer.ifEmpty { "请输入答案" },
+            supportingText = "本题已超时，请直接看下一题。"
         )
 
         AnswerFeedbackKind.TimedWarning,

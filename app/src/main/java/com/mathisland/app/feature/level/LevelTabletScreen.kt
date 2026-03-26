@@ -12,6 +12,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -69,12 +70,15 @@ fun LevelTabletScreen(
         feedbackResetJob = coroutineScope.launch {
             delay(delayMillis)
             feedbackState = state.initialFeedback
+            feedbackResetJob = null
         }
     }
 
     LaunchedEffect(lesson.id, lesson.timeLimitSeconds) {
         didExpire = false
         feedbackResetJob?.cancel()
+        feedbackResetJob = null
+        inputEnabled = true
         feedbackState = state.initialFeedback
         val limitSeconds = lesson.timeLimitSeconds ?: return@LaunchedEffect
         remainingSeconds = limitSeconds
@@ -84,21 +88,35 @@ fun LevelTabletScreen(
         }
         if (!didExpire && remainingSeconds == 0) {
             didExpire = true
+            feedbackResetJob?.cancel()
+            feedbackResetJob = null
+            inputEnabled = false
+            feedbackState = AnswerFeedbackUiState(
+                kind = AnswerFeedbackKind.TimeoutExpired,
+                title = "已超时",
+                body = "本轮冲刺已经结束，这题按当前结果结算。",
+                submittedAnswer = feedbackState?.submittedAnswer
+            )
             onExpire?.invoke()
         }
     }
 
     LaunchedEffect(lesson.id, state.questionIndex, question.prompt) {
+        feedbackResetJob?.cancel()
+        feedbackResetJob = null
         inputEnabled = true
-        if (feedbackState?.kind != AnswerFeedbackKind.Correct) {
-            feedbackState = state.initialFeedback
-        } else {
-            scheduleFeedbackReset(delayMillis = 650)
+        feedbackState = state.initialFeedback
+    }
+
+    DisposableEffect(lesson.id, state.questionIndex, question.prompt) {
+        onDispose {
+            feedbackResetJob?.cancel()
+            feedbackResetJob = null
         }
     }
 
     val handleAnswer: (String) -> Unit = answerHandler@{ answer ->
-        if (!inputEnabled) return@answerHandler
+        if (!inputEnabled || didExpire || remainingSeconds == 0) return@answerHandler
         val answeredCorrectly = answer == question.correctChoice
         inputEnabled = false
         feedbackState = if (answeredCorrectly) {
@@ -121,10 +139,12 @@ fun LevelTabletScreen(
             )
         }
         if (!answeredCorrectly) {
-            scheduleFeedbackReset(delayMillis = 1_100)
+            scheduleFeedbackReset(delayMillis = LevelMotionTokens.RetryBannerWindowMillis)
             coroutineScope.launch {
-                delay(450)
-                inputEnabled = true
+                delay(LevelMotionTokens.RetryLockWindowMillis)
+                if (!didExpire && remainingSeconds > 0) {
+                    inputEnabled = true
+                }
             }
         }
         onAnswer(answer)
