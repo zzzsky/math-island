@@ -153,6 +153,17 @@ That means:
 - warning copy remains separate from retry copy
 - warning/expired visuals use warning tone, not retry tone
 - number-pad and choice renderers do not infer timeout from generic disablement alone
+- `LessonStatusTone`, `rendererActionStateFor`, `optionFeedbackStateFor`, and `numberPadDisplayStateFor` must all handle `AnswerFeedbackKind.TimeoutExpired` explicitly
+
+### 4a. Timeout state contract
+
+When timeout expires:
+
+- `LevelTabletScreen` must force `inputEnabled = false`
+- `LevelTabletScreen` must cancel any pending feedback-reset job before setting timeout-expired
+- late answers after remaining time reaches `0` must be ignored
+- the latest submitted answer may remain visible as passive context, but timeout-expired owns the visible feedback tone and copy
+- renderer actions stay disabled until lesson navigation exits the screen
 
 ## Lifecycle Rules
 
@@ -169,6 +180,7 @@ Pending work rules:
 - only one feedback-reset job may exist at a time
 - scheduling a new reset cancels the previous one first
 - timeout-expired wins over retry/confirm timing; if timeout arrives during a pending retry/correct window, replace transient answer feedback with timeout presentation
+- timeout-expired cancels any pending retry or confirm reset immediately
 
 Submission rules:
 
@@ -176,6 +188,7 @@ Submission rules:
 - retry restores input after the retry lock window ends
 - correct keeps input locked through the confirmation window
 - timeout-expired keeps renderer actions disabled until lesson navigation exits
+- once remaining time reaches `0`, all further `onAnswer(...)` attempts are ignored
 
 ## File Boundaries
 
@@ -184,6 +197,7 @@ Primary implementation files:
 - `app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelStatusCardState.kt`
+- `app/src/main/java/com/mathisland/app/feature/level/LessonStatusTone.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/AnswerFeedbackBanner.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/RendererFeedbackState.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/RendererActionState.kt`
@@ -245,8 +259,8 @@ Concrete timing:
 
 Timed lessons should continue to show pressure before expiry, but the copy and visual treatment should become more consistent:
 
-- neutral/steady: remaining time is above half of the lesson limit
-- time over half: remaining time is at or below half of the lesson limit and above 2 seconds
+- neutral/steady: remaining time is above `floor(totalSeconds * 0.5)`
+- time over half: remaining time is at or below `floor(totalSeconds * 0.5)` and above 2 seconds
 - final sprint: remaining time is 2 seconds or below and above 0
 - expired: remaining time is 0
 
@@ -254,7 +268,7 @@ The first three are warning-pressure states. Only the last one is terminal for t
 
 Transition rules:
 
-- `steady -> time over half` when remaining time is `<= total * 0.5`
+- `steady -> time over half` when remaining time is `<= floor(totalSeconds * 0.5)`
 - `time over half -> final sprint` when remaining time is `<= 2`
 - `final sprint -> expired` when remaining time reaches `0`
 - timeout-warning and timeout-expired never reuse retry wording or retry tone
