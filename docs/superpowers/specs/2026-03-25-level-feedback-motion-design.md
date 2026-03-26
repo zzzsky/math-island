@@ -70,6 +70,13 @@ Timed lessons should distinguish between warning and expiration:
 - the left-side timer card and right-side guidance use a dedicated timeout warning rhythm
 - expiration itself should surface as a distinct timeout state instead of reusing retry semantics
 
+Ownership for timeout:
+
+- `LevelViewModel` continues to seed only the initial timed warning copy for timed lessons
+- `LevelTabletScreen` is the sole owner that creates timeout-expired presentation state when the countdown reaches `0`
+- timeout-expired is carried by `AnswerFeedbackUiState` as a distinct `AnswerFeedbackKind.TimeoutExpired`
+- `LevelTabletScreen` also owns clearing timeout-expired when lesson navigation exits
+
 ## Architecture
 
 ### 1. Shared lesson motion model
@@ -108,6 +115,21 @@ It should not:
 - change gameplay/controller behavior
 - introduce persistence
 - own renderer-specific visuals
+
+### 2a. Level view-model boundary
+
+`LevelViewModel` remains unchanged in responsibility except for timeout feedback compatibility.
+
+It should:
+
+- continue to provide `flowHint`
+- continue to provide the initial timed-warning feedback seed for timed lessons
+
+It should not:
+
+- own timeout-expired transitions
+- own transient retry/correct timing
+- own reset/cancellation logic
 
 ### 3. Renderer presentation state
 
@@ -159,6 +181,7 @@ Submission rules:
 
 Primary implementation files:
 
+- `app/src/main/java/com/mathisland/app/feature/level/LevelViewModel.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelTabletScreen.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/LevelStatusCardState.kt`
 - `app/src/main/java/com/mathisland/app/feature/level/renderers/AnswerFeedbackBanner.kt`
@@ -175,6 +198,7 @@ Reasonable new files:
 
 Tests to extend:
 
+- `app/src/test/java/com/mathisland/app/feature/level/LevelViewModelTest.kt`
 - `app/src/test/java/com/mathisland/app/feature/level/LevelStatusCardStateTest.kt`
 - `app/src/test/java/com/mathisland/app/feature/level/renderers/RendererFeedbackStateTest.kt`
 - `app/src/test/java/com/mathisland/app/feature/level/renderers/RendererActionStateTest.kt`
@@ -198,6 +222,7 @@ Concrete timing:
 
 - `correct` lock + confirmation window: `650ms`
 - during that window, the lesson status card, feedback banner, and submitted-answer emphasis must remain synchronized
+- if timeout reaches `0` during this window, correct confirmation is discarded and timeout-expired becomes the visible presentation state
 
 ### Retry recovery window
 
@@ -214,6 +239,7 @@ Concrete timing:
 - `retry` temporary lock: `450ms`
 - `retry` banner/supporting emphasis lifetime: `1_100ms`
 - retry copy may outlive the lock window, but input returns immediately after the lock window finishes
+- if timeout reaches `0` during this window, retry recovery is aborted and timeout-expired becomes the visible presentation state
 
 ### Timeout pressure window
 
@@ -232,6 +258,7 @@ Transition rules:
 - `time over half -> final sprint` when remaining time is `<= 2`
 - `final sprint -> expired` when remaining time reaches `0`
 - timeout-warning and timeout-expired never reuse retry wording or retry tone
+- timeout-expired is represented by `AnswerFeedbackKind.TimeoutExpired`, created by `LevelTabletScreen`, and consumed by the same lesson status / banner / renderer action mapping path as other feedback kinds
 
 ## Copy Guidance
 
