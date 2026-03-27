@@ -8,6 +8,7 @@ object RendererTokens {
     val ActionGroupGap = 14.dp
     val ActionRowGap = 10.dp
     val HelperSurface = Color(0x662C647A)
+    val PromptSurface = Color(0x88304D61)
     val OptionSurface = Color(0xCC225267)
     val NumberPadSurface = Color(0x663F536B)
     val NumberPadDisplaySurface = Color(0xCC173C4C)

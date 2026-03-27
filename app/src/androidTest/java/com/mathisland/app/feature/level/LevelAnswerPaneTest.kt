@@ -3,11 +3,13 @@ package com.mathisland.app.feature.level
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
@@ -68,6 +70,8 @@ class LevelAnswerPaneTest {
         }
 
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("number-pad-submit"))
         composeRule.onNodeWithTag("number-pad-key-8").performClick()
         composeRule.onNodeWithTag("number-pad-key-1").performClick()
         composeRule.onNodeWithTag("number-pad-submit").performClick()
@@ -106,7 +110,10 @@ class LevelAnswerPaneTest {
         }
 
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-chip").assertIsDisplayed()
         composeRule.onAllNodesWithTag("renderer-guidance-card").assertCountEquals(2)
+        composeRule.onAllNodesWithTag("renderer-guidance-chip").assertCountEquals(2)
         composeRule.onNodeWithTag("renderer-action-header").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
@@ -143,6 +150,8 @@ class LevelAnswerPaneTest {
         }
 
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
@@ -181,6 +190,10 @@ class LevelAnswerPaneTest {
         }
 
         composeRule.onNodeWithTag("renderer-choice").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-prompt-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-choice")
+            .performScrollToNode(hasTestTag("answer-state-45"))
         composeRule.onNodeWithTag("answer-state-45").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-state-chip-45").assertIsDisplayed()
         composeRule.onNodeWithText("这次尝试超时").assertIsDisplayed()

@@ -88,10 +88,22 @@ fun NumberPadQuestionPane(
 
         RendererPanelStack(
             rendererTag = "renderer-number-pad",
+            prompt = {
+                RendererPromptCard(
+                    prompt = question.prompt,
+                    actionState = actionState
+                )
+            },
             context = {
                 RendererGuidanceCard(
                     title = "数字键盘",
-                    body = "先输入答案，再提交。"
+                    body = "先输入答案，再提交。",
+                    badgeText = if (actionState.phase == RendererActionPhase.Retry) "回看提示" else "操作提示",
+                    badgeVariant = if (actionState.phase == RendererActionPhase.Retry) {
+                        com.mathisland.app.ui.theme.StatusVariant.Highlight
+                    } else {
+                        com.mathisland.app.ui.theme.StatusVariant.Neutral
+                    }
                 )
             },
             feedback = feedback,

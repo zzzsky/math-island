@@ -42,11 +42,23 @@ internal fun RendererOptionsColumn(
 ) {
     RendererPanelStack(
         rendererTag = rendererTag,
+        prompt = {
+            RendererPromptCard(
+                prompt = question.prompt,
+                actionState = actionState
+            )
+        },
         context = if (header != null && helper != null) {
             {
                 RendererGuidanceCard(
                     title = header,
-                    body = helper
+                    body = helper,
+                    badgeText = if (actionState.phase == RendererActionPhase.Retry) "回看提示" else "操作提示",
+                    badgeVariant = if (actionState.phase == RendererActionPhase.Retry) {
+                        com.mathisland.app.ui.theme.StatusVariant.Highlight
+                    } else {
+                        com.mathisland.app.ui.theme.StatusVariant.Neutral
+                    }
                 )
             }
         } else {

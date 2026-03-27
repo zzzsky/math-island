@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.components.TabletChipLabel
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
@@ -21,6 +22,8 @@ import androidx.compose.material3.Text
 internal fun RendererGuidanceCard(
     title: String,
     body: String,
+    badgeText: String = "操作提示",
+    badgeVariant: StatusVariant = StatusVariant.Neutral,
     modifier: Modifier = Modifier,
 ) {
     StoryPanelCard(
@@ -37,7 +40,16 @@ internal fun RendererGuidanceCard(
                 .padding(SpacingTokens.Lg),
             verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
         ) {
-            TabletChipLabel(text = title)
+            StatusChip(
+                text = badgeText,
+                variant = badgeVariant,
+                modifier = Modifier.testTag("renderer-guidance-chip")
+            )
+            Text(
+                text = title,
+                style = TypographyTokens.SupportingLabel,
+                color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
+            )
             Text(
                 text = body,
                 modifier = Modifier.testTag("renderer-guidance-body"),
