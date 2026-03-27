@@ -22,6 +22,14 @@ internal fun RendererSectionHeader(
             badgeVariant = badgeVariant,
             cardTag = "renderer-action-card",
             chipTag = "renderer-action-chip",
+            containerColor = rendererStageContainerColorFor(
+                when (badgeVariant) {
+                    StatusVariant.Success -> com.mathisland.app.feature.level.LessonStatusTone.Confirmed
+                    StatusVariant.Highlight -> com.mathisland.app.feature.level.LessonStatusTone.Retry
+                    StatusVariant.Caution -> com.mathisland.app.feature.level.LessonStatusTone.Warning
+                    else -> com.mathisland.app.feature.level.LessonStatusTone.Neutral
+                }
+            ),
             title = title,
             body = body
         )

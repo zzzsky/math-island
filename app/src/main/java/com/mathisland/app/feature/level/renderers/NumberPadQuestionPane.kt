@@ -101,9 +101,12 @@ fun NumberPadQuestionPane(
                     badgeText = if (actionState.phase == RendererActionPhase.Retry) "回看提示" else "操作提示",
                     badgeVariant = if (actionState.phase == RendererActionPhase.Retry) {
                         com.mathisland.app.ui.theme.StatusVariant.Highlight
+                    } else if (actionState.phase == RendererActionPhase.TimeoutExpired) {
+                        com.mathisland.app.ui.theme.StatusVariant.Caution
                     } else {
                         com.mathisland.app.ui.theme.StatusVariant.Neutral
-                    }
+                    },
+                    containerColor = rendererStageContainerColorFor(actionState.stageTone())
                 )
             },
             feedback = feedback,

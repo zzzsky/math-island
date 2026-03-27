@@ -1,6 +1,7 @@
 package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.feature.level.lessonAttemptCopyFor
+import com.mathisland.app.feature.level.LessonStatusTone
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.StatusVariant
 
@@ -96,6 +97,14 @@ data class RendererActionState(
         RendererActionPhase.Confirmed -> StatusVariant.Success
         RendererActionPhase.Locked -> StatusVariant.Neutral
         RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+    }
+
+    fun stageTone(): LessonStatusTone = when (phase) {
+        RendererActionPhase.Ready -> LessonStatusTone.Neutral
+        RendererActionPhase.Retry -> LessonStatusTone.Retry
+        RendererActionPhase.Confirmed -> LessonStatusTone.Confirmed
+        RendererActionPhase.Locked -> LessonStatusTone.Neutral
+        RendererActionPhase.TimeoutExpired -> LessonStatusTone.Warning
     }
 }
 

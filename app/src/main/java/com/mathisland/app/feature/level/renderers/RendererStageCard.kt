@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import com.mathisland.app.feature.level.LessonStatusTone
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.RadiusTokens
@@ -68,4 +69,12 @@ internal fun RendererStageCard(
             )
         }
     }
+}
+
+internal fun rendererStageContainerColorFor(tone: LessonStatusTone): Color = when (tone) {
+    LessonStatusTone.Confirmed -> RendererTokens.FeedbackSuccessSurface
+    LessonStatusTone.Retry -> RendererTokens.FeedbackRetrySurface
+    LessonStatusTone.Warning -> RendererTokens.FeedbackWarningSurface
+    LessonStatusTone.Highlight -> RendererTokens.FeedbackHighlightSurface
+    LessonStatusTone.Neutral -> RendererTokens.HelperSurface
 }

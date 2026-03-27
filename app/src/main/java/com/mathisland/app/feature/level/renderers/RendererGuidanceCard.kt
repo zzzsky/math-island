@@ -14,6 +14,7 @@ internal fun RendererGuidanceCard(
     badgeVariant: StatusVariant = StatusVariant.Neutral,
     cardTag: String = "renderer-guidance-card",
     chipTag: String = "renderer-guidance-chip",
+    containerColor: androidx.compose.ui.graphics.Color = RendererTokens.HelperSurface,
     modifier: Modifier = Modifier,
 ) {
     RendererStageCard(
@@ -24,7 +25,7 @@ internal fun RendererGuidanceCard(
         title = title,
         body = body,
         modifier = modifier,
-        containerColor = RendererTokens.HelperSurface,
+        containerColor = containerColor,
         bodyTag = "renderer-guidance-body"
     )
 }
