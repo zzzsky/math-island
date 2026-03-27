@@ -11,6 +11,7 @@ import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusVariant
+import com.mathisland.app.ui.theme.TextToneTokens
 
 @Composable
 fun LevelSupportRail(
@@ -22,8 +23,8 @@ fun LevelSupportRail(
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
     ) {
         StatusChip(
-            text = "线索与问题",
-            variant = StatusVariant.Neutral
+            text = state.headerBadgeText,
+            variant = state.headerBadgeVariant
         )
         state.cards.forEach { card ->
             TabletInfoCard(
@@ -32,6 +33,8 @@ fun LevelSupportRail(
                 body = card.body,
                 accentColor = card.tone?.let { lessonStatusAccentColor(it) }
                     ?: MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f),
+                containerColor = card.tone?.let { lessonStatusSurfaceColor(it) }
+                    ?: TextToneTokens.low(MaterialTheme.colorScheme.surface),
                 badgeText = card.badgeText,
                 badgeVariant = card.badgeVariant,
                 badgeTag = "${card.tag}-chip",
@@ -49,5 +52,15 @@ internal fun lessonStatusAccentColor(tone: LessonStatusTone): Color {
         LessonStatusTone.Retry -> Color(0x80F2B880)
         LessonStatusTone.Confirmed -> Color(0x809ADBC7)
         LessonStatusTone.Warning -> Color(0x80D9D48A)
+    }
+}
+
+internal fun lessonStatusSurfaceColor(tone: LessonStatusTone): Color {
+    return when (tone) {
+        LessonStatusTone.Neutral -> Color(0x0F000000)
+        LessonStatusTone.Highlight -> Color(0x1A9ADBC7)
+        LessonStatusTone.Retry -> Color(0x1AF2B880)
+        LessonStatusTone.Confirmed -> Color(0x1A9ADBC7)
+        LessonStatusTone.Warning -> Color(0x1AD9D48A)
     }
 }

@@ -21,6 +21,8 @@ data class LevelSupportRailState(
     val trailingSummary: String,
     val timerChipText: String?,
     val timerNote: String?,
+    val headerBadgeText: String,
+    val headerBadgeVariant: StatusVariant,
     val cards: List<LevelSupportCardModel>
 )
 
@@ -144,6 +146,22 @@ fun levelSupportRailStateFor(
         trailingSummary = "总星星 ${state.totalStars}",
         timerChipText = lesson.timeLimitSeconds?.let { "限时 ${formatSupportCountdown(remainingSeconds)}" },
         timerNote = lesson.timeLimitSeconds?.let { "倒计时结束会直接结算，本轮不计通关。" },
+        headerBadgeText = when (actionState.phase) {
+            RendererActionPhase.Retry -> "重试线索"
+            RendererActionPhase.Confirmed -> "已确认"
+            RendererActionPhase.TimeoutExpired -> "本题结束"
+            RendererActionPhase.Ready,
+            RendererActionPhase.Locked,
+            -> "线索与问题"
+        },
+        headerBadgeVariant = when (actionState.phase) {
+            RendererActionPhase.Retry -> StatusVariant.Highlight
+            RendererActionPhase.Confirmed -> StatusVariant.Success
+            RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+            RendererActionPhase.Ready,
+            RendererActionPhase.Locked,
+            -> StatusVariant.Neutral
+        },
         cards = cards
     )
 }

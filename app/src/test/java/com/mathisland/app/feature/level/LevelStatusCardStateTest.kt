@@ -4,6 +4,7 @@ import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -117,5 +118,14 @@ class LevelStatusCardStateTest {
 
         assertEquals(LessonStatusTone.Warning, state.tone)
         assertEquals("最后冲刺", state.subtitle)
+    }
+
+    @Test
+    fun lessonStatusSurfaceColor_matchesExpectedTonePalette() {
+        assertEquals(Color(0x0F000000), lessonStatusSurfaceColor(LessonStatusTone.Neutral))
+        assertEquals(Color(0x1A9ADBC7), lessonStatusSurfaceColor(LessonStatusTone.Highlight))
+        assertEquals(Color(0x1AF2B880), lessonStatusSurfaceColor(LessonStatusTone.Retry))
+        assertEquals(Color(0x1A9ADBC7), lessonStatusSurfaceColor(LessonStatusTone.Confirmed))
+        assertEquals(Color(0x1AD9D48A), lessonStatusSurfaceColor(LessonStatusTone.Warning))
     }
 }

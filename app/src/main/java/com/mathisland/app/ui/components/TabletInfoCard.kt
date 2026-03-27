@@ -32,6 +32,7 @@ fun TabletInfoCard(
     subtitle: String,
     body: String,
     accentColor: Color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f),
+    containerColor: Color = TextToneTokens.low(MaterialTheme.colorScheme.surface),
     badgeText: String? = null,
     badgeVariant: StatusVariant = StatusVariant.Neutral,
     badgeTag: String? = null
@@ -41,9 +42,15 @@ fun TabletInfoCard(
         animationSpec = tween(durationMillis = 240),
         label = "tablet-info-card-accent"
     )
+    val animatedContainerColor = animateColorAsState(
+        targetValue = containerColor,
+        animationSpec = tween(durationMillis = 240),
+        label = "tablet-info-card-container"
+    )
     StoryPanelCard(
         modifier = modifier,
         level = SurfaceLevel.Secondary,
+        containerColor = animatedContainerColor.value,
         shape = RadiusTokens.CardLg
     ) {
         Column(
