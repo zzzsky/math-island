@@ -116,20 +116,14 @@ fun levelSupportRailStateFor(
                     RendererActionPhase.Locked,
                     -> if (lesson.isReview) LessonStatusTone.Highlight else LessonStatusTone.Neutral
                 },
-                badgeText = when {
-                    actionState.phase == RendererActionPhase.Retry -> "回看提示"
-                    actionState.phase == RendererActionPhase.Confirmed -> "已完成"
-                    actionState.phase == RendererActionPhase.TimeoutExpired -> "本题结束"
-                    lesson.isReview -> "先看线索"
-                    else -> "先看题目"
-                },
-                badgeVariant = when {
-                    actionState.phase == RendererActionPhase.Retry -> StatusVariant.Highlight
-                    actionState.phase == RendererActionPhase.Confirmed -> StatusVariant.Success
-                    actionState.phase == RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
-                    lesson.isReview -> StatusVariant.Highlight
-                    else -> StatusVariant.Recommended
-                }
+                badgeText = lessonPromptBadgeTextFor(
+                    phase = actionState.phase,
+                    lessonIsReview = lesson.isReview
+                ),
+                badgeVariant = lessonPromptBadgeVariantFor(
+                    phase = actionState.phase,
+                    lessonIsReview = lesson.isReview
+                )
             )
         )
     }
@@ -160,7 +154,7 @@ fun levelSupportRailStateFor(
             -> if (lesson.timeLimitSeconds != null) LessonStatusTone.Highlight else LessonStatusTone.Neutral
         },
         routeBadgeText = when (actionState.phase) {
-            RendererActionPhase.Retry -> "先看提示"
+            RendererActionPhase.Retry -> "重试提示"
             RendererActionPhase.Confirmed -> "继续推进"
             RendererActionPhase.TimeoutExpired -> "本题结束"
             RendererActionPhase.Ready,

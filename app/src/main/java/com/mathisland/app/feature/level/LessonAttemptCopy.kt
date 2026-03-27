@@ -32,12 +32,12 @@ fun lessonRailHeaderBadgeTextFor(
     phase: RendererActionPhase,
     lessonIsReview: Boolean,
 ): String = when (phase) {
-    RendererActionPhase.Retry -> "重试线索"
+    RendererActionPhase.Retry -> "重试状态"
     RendererActionPhase.Confirmed -> "已确认"
     RendererActionPhase.TimeoutExpired -> "本题结束"
     RendererActionPhase.Ready,
     RendererActionPhase.Locked,
-    -> if (lessonIsReview) "当前线索" else "当前线索"
+    -> "学习状态"
 }
 
 fun lessonRailHeaderBadgeVariantFor(phase: RendererActionPhase): StatusVariant = when (phase) {
@@ -71,6 +71,50 @@ fun lessonFeedbackBadgeVariantFor(kind: AnswerFeedbackKind): StatusVariant = whe
     -> StatusVariant.Caution
 }
 
+fun lessonPromptBadgeTextFor(
+    phase: RendererActionPhase,
+    lessonIsReview: Boolean,
+): String = when (phase) {
+    RendererActionPhase.Retry -> if (lessonIsReview) "重看线索" else "重看题目"
+    RendererActionPhase.Confirmed -> "本题完成"
+    RendererActionPhase.TimeoutExpired -> "本题结束"
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> if (lessonIsReview) "先看线索" else "先看题目"
+}
+
+fun lessonPromptBadgeVariantFor(
+    phase: RendererActionPhase,
+    lessonIsReview: Boolean,
+): StatusVariant = when (phase) {
+    RendererActionPhase.Retry -> StatusVariant.Highlight
+    RendererActionPhase.Confirmed -> StatusVariant.Success
+    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> if (lessonIsReview) StatusVariant.Highlight else StatusVariant.Recommended
+}
+
+fun lessonPromptBodyFor(
+    phase: RendererActionPhase,
+    lessonIsReview: Boolean,
+): String = when (phase) {
+    RendererActionPhase.Retry -> if (lessonIsReview) {
+        "先重看线索，再换答案。"
+    } else {
+        "先重看题目，再换答案。"
+    }
+    RendererActionPhase.Confirmed -> "本题已确认，准备下一题。"
+    RendererActionPhase.TimeoutExpired -> "本题已结束，直接看下一题。"
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> if (lessonIsReview) {
+        "先读线索，再开始作答。"
+    } else {
+        "先读题目，再开始作答。"
+    }
+}
+
 fun lessonAttemptCopyFor(
     lessonIsReview: Boolean,
     feedback: AnswerFeedbackUiState?,
@@ -81,14 +125,14 @@ fun lessonAttemptCopyFor(
             statusSubtitle = "答案已确认",
             statusBody = "马上进入下一题。",
             nextStepSubtitle = "准备切题",
-            nextStepBody = "保持节奏，马上进入下一题。"
+            nextStepBody = "保持节奏，准备下一题。"
         )
 
         AnswerFeedbackKind.Incorrect -> LessonAttemptCopy(
             statusSubtitle = "再次尝试",
             statusBody = feedback.body,
             nextStepSubtitle = "继续重试",
-            nextStepBody = "先看刚才的尝试，再换一个答案。"
+            nextStepBody = "先看这次尝试，再换答案。"
         )
 
         AnswerFeedbackKind.TimedWarning -> LessonAttemptCopy(
@@ -113,14 +157,14 @@ fun lessonAttemptCopyFor(
                     statusSubtitle = "先看线索",
                     statusBody = "这节是回放题，先读提示再作答。",
                     nextStepSubtitle = "继续回放",
-                    nextStepBody = "先看右侧线索，再提交这次答案。"
+                    nextStepBody = "先看右侧线索，再提交答案。"
                 )
             } else {
                 LessonAttemptCopy(
                     statusSubtitle = "准备作答",
                     statusBody = "先看题目，再提交答案。",
                     nextStepSubtitle = "现在就答",
-                    nextStepBody = "先看右侧题目，再完成这次作答。"
+                    nextStepBody = "先看右侧题目，再提交答案。"
                 )
             }
 
@@ -128,14 +172,14 @@ fun lessonAttemptCopyFor(
                 statusSubtitle = "再次尝试",
                 statusBody = "先看提示，再判断答案。",
                 nextStepSubtitle = "继续重试",
-                nextStepBody = "先看刚才的尝试，再换一个答案。"
+                nextStepBody = "先看这次尝试，再换答案。"
             )
 
             RendererActionPhase.Confirmed -> LessonAttemptCopy(
                 statusSubtitle = "答案已确认",
                 statusBody = "马上进入下一题。",
                 nextStepSubtitle = "准备切题",
-                nextStepBody = "保持节奏，马上进入下一题。"
+                nextStepBody = "保持节奏，准备下一题。"
             )
 
             RendererActionPhase.TimeoutExpired -> LessonAttemptCopy(

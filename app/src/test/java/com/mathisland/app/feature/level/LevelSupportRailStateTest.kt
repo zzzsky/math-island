@@ -47,7 +47,7 @@ class LevelSupportRailStateTest {
         assertNull(state.timerNote)
         assertEquals("加法", state.heroBadgeText)
         assertEquals("当前路线", state.routeBadgeText)
-        assertEquals("当前线索", state.headerBadgeText)
+        assertEquals("学习状态", state.headerBadgeText)
         assertEquals(
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-question-card"),
             state.cards.map { it.tag }
@@ -84,7 +84,7 @@ class LevelSupportRailStateTest {
         assertEquals("倒计时结束会直接结算，本轮不计通关。", state.timerNote)
         assertEquals("综合挑战", state.heroBadgeText)
         assertEquals("冲刺提示", state.routeBadgeText)
-        assertEquals("当前线索", state.headerBadgeText)
+        assertEquals("学习状态", state.headerBadgeText)
         assertEquals(
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-timer-status", "lesson-question-card"),
             state.cards.map { it.tag }
@@ -114,8 +114,9 @@ class LevelSupportRailStateTest {
         )
 
         assertEquals("再次尝试", state.heroBadgeText)
-        assertEquals("先看提示", state.routeBadgeText)
-        assertEquals("重试线索", state.headerBadgeText)
+        assertEquals("重试提示", state.routeBadgeText)
+        assertEquals("重试状态", state.headerBadgeText)
         assertEquals("继续作答", state.cards[1].badgeText)
+        assertEquals("重看题目", state.cards[2].badgeText)
     }
 }
