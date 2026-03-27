@@ -4,13 +4,16 @@ import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.RendererActionPhase
 import com.mathisland.app.feature.level.renderers.rendererActionStateFor
+import com.mathisland.app.ui.theme.StatusVariant
 
 data class LevelSupportCardModel(
     val tag: String,
     val title: String,
     val subtitle: String,
     val body: String,
-    val tone: LessonStatusTone? = null
+    val tone: LessonStatusTone? = null,
+    val badgeText: String? = null,
+    val badgeVariant: StatusVariant = StatusVariant.Neutral
 )
 
 data class LevelSupportRailState(
@@ -64,6 +67,22 @@ fun levelSupportRailStateFor(
                     RendererActionPhase.Ready,
                     RendererActionPhase.Locked,
                     -> if (lesson.timeLimitSeconds != null) LessonStatusTone.Highlight else LessonStatusTone.Neutral
+                },
+                badgeText = when (actionState.phase) {
+                    RendererActionPhase.Retry -> "重试中"
+                    RendererActionPhase.Confirmed -> "已确认"
+                    RendererActionPhase.TimeoutExpired -> "已超时"
+                    RendererActionPhase.Ready,
+                    RendererActionPhase.Locked,
+                    -> "现在处理"
+                },
+                badgeVariant = when (actionState.phase) {
+                    RendererActionPhase.Retry -> StatusVariant.Highlight
+                    RendererActionPhase.Confirmed -> StatusVariant.Success
+                    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+                    RendererActionPhase.Ready,
+                    RendererActionPhase.Locked,
+                    -> StatusVariant.Recommended
                 }
             )
         )
@@ -93,6 +112,28 @@ fun levelSupportRailStateFor(
                     } else {
                         "先看题目，再提交答案。"
                     }
+                },
+                tone = when (actionState.phase) {
+                    RendererActionPhase.Retry -> LessonStatusTone.Retry
+                    RendererActionPhase.Confirmed -> LessonStatusTone.Confirmed
+                    RendererActionPhase.TimeoutExpired -> LessonStatusTone.Warning
+                    RendererActionPhase.Ready,
+                    RendererActionPhase.Locked,
+                    -> if (lesson.isReview) LessonStatusTone.Highlight else LessonStatusTone.Neutral
+                },
+                badgeText = when {
+                    actionState.phase == RendererActionPhase.Retry -> "回看提示"
+                    actionState.phase == RendererActionPhase.Confirmed -> "已完成"
+                    actionState.phase == RendererActionPhase.TimeoutExpired -> "本题结束"
+                    lesson.isReview -> "先看线索"
+                    else -> "先看题目"
+                },
+                badgeVariant = when {
+                    actionState.phase == RendererActionPhase.Retry -> StatusVariant.Highlight
+                    actionState.phase == RendererActionPhase.Confirmed -> StatusVariant.Success
+                    actionState.phase == RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+                    lesson.isReview -> StatusVariant.Highlight
+                    else -> StatusVariant.Recommended
                 }
             )
         )

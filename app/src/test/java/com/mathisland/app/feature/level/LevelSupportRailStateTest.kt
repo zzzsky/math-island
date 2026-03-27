@@ -45,6 +45,8 @@ class LevelSupportRailStateTest {
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-question-card"),
             state.cards.map { it.tag }
         )
+        assertEquals("现在处理", state.cards[1].badgeText)
+        assertEquals("先看题目", state.cards[2].badgeText)
     }
 
     @Test
@@ -77,5 +79,7 @@ class LevelSupportRailStateTest {
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-timer-status", "lesson-question-card"),
             state.cards.map { it.tag }
         )
+        assertEquals("现在处理", state.cards[1].badgeText)
+        assertEquals("先看题目", state.cards[3].badgeText)
     }
 }

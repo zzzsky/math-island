@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.theme.RadiusTokens
@@ -22,6 +23,7 @@ import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
+import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 fun TabletInfoCard(
@@ -29,7 +31,10 @@ fun TabletInfoCard(
     title: String,
     subtitle: String,
     body: String,
-    accentColor: Color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f)
+    accentColor: Color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f),
+    badgeText: String? = null,
+    badgeVariant: StatusVariant = StatusVariant.Neutral,
+    badgeTag: String? = null
 ) {
     val animatedAccentColor = animateColorAsState(
         targetValue = accentColor,
@@ -55,6 +60,14 @@ fun TabletInfoCard(
             )
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(SpacingTokens.Sm))
             TabletChipLabel(text = title)
+            badgeText?.let { resolvedBadgeText ->
+                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(SpacingTokens.Xs))
+                StatusChip(
+                    text = resolvedBadgeText,
+                    variant = badgeVariant,
+                    modifier = badgeTag?.let { Modifier.testTag(it) } ?: Modifier
+                )
+            }
             AnimatedContent(
                 targetState = subtitle,
                 label = "tablet-info-card-subtitle"

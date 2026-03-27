@@ -32,6 +32,9 @@ fun LevelSupportRail(
                 body = card.body,
                 accentColor = card.tone?.let { lessonStatusAccentColor(it) }
                     ?: MaterialTheme.colorScheme.secondary.copy(alpha = 0.24f),
+                badgeText = card.badgeText,
+                badgeVariant = card.badgeVariant,
+                badgeTag = "${card.tag}-chip",
                 modifier = Modifier.testTag(card.tag)
             )
         }
