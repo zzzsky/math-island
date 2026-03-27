@@ -1,25 +1,14 @@
 package com.mathisland.app.feature.level.renderers
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import com.mathisland.app.feature.level.LessonCueCard
 import com.mathisland.app.feature.level.LessonStatusTone
-import com.mathisland.app.ui.components.StatusChip
-import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.theme.RadiusTokens
-import com.mathisland.app.ui.theme.SpacingTokens
+import com.mathisland.app.feature.level.lessonStatusAccentColor
 import com.mathisland.app.ui.theme.StatusVariant
-import com.mathisland.app.ui.theme.SurfaceLevel
-import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
 @Composable
@@ -36,39 +25,22 @@ internal fun RendererStageCard(
     titleWeight: FontWeight = FontWeight.SemiBold,
     bodyTag: String? = null,
 ) {
-    StoryPanelCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .testTag(cardTag),
-        level = SurfaceLevel.Secondary,
+    LessonCueCard(
+        title = title,
+        body = body,
+        modifier = modifier,
+        cardTag = cardTag,
+        chipText = chipText,
+        chipVariant = chipVariant,
+        chipTag = chipTag,
+        bodyTag = bodyTag,
+        tone = rendererStageToneFor(containerColor),
+        accentColor = lessonStatusAccentColor(rendererStageToneFor(containerColor)),
         containerColor = containerColor,
-        shape = RadiusTokens.CardMd
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(SpacingTokens.Lg),
-            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-        ) {
-            StatusChip(
-                text = chipText,
-                variant = chipVariant,
-                modifier = Modifier.testTag(chipTag)
-            )
-            Text(
-                text = title,
-                style = titleStyle,
-                fontWeight = titleWeight,
-                color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
-            )
-            Text(
-                text = body,
-                modifier = if (bodyTag != null) Modifier.testTag(bodyTag) else Modifier,
-                style = TypographyTokens.BodySecondary,
-                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-            )
-        }
-    }
+        titleStyle = titleStyle,
+        titleWeight = titleWeight,
+        bodyStyle = TypographyTokens.BodySecondary
+    )
 }
 
 internal fun rendererStageContainerColorFor(tone: LessonStatusTone): Color = when (tone) {
@@ -77,4 +49,12 @@ internal fun rendererStageContainerColorFor(tone: LessonStatusTone): Color = whe
     LessonStatusTone.Warning -> RendererTokens.FeedbackWarningSurface
     LessonStatusTone.Highlight -> RendererTokens.FeedbackHighlightSurface
     LessonStatusTone.Neutral -> RendererTokens.HelperSurface
+}
+
+private fun rendererStageToneFor(containerColor: Color): LessonStatusTone = when (containerColor) {
+    RendererTokens.FeedbackSuccessSurface -> LessonStatusTone.Confirmed
+    RendererTokens.FeedbackRetrySurface -> LessonStatusTone.Retry
+    RendererTokens.FeedbackWarningSurface -> LessonStatusTone.Warning
+    RendererTokens.FeedbackHighlightSurface -> LessonStatusTone.Highlight
+    else -> LessonStatusTone.Neutral
 }
