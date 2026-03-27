@@ -176,6 +176,8 @@ fun NumberPadQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionRowGap)
                 ) {
                     RendererSectionHeader(
+                        badgeText = actionState.sectionBadgeText(),
+                        badgeVariant = actionState.sectionBadgeVariant(),
                         title = actionState.sectionTitle(),
                         body = actionState.sectionBody()
                     )

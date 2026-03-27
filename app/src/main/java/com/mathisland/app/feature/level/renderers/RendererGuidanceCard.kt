@@ -1,22 +1,10 @@
 package com.mathisland.app.feature.level.renderers
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import com.mathisland.app.ui.components.StatusChip
-import com.mathisland.app.ui.components.StoryPanelCard
-import com.mathisland.app.ui.theme.RadiusTokens
-import com.mathisland.app.ui.theme.SpacingTokens
-import com.mathisland.app.ui.theme.StatusVariant
-import com.mathisland.app.ui.theme.SurfaceLevel
-import com.mathisland.app.ui.theme.TextToneTokens
-import com.mathisland.app.ui.theme.TypographyTokens
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
 internal fun RendererGuidanceCard(
@@ -24,38 +12,19 @@ internal fun RendererGuidanceCard(
     body: String,
     badgeText: String = "操作提示",
     badgeVariant: StatusVariant = StatusVariant.Neutral,
+    cardTag: String = "renderer-guidance-card",
+    chipTag: String = "renderer-guidance-chip",
     modifier: Modifier = Modifier,
 ) {
-    StoryPanelCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .testTag("renderer-guidance-card"),
-        level = SurfaceLevel.Secondary,
+    RendererStageCard(
+        cardTag = cardTag,
+        chipTag = chipTag,
+        chipText = badgeText,
+        chipVariant = badgeVariant,
+        title = title,
+        body = body,
+        modifier = modifier,
         containerColor = RendererTokens.HelperSurface,
-        shape = RadiusTokens.CardMd
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(SpacingTokens.Lg),
-            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-        ) {
-            StatusChip(
-                text = badgeText,
-                variant = badgeVariant,
-                modifier = Modifier.testTag("renderer-guidance-chip")
-            )
-            Text(
-                text = title,
-                style = TypographyTokens.SupportingLabel,
-                color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
-            )
-            Text(
-                text = body,
-                modifier = Modifier.testTag("renderer-guidance-body"),
-                style = TypographyTokens.BodySecondary,
-                color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
-            )
-        }
-    }
+        bodyTag = "renderer-guidance-body"
+    )
 }

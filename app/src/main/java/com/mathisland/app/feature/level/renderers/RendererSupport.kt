@@ -74,6 +74,8 @@ internal fun RendererOptionsColumn(
             verticalArrangement = Arrangement.spacedBy(RendererTokens.ActionGroupGap)
         ) {
             RendererSectionHeader(
+                badgeText = actionState.sectionBadgeText(),
+                badgeVariant = actionState.sectionBadgeVariant(),
                 title = actionState.sectionTitle(),
                 body = actionState.sectionBody()
             )

@@ -1,6 +1,7 @@
 package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -19,6 +20,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Primary, state.resolveRole(ActionRole.Primary))
+        assertEquals("开始作答", state.sectionBadgeText())
+        assertEquals(StatusVariant.Recommended, state.sectionBadgeVariant())
         assertEquals("现在就答", state.sectionTitle())
         assertEquals("先看右侧题目，再完成这次作答。", state.sectionBody())
     }
@@ -37,6 +40,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("再试一次", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
+        assertEquals("继续作答", state.sectionBadgeText())
+        assertEquals(StatusVariant.Highlight, state.sectionBadgeVariant())
         assertEquals("继续重试", state.sectionTitle())
         assertEquals("先看刚才的尝试，再换一个答案。", state.sectionBody())
     }
@@ -55,6 +60,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已确认", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Completed, state.resolveRole(ActionRole.Primary))
+        assertEquals("准备切题", state.sectionBadgeText())
+        assertEquals(StatusVariant.Success, state.sectionBadgeVariant())
         assertEquals("准备切题", state.sectionTitle())
         assertEquals("保持节奏，马上进入下一题。", state.sectionBody())
     }
@@ -73,6 +80,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
+        assertEquals("稍等片刻", state.sectionBadgeText())
+        assertEquals(StatusVariant.Neutral, state.sectionBadgeVariant())
         assertEquals("正在检查", state.sectionTitle())
         assertEquals("稍等片刻。", state.sectionBody())
     }
@@ -91,6 +100,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已超时", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
+        assertEquals("本题结束", state.sectionBadgeText())
+        assertEquals(StatusVariant.Caution, state.sectionBadgeVariant())
         assertEquals("继续推进", state.sectionTitle())
         assertEquals("本题结束，直接看下一题。", state.sectionBody())
     }

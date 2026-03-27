@@ -2,6 +2,7 @@ package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.feature.level.lessonAttemptCopyFor
 import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.StatusVariant
 
 enum class RendererActionPhase {
     Ready,
@@ -79,6 +80,22 @@ data class RendererActionState(
             feedback = null,
             phase = phase
         ).nextStepBody
+    }
+
+    fun sectionBadgeText(): String = when (phase) {
+        RendererActionPhase.Ready -> "开始作答"
+        RendererActionPhase.Retry -> "继续作答"
+        RendererActionPhase.Confirmed -> "准备切题"
+        RendererActionPhase.Locked -> "稍等片刻"
+        RendererActionPhase.TimeoutExpired -> "本题结束"
+    }
+
+    fun sectionBadgeVariant(): StatusVariant = when (phase) {
+        RendererActionPhase.Ready -> StatusVariant.Recommended
+        RendererActionPhase.Retry -> StatusVariant.Highlight
+        RendererActionPhase.Confirmed -> StatusVariant.Success
+        RendererActionPhase.Locked -> StatusVariant.Neutral
+        RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
     }
 }
 
