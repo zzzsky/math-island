@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
@@ -70,10 +72,62 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithText("海图冲刺赛").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
-        composeRule.onNodeWithTag("lesson-flow-hint").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
         composeRule.onNodeWithTag("level-answer-pane").assertIsDisplayed()
+    }
+
+    @Test
+    fun levelScreen_hidesTimerArtifactsForUntimedLesson() {
+        val lesson = Lesson(
+            id = "calculation-01",
+            islandId = "calculation-island",
+            title = "海湾加法课",
+            focus = "加法",
+            summary = "2 题热身",
+            questions = listOf(
+                Question(
+                    prompt = "26 + 18 = ?",
+                    choices = listOf("44", "45", "34"),
+                    correctChoice = "44",
+                    hint = "先算个位，再算十位。",
+                    family = "calculation"
+                )
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelTabletScreen(
+                    state = LevelUiState(
+                        lesson = lesson,
+                        question = lesson.questions.first(),
+                        questionIndex = 0,
+                        totalQuestions = 2,
+                        totalStars = 8,
+                        flowHint = "完成本节后会先结算星星，再回地图继续探索。"
+                    ),
+                    onQuit = {},
+                    answerPane = {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .testTag("level-answer-pane")
+                        )
+                    }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("lesson-timer").assertCountEquals(0)
+        composeRule.onAllNodesWithTag("lesson-timer-note").assertCountEquals(0)
+        composeRule.onAllNodesWithTag("lesson-timer-status").assertCountEquals(0)
     }
 
     @Test
