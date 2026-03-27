@@ -37,7 +37,7 @@ fun LevelProgressHeroCard(
     StoryPanelCard(
         modifier = modifier.fillMaxWidth(),
         level = SurfaceLevel.Secondary,
-        containerColor = Color.White.copy(alpha = 0.05f),
+        containerColor = lessonStatusSurfaceColor(supportState.heroTone),
         shape = RadiusTokens.CardLg
     ) {
         Column(
@@ -51,8 +51,9 @@ fun LevelProgressHeroCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 StatusChip(
-                    text = if (lesson.isReview) "小海鸥求助" else lesson.focus,
-                    variant = if (lesson.isReview) StatusVariant.Caution else StatusVariant.Highlight
+                    text = supportState.heroBadgeText,
+                    variant = supportState.heroBadgeVariant,
+                    modifier = Modifier.testTag("lesson-hero-chip")
                 )
                 if (supportState.timerChipText != null) {
                     StatusChip(
@@ -92,6 +93,11 @@ fun LevelProgressHeroCard(
                 style = TypographyTokens.BodyPrimary,
                 color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier.testTag("lesson-route-summary")
+            )
+            StatusChip(
+                text = supportState.routeBadgeText,
+                variant = supportState.routeBadgeVariant,
+                modifier = Modifier.testTag("lesson-route-chip")
             )
             supportState.timerNote?.let { timerNote ->
                 Text(

@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -74,6 +75,8 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithText("海图冲刺赛").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-hero-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-route-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-next-step-card").assertIsDisplayed()
@@ -130,6 +133,8 @@ class LevelTabletScreenTest {
         }
 
         composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-hero-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-route-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-next-step-card").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-support-rail")
@@ -191,7 +196,9 @@ class LevelTabletScreenTest {
         }
 
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
-        composeRule.onNodeWithText("本题已超时").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-hero-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-route-chip").assertIsDisplayed()
+        composeRule.onAllNodesWithText("本题已超时").assertCountEquals(2)
         composeRule.onNodeWithText("直接看下一题。").assertIsDisplayed()
     }
 }
