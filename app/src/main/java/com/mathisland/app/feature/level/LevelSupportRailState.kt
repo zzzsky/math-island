@@ -71,21 +71,9 @@ fun levelSupportRailStateFor(
                     -> if (lesson.timeLimitSeconds != null) LessonStatusTone.Highlight else LessonStatusTone.Neutral
                 },
                 badgeText = when (actionState.phase) {
-                    RendererActionPhase.Retry -> "重试中"
-                    RendererActionPhase.Confirmed -> "已确认"
-                    RendererActionPhase.TimeoutExpired -> "已超时"
-                    RendererActionPhase.Ready,
-                    RendererActionPhase.Locked,
-                    -> "现在处理"
+                    else -> lessonActionBadgeTextFor(actionState.phase)
                 },
-                badgeVariant = when (actionState.phase) {
-                    RendererActionPhase.Retry -> StatusVariant.Highlight
-                    RendererActionPhase.Confirmed -> StatusVariant.Success
-                    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
-                    RendererActionPhase.Ready,
-                    RendererActionPhase.Locked,
-                    -> StatusVariant.Recommended
-                }
+                badgeVariant = lessonActionBadgeVariantFor(actionState.phase)
             )
         )
         if (lesson.timeLimitSeconds != null) {
@@ -146,22 +134,8 @@ fun levelSupportRailStateFor(
         trailingSummary = "总星星 ${state.totalStars}",
         timerChipText = lesson.timeLimitSeconds?.let { "限时 ${formatSupportCountdown(remainingSeconds)}" },
         timerNote = lesson.timeLimitSeconds?.let { "倒计时结束会直接结算，本轮不计通关。" },
-        headerBadgeText = when (actionState.phase) {
-            RendererActionPhase.Retry -> "重试线索"
-            RendererActionPhase.Confirmed -> "已确认"
-            RendererActionPhase.TimeoutExpired -> "本题结束"
-            RendererActionPhase.Ready,
-            RendererActionPhase.Locked,
-            -> "线索与问题"
-        },
-        headerBadgeVariant = when (actionState.phase) {
-            RendererActionPhase.Retry -> StatusVariant.Highlight
-            RendererActionPhase.Confirmed -> StatusVariant.Success
-            RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
-            RendererActionPhase.Ready,
-            RendererActionPhase.Locked,
-            -> StatusVariant.Neutral
-        },
+        headerBadgeText = lessonRailHeaderBadgeTextFor(actionState.phase, lesson.isReview),
+        headerBadgeVariant = lessonRailHeaderBadgeVariantFor(actionState.phase),
         cards = cards
     )
 }

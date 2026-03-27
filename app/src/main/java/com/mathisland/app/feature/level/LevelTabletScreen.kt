@@ -80,7 +80,7 @@ fun LevelTabletScreen(
             inputEnabled = false
             feedbackState = AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.TimeoutExpired,
-                title = "本题已超时",
+                title = lessonFeedbackTitleFor(AnswerFeedbackKind.TimeoutExpired),
                 body = "直接看下一题。",
                 submittedAnswer = feedbackState?.submittedAnswer
             )
@@ -109,14 +109,14 @@ fun LevelTabletScreen(
         feedbackState = if (answeredCorrectly) {
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Correct,
-                title = "答对了",
+                title = lessonFeedbackTitleFor(AnswerFeedbackKind.Correct),
                 body = "马上进入下一题。",
                 submittedAnswer = answer
             )
         } else {
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Incorrect,
-                title = "再试一次",
+                title = lessonFeedbackTitleFor(AnswerFeedbackKind.Incorrect),
                 body = question.hint.ifBlank { "先看提示，再判断答案。" },
                 submittedAnswer = answer
             )

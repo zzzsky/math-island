@@ -3,6 +3,7 @@ package com.mathisland.app.feature.level
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.RendererActionPhase
+import com.mathisland.app.ui.theme.StatusVariant
 
 data class LessonAttemptCopy(
     val statusSubtitle: String,
@@ -10,6 +11,65 @@ data class LessonAttemptCopy(
     val nextStepSubtitle: String,
     val nextStepBody: String
 )
+
+fun lessonActionBadgeTextFor(phase: RendererActionPhase): String = when (phase) {
+    RendererActionPhase.Ready -> "开始作答"
+    RendererActionPhase.Retry -> "继续作答"
+    RendererActionPhase.Confirmed -> "准备切题"
+    RendererActionPhase.Locked -> "稍等片刻"
+    RendererActionPhase.TimeoutExpired -> "本题结束"
+}
+
+fun lessonActionBadgeVariantFor(phase: RendererActionPhase): StatusVariant = when (phase) {
+    RendererActionPhase.Ready -> StatusVariant.Recommended
+    RendererActionPhase.Retry -> StatusVariant.Highlight
+    RendererActionPhase.Confirmed -> StatusVariant.Success
+    RendererActionPhase.Locked -> StatusVariant.Neutral
+    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+}
+
+fun lessonRailHeaderBadgeTextFor(
+    phase: RendererActionPhase,
+    lessonIsReview: Boolean,
+): String = when (phase) {
+    RendererActionPhase.Retry -> "重试线索"
+    RendererActionPhase.Confirmed -> "已确认"
+    RendererActionPhase.TimeoutExpired -> "本题结束"
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> if (lessonIsReview) "当前线索" else "当前线索"
+}
+
+fun lessonRailHeaderBadgeVariantFor(phase: RendererActionPhase): StatusVariant = when (phase) {
+    RendererActionPhase.Retry -> StatusVariant.Highlight
+    RendererActionPhase.Confirmed -> StatusVariant.Success
+    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> StatusVariant.Neutral
+}
+
+fun lessonFeedbackTitleFor(kind: AnswerFeedbackKind): String = when (kind) {
+    AnswerFeedbackKind.Correct -> "答案已确认"
+    AnswerFeedbackKind.Incorrect -> "再次尝试"
+    AnswerFeedbackKind.TimedWarning -> "限时进行中"
+    AnswerFeedbackKind.TimeoutExpired -> "本题已超时"
+}
+
+fun lessonFeedbackBadgeTextFor(kind: AnswerFeedbackKind): String = when (kind) {
+    AnswerFeedbackKind.Correct -> "已确认"
+    AnswerFeedbackKind.Incorrect -> "重试中"
+    AnswerFeedbackKind.TimedWarning -> "限时进行中"
+    AnswerFeedbackKind.TimeoutExpired -> "本题结束"
+}
+
+fun lessonFeedbackBadgeVariantFor(kind: AnswerFeedbackKind): StatusVariant = when (kind) {
+    AnswerFeedbackKind.Correct -> StatusVariant.Success
+    AnswerFeedbackKind.Incorrect -> StatusVariant.Highlight
+    AnswerFeedbackKind.TimedWarning,
+    AnswerFeedbackKind.TimeoutExpired,
+    -> StatusVariant.Caution
+}
 
 fun lessonAttemptCopyFor(
     lessonIsReview: Boolean,

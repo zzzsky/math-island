@@ -41,11 +41,12 @@ class LevelSupportRailStateTest {
         assertEquals("总星星 8", state.trailingSummary)
         assertNull(state.timerChipText)
         assertNull(state.timerNote)
+        assertEquals("当前线索", state.headerBadgeText)
         assertEquals(
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-question-card"),
             state.cards.map { it.tag }
         )
-        assertEquals("现在处理", state.cards[1].badgeText)
+        assertEquals("开始作答", state.cards[1].badgeText)
         assertEquals("先看题目", state.cards[2].badgeText)
     }
 
@@ -75,11 +76,12 @@ class LevelSupportRailStateTest {
         assertEquals("冲刺结束后会显示评级，并决定是否优先进入错题回放。", state.routeSummary)
         assertEquals("限时 00:05", state.timerChipText)
         assertEquals("倒计时结束会直接结算，本轮不计通关。", state.timerNote)
+        assertEquals("当前线索", state.headerBadgeText)
         assertEquals(
             listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-timer-status", "lesson-question-card"),
             state.cards.map { it.tag }
         )
-        assertEquals("现在处理", state.cards[1].badgeText)
+        assertEquals("开始作答", state.cards[1].badgeText)
         assertEquals("先看题目", state.cards[3].badgeText)
     }
 }
