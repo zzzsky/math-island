@@ -12,6 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.feature.level.lessonGuidanceBadgeTextFor
+import com.mathisland.app.feature.level.lessonGuidanceBadgeVariantFor
+import com.mathisland.app.feature.level.lessonRetryHintBodyFor
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
@@ -52,15 +55,13 @@ internal fun RendererOptionsColumn(
             {
                 RendererGuidanceCard(
                     title = header,
-                    body = helper,
-                    badgeText = if (actionState.phase == RendererActionPhase.Retry) "回看提示" else "操作提示",
-                    badgeVariant = if (actionState.phase == RendererActionPhase.Retry) {
-                        com.mathisland.app.ui.theme.StatusVariant.Highlight
-                    } else if (actionState.phase == RendererActionPhase.TimeoutExpired) {
-                        com.mathisland.app.ui.theme.StatusVariant.Caution
+                    body = if (actionState.phase == RendererActionPhase.Retry) {
+                        lessonRetryHintBodyFor(helper)
                     } else {
-                        com.mathisland.app.ui.theme.StatusVariant.Neutral
+                        helper
                     },
+                    badgeText = lessonGuidanceBadgeTextFor(actionState.phase),
+                    badgeVariant = lessonGuidanceBadgeVariantFor(actionState.phase),
                     containerColor = rendererStageContainerColorFor(actionState.stageTone())
                 )
             }

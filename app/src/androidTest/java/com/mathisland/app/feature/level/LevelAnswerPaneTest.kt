@@ -118,6 +118,8 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-action-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
+        composeRule.onNodeWithText("重试提示").assertIsDisplayed()
+        composeRule.onNodeWithText("先看提示，再换答案。").assertIsDisplayed()
     }
 
     @Test

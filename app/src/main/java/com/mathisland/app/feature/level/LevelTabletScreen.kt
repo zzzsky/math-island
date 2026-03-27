@@ -117,7 +117,7 @@ fun LevelTabletScreen(
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Incorrect,
                 title = lessonFeedbackTitleFor(AnswerFeedbackKind.Incorrect),
-                body = question.hint.ifBlank { "先看提示，再判断答案。" },
+                body = lessonRetryHintBodyFor(question.hint),
                 submittedAnswer = answer
             )
         }

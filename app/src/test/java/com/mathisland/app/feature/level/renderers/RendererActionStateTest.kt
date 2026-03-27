@@ -25,7 +25,7 @@ class RendererActionStateTest {
         assertEquals(StatusVariant.Recommended, state.sectionBadgeVariant())
         assertEquals(LessonStatusTone.Neutral, state.stageTone())
         assertEquals("现在就答", state.sectionTitle())
-        assertEquals("先看右侧题目，再完成这次作答。", state.sectionBody())
+        assertEquals("先看右侧题目，再提交答案。", state.sectionBody())
     }
 
     @Test
@@ -46,7 +46,7 @@ class RendererActionStateTest {
         assertEquals(StatusVariant.Highlight, state.sectionBadgeVariant())
         assertEquals(LessonStatusTone.Retry, state.stageTone())
         assertEquals("继续重试", state.sectionTitle())
-        assertEquals("先看刚才的尝试，再换一个答案。", state.sectionBody())
+        assertEquals("先看这次尝试，再换答案。", state.sectionBody())
     }
 
     @Test
@@ -67,7 +67,7 @@ class RendererActionStateTest {
         assertEquals(StatusVariant.Success, state.sectionBadgeVariant())
         assertEquals(LessonStatusTone.Confirmed, state.stageTone())
         assertEquals("准备切题", state.sectionTitle())
-        assertEquals("保持节奏，马上进入下一题。", state.sectionBody())
+        assertEquals("保持节奏，准备下一题。", state.sectionBody())
     }
 
     @Test

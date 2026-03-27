@@ -115,6 +115,27 @@ fun lessonPromptBodyFor(
     }
 }
 
+fun lessonGuidanceBadgeTextFor(phase: RendererActionPhase): String = when (phase) {
+    RendererActionPhase.Retry -> "重试提示"
+    RendererActionPhase.TimeoutExpired -> "本题结束"
+    RendererActionPhase.Confirmed -> "已确认"
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> "操作提示"
+}
+
+fun lessonGuidanceBadgeVariantFor(phase: RendererActionPhase): StatusVariant = when (phase) {
+    RendererActionPhase.Retry -> StatusVariant.Highlight
+    RendererActionPhase.TimeoutExpired -> StatusVariant.Caution
+    RendererActionPhase.Confirmed -> StatusVariant.Success
+    RendererActionPhase.Ready,
+    RendererActionPhase.Locked,
+    -> StatusVariant.Neutral
+}
+
+fun lessonRetryHintBodyFor(defaultHint: String): String =
+    if (defaultHint.isBlank()) "先看提示，再换答案。" else defaultHint
+
 fun lessonAttemptCopyFor(
     lessonIsReview: Boolean,
     feedback: AnswerFeedbackUiState?,
