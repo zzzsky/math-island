@@ -3,6 +3,7 @@ package com.mathisland.app.feature.level
 import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import com.mathisland.app.feature.level.renderers.RendererActionPhase
 
 data class LevelStatusCardState(
     val tone: LessonStatusTone,
@@ -15,44 +16,51 @@ fun attemptStatusCardStateFor(
     lesson: Lesson,
     feedback: AnswerFeedbackUiState?
 ): LevelStatusCardState {
+    val copy = lessonAttemptCopyFor(
+        lessonIsReview = lesson.isReview,
+        feedback = feedback,
+        phase = when (feedback?.kind) {
+            AnswerFeedbackKind.Correct -> RendererActionPhase.Confirmed
+            AnswerFeedbackKind.Incorrect -> RendererActionPhase.Retry
+            AnswerFeedbackKind.TimedWarning -> RendererActionPhase.Ready
+            AnswerFeedbackKind.TimeoutExpired -> RendererActionPhase.TimeoutExpired
+            null -> RendererActionPhase.Ready
+        }
+    )
     return when (feedback?.kind) {
         AnswerFeedbackKind.Correct -> LevelStatusCardState(
             tone = LessonStatusTone.Confirmed,
             title = "当前状态",
-            subtitle = "答案已确认",
-            body = "马上进入下一题。"
+            subtitle = copy.statusSubtitle,
+            body = copy.statusBody
         )
 
         AnswerFeedbackKind.Incorrect -> LevelStatusCardState(
             tone = LessonStatusTone.Retry,
             title = "当前状态",
-            subtitle = "再次尝试",
-            body = feedback.body
+            subtitle = copy.statusSubtitle,
+            body = copy.statusBody
         )
 
         AnswerFeedbackKind.TimedWarning -> LevelStatusCardState(
             tone = LessonStatusTone.Warning,
             title = "当前状态",
-            subtitle = "限时进行中",
-            body = "先交最有把握的答案。"
+            subtitle = copy.statusSubtitle,
+            body = copy.statusBody
         )
 
         AnswerFeedbackKind.TimeoutExpired -> LevelStatusCardState(
             tone = LessonStatusTone.Warning,
             title = "当前状态",
-            subtitle = "本题已超时",
-            body = "直接看下一题。"
+            subtitle = copy.statusSubtitle,
+            body = copy.statusBody
         )
 
         null -> LevelStatusCardState(
             tone = LessonStatusTone.Neutral,
             title = "当前状态",
-            subtitle = if (lesson.isReview) "先看线索" else "准备作答",
-            body = if (lesson.isReview) {
-                "这节是回放题，先读提示再作答。"
-            } else {
-                "先看题目，再提交答案。"
-            }
+            subtitle = copy.statusSubtitle,
+            body = copy.statusBody
         )
     }
 }

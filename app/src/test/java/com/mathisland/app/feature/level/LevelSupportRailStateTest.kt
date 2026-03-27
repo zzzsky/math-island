@@ -41,7 +41,10 @@ class LevelSupportRailStateTest {
         assertEquals("总星星 8", state.trailingSummary)
         assertNull(state.timerChipText)
         assertNull(state.timerNote)
-        assertEquals(listOf("lesson-attempt-status", "lesson-question-card"), state.cards.map { it.tag })
+        assertEquals(
+            listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-question-card"),
+            state.cards.map { it.tag }
+        )
     }
 
     @Test
@@ -71,7 +74,7 @@ class LevelSupportRailStateTest {
         assertEquals("限时 00:05", state.timerChipText)
         assertEquals("倒计时结束会直接结算，本轮不计通关。", state.timerNote)
         assertEquals(
-            listOf("lesson-attempt-status", "lesson-timer-status", "lesson-question-card"),
+            listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-timer-status", "lesson-question-card"),
             state.cards.map { it.tag }
         )
     }

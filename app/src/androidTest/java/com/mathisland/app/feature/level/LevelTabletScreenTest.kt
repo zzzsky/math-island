@@ -8,10 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.Lesson
@@ -74,7 +76,12 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithTag("lesson-timer-note").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-next-step-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-support-rail")
+            .performScrollToNode(hasTestTag("lesson-timer-status"))
         composeRule.onNodeWithTag("lesson-timer-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-support-rail")
+            .performScrollToNode(hasTestTag("lesson-question-card"))
         composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
         composeRule.onNodeWithTag("level-answer-pane").assertIsDisplayed()
     }
@@ -124,6 +131,9 @@ class LevelTabletScreenTest {
 
         composeRule.onNodeWithTag("lesson-route-summary").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-next-step-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("lesson-support-rail")
+            .performScrollToNode(hasTestTag("lesson-question-card"))
         composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
         composeRule.onAllNodesWithTag("lesson-timer").assertCountEquals(0)
         composeRule.onAllNodesWithTag("lesson-timer-note").assertCountEquals(0)

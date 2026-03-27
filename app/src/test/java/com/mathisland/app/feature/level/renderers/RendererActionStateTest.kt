@@ -19,8 +19,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Primary, state.resolveRole(ActionRole.Primary))
-        assertEquals("准备作答", state.sectionTitle())
-        assertEquals("先看题目，再提交答案。", state.sectionBody())
+        assertEquals("现在就答", state.sectionTitle())
+        assertEquals("先看右侧题目，再完成这次作答。", state.sectionBody())
     }
 
     @Test
@@ -37,8 +37,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("再试一次", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
-        assertEquals("再次尝试", state.sectionTitle())
-        assertEquals("先看提示，再判断答案。", state.sectionBody())
+        assertEquals("继续重试", state.sectionTitle())
+        assertEquals("先看刚才的尝试，再换一个答案。", state.sectionBody())
     }
 
     @Test
@@ -55,8 +55,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已确认", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Completed, state.resolveRole(ActionRole.Primary))
-        assertEquals("答案已确认", state.sectionTitle())
-        assertEquals("马上进入下一题。", state.sectionBody())
+        assertEquals("准备切题", state.sectionTitle())
+        assertEquals("保持节奏，马上进入下一题。", state.sectionBody())
     }
 
     @Test
@@ -91,7 +91,7 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已超时", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
-        assertEquals("本题已超时", state.sectionTitle())
-        assertEquals("直接看下一题。", state.sectionBody())
+        assertEquals("继续推进", state.sectionTitle())
+        assertEquals("本题结束，直接看下一题。", state.sectionBody())
     }
 }

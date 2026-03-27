@@ -1,6 +1,9 @@
 package com.mathisland.app.feature.level
 
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
+import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
+import com.mathisland.app.feature.level.renderers.RendererActionPhase
+import com.mathisland.app.feature.level.renderers.rendererActionStateFor
 
 data class LevelSupportCardModel(
     val tag: String,
@@ -24,6 +27,16 @@ fun levelSupportRailStateFor(
     feedback: AnswerFeedbackUiState?
 ): LevelSupportRailState {
     val lesson = state.lesson
+    val actionState = rendererActionStateFor(
+        feedback = feedback,
+        inputEnabled = feedback?.kind != AnswerFeedbackKind.Correct && feedback?.kind != AnswerFeedbackKind.TimeoutExpired,
+        isReview = lesson.isReview
+    )
+    val copy = lessonAttemptCopyFor(
+        lessonIsReview = lesson.isReview,
+        feedback = feedback,
+        phase = actionState.phase
+    )
     val cards = buildList {
         val attempt = attemptStatusCardStateFor(
             lesson = lesson,
@@ -36,6 +49,22 @@ fun levelSupportRailStateFor(
                 subtitle = attempt.subtitle,
                 body = attempt.body,
                 tone = attempt.tone
+            )
+        )
+        add(
+            LevelSupportCardModel(
+                tag = "lesson-next-step-card",
+                title = "下一步",
+                subtitle = copy.nextStepSubtitle,
+                body = copy.nextStepBody,
+                tone = when (actionState.phase) {
+                    RendererActionPhase.Retry -> LessonStatusTone.Retry
+                    RendererActionPhase.Confirmed -> LessonStatusTone.Confirmed
+                    RendererActionPhase.TimeoutExpired -> LessonStatusTone.Warning
+                    RendererActionPhase.Ready,
+                    RendererActionPhase.Locked,
+                    -> if (lesson.timeLimitSeconds != null) LessonStatusTone.Highlight else LessonStatusTone.Neutral
+                }
             )
         )
         if (lesson.timeLimitSeconds != null) {

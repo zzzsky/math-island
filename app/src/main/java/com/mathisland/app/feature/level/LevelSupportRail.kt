@@ -18,7 +18,7 @@ fun LevelSupportRail(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("lesson-support-rail"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
     ) {
         StatusChip(

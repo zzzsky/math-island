@@ -3,9 +3,10 @@ package com.mathisland.app.feature.level
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -160,9 +161,13 @@ fun LevelTabletScreen(
                     supportState = supportRailState
                 )
 
-                LevelSupportRail(state = supportRailState)
+                LevelSupportRail(
+                    state = supportRailState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                )
 
-                Spacer(modifier = Modifier.weight(1f))
                 ActionButton(
                     text = "返回地图",
                     onClick = onQuit,
@@ -181,7 +186,8 @@ fun LevelTabletScreen(
                 feedbackState,
                 rendererActionStateFor(
                     feedback = feedbackState,
-                    inputEnabled = inputEnabled
+                    inputEnabled = inputEnabled,
+                    isReview = lesson.isReview
                 ),
                 handleAnswer
             )

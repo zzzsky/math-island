@@ -1,5 +1,6 @@
 package com.mathisland.app.feature.level.renderers
 
+import com.mathisland.app.feature.level.lessonAttemptCopyFor
 import com.mathisland.app.ui.theme.ActionRole
 
 enum class RendererActionPhase {
@@ -13,6 +14,7 @@ enum class RendererActionPhase {
 data class RendererActionState(
     val phase: RendererActionPhase,
     val enabled: Boolean,
+    val isReview: Boolean = false,
 ) {
     fun resolveLabel(defaultLabel: String): String = when (phase) {
         RendererActionPhase.Retry -> "再试一次"
@@ -32,48 +34,86 @@ data class RendererActionState(
     }
 
     fun sectionTitle(): String = when (phase) {
-        RendererActionPhase.Ready -> "准备作答"
-        RendererActionPhase.Retry -> "再次尝试"
-        RendererActionPhase.Confirmed -> "答案已确认"
+        RendererActionPhase.Ready -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepSubtitle
+        RendererActionPhase.Retry -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepSubtitle
+        RendererActionPhase.Confirmed -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepSubtitle
         RendererActionPhase.Locked -> "正在检查"
-        RendererActionPhase.TimeoutExpired -> "本题已超时"
+        RendererActionPhase.TimeoutExpired -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepSubtitle
     }
 
     fun sectionBody(): String = when (phase) {
-        RendererActionPhase.Ready -> "先看题目，再提交答案。"
-        RendererActionPhase.Retry -> "先看提示，再判断答案。"
-        RendererActionPhase.Confirmed -> "马上进入下一题。"
+        RendererActionPhase.Ready -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepBody
+        RendererActionPhase.Retry -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepBody
+        RendererActionPhase.Confirmed -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepBody
         RendererActionPhase.Locked -> "稍等片刻。"
-        RendererActionPhase.TimeoutExpired -> "直接看下一题。"
+        RendererActionPhase.TimeoutExpired -> lessonAttemptCopyFor(
+            lessonIsReview = isReview,
+            feedback = null,
+            phase = phase
+        ).nextStepBody
     }
 }
 
 fun rendererActionStateFor(
     feedback: AnswerFeedbackUiState?,
     inputEnabled: Boolean,
+    isReview: Boolean = false,
 ): RendererActionState = when {
     feedback?.kind == AnswerFeedbackKind.TimeoutExpired -> RendererActionState(
         phase = RendererActionPhase.TimeoutExpired,
-        enabled = false
+        enabled = false,
+        isReview = isReview
     )
 
     !inputEnabled && feedback?.kind == AnswerFeedbackKind.Correct -> RendererActionState(
         phase = RendererActionPhase.Confirmed,
-        enabled = false
+        enabled = false,
+        isReview = isReview
     )
 
     !inputEnabled -> RendererActionState(
         phase = RendererActionPhase.Locked,
-        enabled = false
+        enabled = false,
+        isReview = isReview
     )
 
     feedback?.kind == AnswerFeedbackKind.Incorrect -> RendererActionState(
         phase = RendererActionPhase.Retry,
-        enabled = true
+        enabled = true,
+        isReview = isReview
     )
 
     else -> RendererActionState(
         phase = RendererActionPhase.Ready,
-        enabled = inputEnabled
+        enabled = inputEnabled,
+        isReview = isReview
     )
 }
