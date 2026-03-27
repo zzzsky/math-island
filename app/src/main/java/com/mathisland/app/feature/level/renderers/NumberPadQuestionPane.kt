@@ -91,7 +91,7 @@ fun NumberPadQuestionPane(
             context = {
                 RendererGuidanceCard(
                     title = "数字键盘",
-                    body = "可输入答案：${question.choices.joinToString(" / ")}"
+                    body = "先输入答案，再提交。"
                 )
             },
             feedback = feedback,

@@ -40,7 +40,7 @@ fun SortQuestionPane(
         feedback = feedback,
         actionState = actionState,
         header = "灯塔排序板",
-        helper = "比较大小或顺序后，点亮正确信号灯。",
+        helper = "先比较顺序，再选答案。",
         affordance = {
             StoryPanelCard(
                 modifier = Modifier.fillMaxWidth(),

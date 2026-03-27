@@ -36,7 +36,7 @@ fun ChantQuestionPane(
         feedback = feedback,
         actionState = actionState,
         header = "口诀回声",
-        helper = "先大声念口诀，再点中正确答案。",
+        helper = "先念口诀，再选答案。",
         affordance = {
             Card(
                 modifier = Modifier.fillMaxWidth(),

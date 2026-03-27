@@ -37,7 +37,7 @@ fun GroupQuestionPane(
         feedback = feedback,
         actionState = actionState,
         header = "分组操作台",
-        helper = "先想想该怎么分组或分类，再确认答案。",
+        helper = "先分组，再选答案。",
         affordance = {
             StoryPanelCard(
                 modifier = Modifier.fillMaxWidth(),

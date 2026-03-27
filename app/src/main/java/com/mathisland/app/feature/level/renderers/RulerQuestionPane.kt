@@ -37,7 +37,7 @@ fun RulerQuestionPane(
         feedback = feedback,
         actionState = actionState,
         header = "尺子工坊",
-        helper = "拖动尺子观察刻度，再选择最合适的答案。",
+        helper = "先看刻度，再选答案。",
         affordance = {
             StoryPanelCard(
                 modifier = Modifier.fillMaxWidth(),

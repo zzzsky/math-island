@@ -207,7 +207,7 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-ruler").assertIsDisplayed()
         composeRule.onNodeWithTag("tablet-ruler-handle").assertIsDisplayed()
         composeRule.onAllNodesWithTag("answer-10 厘米").assertCountEquals(1)
-        composeRule.onNodeWithText("拖动尺子观察刻度，再选择最合适的答案。").assertIsDisplayed()
+        composeRule.onNodeWithText("先看刻度，再选答案。").assertIsDisplayed()
     }
 
     @Test
@@ -231,7 +231,7 @@ class LevelAnswerPaneTest {
 
         composeRule.onNodeWithTag("renderer-chant").assertIsDisplayed()
         composeRule.onNodeWithTag("chant-beat-strip").assertIsDisplayed()
-        composeRule.onNodeWithText("先大声念口诀，再点中正确答案。").assertIsDisplayed()
+        composeRule.onNodeWithText("先念口诀，再选答案。").assertIsDisplayed()
     }
 
     @Test
@@ -255,7 +255,7 @@ class LevelAnswerPaneTest {
 
         composeRule.onNodeWithTag("renderer-group").assertIsDisplayed()
         composeRule.onNodeWithTag("group-basket-zone").assertIsDisplayed()
-        composeRule.onNodeWithText("先想想该怎么分组或分类，再确认答案。").assertIsDisplayed()
+        composeRule.onNodeWithText("先分组，再选答案。").assertIsDisplayed()
     }
 
     @Test
@@ -279,6 +279,6 @@ class LevelAnswerPaneTest {
 
         composeRule.onNodeWithTag("renderer-sort").assertIsDisplayed()
         composeRule.onNodeWithTag("sort-signal-lights").assertIsDisplayed()
-        composeRule.onNodeWithText("比较大小或顺序后，点亮正确信号灯。").assertIsDisplayed()
+        composeRule.onNodeWithText("先比较顺序，再选答案。").assertIsDisplayed()
     }
 }
