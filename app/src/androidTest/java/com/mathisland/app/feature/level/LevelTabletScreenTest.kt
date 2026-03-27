@@ -83,9 +83,7 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithTag("lesson-support-rail")
             .performScrollToNode(hasTestTag("lesson-timer-status"))
         composeRule.onNodeWithTag("lesson-timer-status").assertIsDisplayed()
-        composeRule.onNodeWithTag("lesson-support-rail")
-            .performScrollToNode(hasTestTag("lesson-question-card"))
-        composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("lesson-question-card").assertCountEquals(0)
         composeRule.onNodeWithTag("level-answer-pane").assertIsDisplayed()
     }
 
@@ -137,9 +135,7 @@ class LevelTabletScreenTest {
         composeRule.onNodeWithTag("lesson-route-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
         composeRule.onNodeWithTag("lesson-next-step-card").assertIsDisplayed()
-        composeRule.onNodeWithTag("lesson-support-rail")
-            .performScrollToNode(hasTestTag("lesson-question-card"))
-        composeRule.onNodeWithTag("lesson-question-card").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("lesson-question-card").assertCountEquals(0)
         composeRule.onAllNodesWithTag("lesson-timer").assertCountEquals(0)
         composeRule.onAllNodesWithTag("lesson-timer-note").assertCountEquals(0)
         composeRule.onAllNodesWithTag("lesson-timer-status").assertCountEquals(0)

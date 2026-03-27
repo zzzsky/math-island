@@ -96,36 +96,6 @@ fun levelSupportRailStateFor(
                 )
             )
         }
-        add(
-            LevelSupportCardModel(
-                tag = "lesson-question-card",
-                title = if (lesson.isReview) "回放线索" else "题目提示",
-                subtitle = state.question.prompt,
-                body = state.question.hint.ifBlank {
-                    if (lesson.isReview) {
-                        "先看线索，再重新判断一次。"
-                    } else {
-                        "先看题目，再提交答案。"
-                    }
-                },
-                tone = when (actionState.phase) {
-                    RendererActionPhase.Retry -> LessonStatusTone.Retry
-                    RendererActionPhase.Confirmed -> LessonStatusTone.Confirmed
-                    RendererActionPhase.TimeoutExpired -> LessonStatusTone.Warning
-                    RendererActionPhase.Ready,
-                    RendererActionPhase.Locked,
-                    -> if (lesson.isReview) LessonStatusTone.Highlight else LessonStatusTone.Neutral
-                },
-                badgeText = lessonPromptBadgeTextFor(
-                    phase = actionState.phase,
-                    lessonIsReview = lesson.isReview
-                ),
-                badgeVariant = lessonPromptBadgeVariantFor(
-                    phase = actionState.phase,
-                    lessonIsReview = lesson.isReview
-                )
-            )
-        )
     }
 
     return LevelSupportRailState(
