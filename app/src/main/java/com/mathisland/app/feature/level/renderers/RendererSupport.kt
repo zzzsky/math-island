@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
@@ -88,6 +89,13 @@ internal fun RendererOptionsColumn(
                             .padding(SpacingTokens.Lg),
                         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                     ) {
+                        optionFeedback.badgeText?.let { badgeText ->
+                            StatusChip(
+                                text = badgeText,
+                                variant = optionFeedback.badgeVariant,
+                                modifier = Modifier.testTag("answer-state-chip-$choice")
+                            )
+                        }
                         Text(
                             text = choice,
                             style = TypographyTokens.FeatureTitle,

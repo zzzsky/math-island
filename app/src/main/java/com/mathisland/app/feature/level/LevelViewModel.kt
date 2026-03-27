@@ -39,7 +39,7 @@ object LevelViewModel {
                 AnswerFeedbackUiState(
                     kind = AnswerFeedbackKind.TimedWarning,
                     title = "限时进行中",
-                    body = "注意倒计时，先交当前最有把握的答案。"
+                    body = "先交最有把握的答案。"
                 )
             } else {
                 null

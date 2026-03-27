@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.StoryPanelCard
 import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.RadiusTokens
@@ -111,6 +112,13 @@ fun NumberPadQuestionPane(
                                 .padding(horizontal = SpacingTokens.Lg, vertical = SpacingTokens.Xl),
                             verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                         ) {
+                            displayState.badgeText?.let { badgeText ->
+                                StatusChip(
+                                    text = badgeText,
+                                    variant = displayState.badgeVariant,
+                                    modifier = Modifier.testTag("number-pad-tone-chip")
+                                )
+                            }
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -193,14 +201,14 @@ fun NumberPadQuestionPane(
                                     role = if (key == "提交") submitActionRole else ActionRole.Secondary,
                                     containerColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
                                         TabletSand
-                                    } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                                    } else if (key == "提交" && (submitActionRole == ActionRole.Secondary || submitActionRole == ActionRole.Completed)) {
                                         null
                                     } else {
                                         RendererTokens.OptionSurface
                                     },
                                     contentColor = if (key == "提交" && submitActionRole == ActionRole.Recommended) {
                                         TabletDeepWater
-                                    } else if (key == "提交" && submitActionRole == ActionRole.Secondary) {
+                                    } else if (key == "提交" && (submitActionRole == ActionRole.Secondary || submitActionRole == ActionRole.Completed)) {
                                         null
                                     } else {
                                         TabletFoam

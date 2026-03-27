@@ -20,7 +20,7 @@ class RendererActionStateTest {
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Primary, state.resolveRole(ActionRole.Primary))
         assertEquals("准备作答", state.sectionTitle())
-        assertEquals("先看题目，再提交这次答案。", state.sectionBody())
+        assertEquals("先看题目，再提交答案。", state.sectionBody())
     }
 
     @Test
@@ -37,8 +37,8 @@ class RendererActionStateTest {
         assertTrue(state.enabled)
         assertEquals("再试一次", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
-        assertEquals("正在重试", state.sectionTitle())
-        assertEquals("先看提示，再判断一次。", state.sectionBody())
+        assertEquals("再次尝试", state.sectionTitle())
+        assertEquals("先看提示，再判断答案。", state.sectionBody())
     }
 
     @Test
@@ -55,8 +55,8 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已确认", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Completed, state.resolveRole(ActionRole.Primary))
-        assertEquals("已确认", state.sectionTitle())
-        assertEquals("答案已确认，马上进入下一题。", state.sectionBody())
+        assertEquals("答案已确认", state.sectionTitle())
+        assertEquals("马上进入下一题。", state.sectionBody())
     }
 
     @Test
@@ -74,7 +74,7 @@ class RendererActionStateTest {
         assertEquals("选择这个答案", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
         assertEquals("正在检查", state.sectionTitle())
-        assertEquals("这次提交正在检查，请稍等片刻。", state.sectionBody())
+        assertEquals("稍等片刻。", state.sectionBody())
     }
 
     @Test
@@ -91,7 +91,7 @@ class RendererActionStateTest {
         assertFalse(state.enabled)
         assertEquals("已超时", state.resolveLabel("选择这个答案"))
         assertEquals(ActionRole.Secondary, state.resolveRole(ActionRole.Primary))
-        assertEquals("已超时", state.sectionTitle())
-        assertEquals("本题时间已到，请直接进入下一题。", state.sectionBody())
+        assertEquals("本题已超时", state.sectionTitle())
+        assertEquals("直接看下一题。", state.sectionBody())
     }
 }

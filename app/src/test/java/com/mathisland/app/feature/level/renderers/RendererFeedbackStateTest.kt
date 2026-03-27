@@ -49,7 +49,8 @@ class RendererFeedbackStateTest {
         )
 
         assertEquals(OptionFeedbackTone.Retry, state.tone)
-        assertEquals("这是刚才的尝试", state.supportingText)
+        assertEquals("刚才选了这个", state.supportingText)
+        assertEquals("重试", state.badgeText)
     }
 
     @Test
@@ -65,7 +66,8 @@ class RendererFeedbackStateTest {
         )
 
         assertEquals(OptionFeedbackTone.Confirmed, state.tone)
-        assertEquals("这就是本次提交", state.supportingText)
+        assertEquals("这次答对了", state.supportingText)
+        assertEquals("已确认", state.badgeText)
     }
 
     @Test
@@ -81,7 +83,8 @@ class RendererFeedbackStateTest {
         )
 
         assertEquals(OptionFeedbackTone.TimeoutExpired, state.tone)
-        assertEquals("这次尝试已超时", state.supportingText)
+        assertEquals("这次尝试超时", state.supportingText)
+        assertEquals("已超时", state.badgeText)
     }
 
     @Test
@@ -98,7 +101,8 @@ class RendererFeedbackStateTest {
 
         assertEquals(NumberPadDisplayTone.Retry, state.tone)
         assertEquals("45", state.displayText)
-        assertEquals("先检查刚才的输入，再试一次", state.supportingText)
+        assertEquals("先检查这次输入，再试一次", state.supportingText)
+        assertEquals("重试中", state.badgeText)
     }
 
     @Test
@@ -111,6 +115,7 @@ class RendererFeedbackStateTest {
         assertEquals(NumberPadDisplayTone.Ready, state.tone)
         assertEquals("81", state.displayText)
         assertEquals("已输入 2 位，准备提交", state.supportingText)
+        assertEquals("准备提交", state.badgeText)
     }
 
     @Test
@@ -127,6 +132,7 @@ class RendererFeedbackStateTest {
 
         assertEquals(NumberPadDisplayTone.TimeoutExpired, state.tone)
         assertEquals("45", state.displayText)
-        assertEquals("本题已超时，请直接看下一题。", state.supportingText)
+        assertEquals("本题已超时，直接看下一题。", state.supportingText)
+        assertEquals("已超时", state.badgeText)
     }
 }

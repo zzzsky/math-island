@@ -108,8 +108,8 @@ class LevelTabletScreenTest {
                         flowHint = "冲刺结束后会显示评级，并决定是否优先进入错题回放。",
                         initialFeedback = AnswerFeedbackUiState(
                             kind = AnswerFeedbackKind.TimeoutExpired,
-                            title = "已超时",
-                            body = "本轮冲刺已经结束，这题按当前结果结算。",
+                            title = "本题已超时",
+                            body = "直接看下一题。",
                             submittedAnswer = "72"
                         )
                     ),
@@ -127,7 +127,7 @@ class LevelTabletScreenTest {
         }
 
         composeRule.onNodeWithTag("lesson-attempt-status").assertIsDisplayed()
-        composeRule.onNodeWithText("已超时").assertIsDisplayed()
-        composeRule.onNodeWithText("本轮冲刺已经结束，这题按当前结果结算。").assertIsDisplayed()
+        composeRule.onNodeWithText("本题已超时").assertIsDisplayed()
+        composeRule.onNodeWithText("直接看下一题。").assertIsDisplayed()
     }
 }

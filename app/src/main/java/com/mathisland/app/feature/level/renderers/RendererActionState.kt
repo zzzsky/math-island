@@ -33,18 +33,18 @@ data class RendererActionState(
 
     fun sectionTitle(): String = when (phase) {
         RendererActionPhase.Ready -> "准备作答"
-        RendererActionPhase.Retry -> "正在重试"
-        RendererActionPhase.Confirmed -> "已确认"
+        RendererActionPhase.Retry -> "再次尝试"
+        RendererActionPhase.Confirmed -> "答案已确认"
         RendererActionPhase.Locked -> "正在检查"
-        RendererActionPhase.TimeoutExpired -> "已超时"
+        RendererActionPhase.TimeoutExpired -> "本题已超时"
     }
 
     fun sectionBody(): String = when (phase) {
-        RendererActionPhase.Ready -> "先看题目，再提交这次答案。"
-        RendererActionPhase.Retry -> "先看提示，再判断一次。"
-        RendererActionPhase.Confirmed -> "答案已确认，马上进入下一题。"
-        RendererActionPhase.Locked -> "这次提交正在检查，请稍等片刻。"
-        RendererActionPhase.TimeoutExpired -> "本题时间已到，请直接进入下一题。"
+        RendererActionPhase.Ready -> "先看题目，再提交答案。"
+        RendererActionPhase.Retry -> "先看提示，再判断答案。"
+        RendererActionPhase.Confirmed -> "马上进入下一题。"
+        RendererActionPhase.Locked -> "稍等片刻。"
+        RendererActionPhase.TimeoutExpired -> "直接看下一题。"
     }
 }
 

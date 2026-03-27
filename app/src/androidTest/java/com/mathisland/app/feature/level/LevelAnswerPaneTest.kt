@@ -144,7 +144,8 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
-        composeRule.onNodeWithText("本题已超时，请直接看下一题。").assertIsDisplayed()
+        composeRule.onNodeWithTag("number-pad-tone-chip").assertIsDisplayed()
+        composeRule.onNodeWithText("本题已超时，直接看下一题。").assertIsDisplayed()
     }
 
     @Test
@@ -179,7 +180,8 @@ class LevelAnswerPaneTest {
 
         composeRule.onNodeWithTag("renderer-choice").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-state-45").assertIsDisplayed()
-        composeRule.onNodeWithText("这次尝试已超时").assertIsDisplayed()
+        composeRule.onNodeWithTag("answer-state-chip-45").assertIsDisplayed()
+        composeRule.onNodeWithText("这次尝试超时").assertIsDisplayed()
         composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
     }
 

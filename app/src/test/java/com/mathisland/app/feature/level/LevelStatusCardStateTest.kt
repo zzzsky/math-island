@@ -40,7 +40,7 @@ class LevelStatusCardStateTest {
 
         assertEquals(LessonStatusTone.Neutral, state.tone)
         assertEquals("准备作答", state.subtitle)
-        assertEquals("先看题目，再提交这次答案。", state.body)
+        assertEquals("先看题目，再提交答案。", state.body)
     }
 
     @Test
@@ -56,7 +56,7 @@ class LevelStatusCardStateTest {
         )
 
         assertEquals(LessonStatusTone.Retry, state.tone)
-        assertEquals("正在重试", state.subtitle)
+        assertEquals("再次尝试", state.subtitle)
         assertEquals("先看题目线索，再重新判断一次。", state.body)
     }
 
@@ -73,8 +73,8 @@ class LevelStatusCardStateTest {
         )
 
         assertEquals(LessonStatusTone.Confirmed, state.tone)
-        assertEquals("已确认", state.subtitle)
-        assertEquals("这题已经通过，继续往前推进。", state.body)
+        assertEquals("答案已确认", state.subtitle)
+        assertEquals("马上进入下一题。", state.body)
     }
 
     @Test
@@ -90,8 +90,8 @@ class LevelStatusCardStateTest {
         )
 
         assertEquals(LessonStatusTone.Warning, state.tone)
-        assertEquals("已超时", state.subtitle)
-        assertEquals("本轮冲刺已经结束，这题按当前结果结算。", state.body)
+        assertEquals("本题已超时", state.subtitle)
+        assertEquals("直接看下一题。", state.body)
     }
 
     @Test
@@ -103,7 +103,7 @@ class LevelStatusCardStateTest {
 
         assertEquals(LessonStatusTone.Warning, state.tone)
         assertEquals("最后冲刺", state.subtitle)
-        assertEquals("只剩 00:02，优先快速提交，不要停在这一题。", state.body)
+        assertEquals("只剩 00:02，先交最有把握的答案。", state.body)
     }
 
     @Test

@@ -94,8 +94,8 @@ fun LevelTabletScreen(
             inputEnabled = false
             feedbackState = AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.TimeoutExpired,
-                title = "已超时",
-                body = "本轮冲刺已经结束，这题按当前结果结算。",
+                title = "本题已超时",
+                body = "直接看下一题。",
                 submittedAnswer = feedbackState?.submittedAnswer
             )
             onExpire?.invoke()
@@ -124,18 +124,14 @@ fun LevelTabletScreen(
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Correct,
                 title = "答对了",
-                body = if (lesson.timeLimitSeconds != null) {
-                    "保持这个节奏，马上进入下一题。"
-                } else {
-                    "这题已经通过，继续往前推进。"
-                },
+                body = "马上进入下一题。",
                 submittedAnswer = answer
             )
         } else {
             AnswerFeedbackUiState(
                 kind = AnswerFeedbackKind.Incorrect,
                 title = "再试一次",
-                body = question.hint.ifBlank { "看看题目线索，再重新判断一次。" },
+                body = question.hint.ifBlank { "先看提示，再判断答案。" },
                 submittedAnswer = answer
             )
         }
@@ -234,7 +230,7 @@ fun LevelTabletScreen(
                         )
                         if (lesson.timeLimitSeconds != null) {
                             Text(
-                                text = "倒计时结束会直接结算，本轮作为冲刺练习不计通关。",
+                                text = "倒计时结束会直接结算，本轮不计通关。",
                                 style = TypographyTokens.BodyPrimary,
                                 color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface),
                                 modifier = Modifier.testTag("lesson-timer-note")

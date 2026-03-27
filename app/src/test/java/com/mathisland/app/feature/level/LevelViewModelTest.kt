@@ -68,7 +68,7 @@ class LevelViewModelTest {
 
         assertEquals("冲刺结束后会显示评级，并决定是否优先进入错题回放。", uiState?.flowHint)
         assertEquals("限时进行中", uiState?.initialFeedback?.title)
-        assertEquals("注意倒计时，先交当前最有把握的答案。", uiState?.initialFeedback?.body)
+        assertEquals("先交最有把握的答案。", uiState?.initialFeedback?.body)
         assertEquals(AnswerFeedbackKind.TimedWarning, uiState?.initialFeedback?.kind)
     }
 

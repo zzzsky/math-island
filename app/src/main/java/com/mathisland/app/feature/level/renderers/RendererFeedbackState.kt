@@ -1,5 +1,7 @@
 package com.mathisland.app.feature.level.renderers
 
+import com.mathisland.app.ui.theme.StatusVariant
+
 enum class OptionFeedbackTone {
     Neutral,
     Retry,
@@ -9,7 +11,9 @@ enum class OptionFeedbackTone {
 
 data class OptionFeedbackState(
     val tone: OptionFeedbackTone,
-    val supportingText: String? = null
+    val supportingText: String? = null,
+    val badgeText: String? = null,
+    val badgeVariant: StatusVariant = StatusVariant.Neutral
 )
 
 enum class NumberPadDisplayTone {
@@ -23,7 +27,9 @@ enum class NumberPadDisplayTone {
 data class NumberPadDisplayState(
     val tone: NumberPadDisplayTone,
     val displayText: String,
-    val supportingText: String
+    val supportingText: String,
+    val badgeText: String? = null,
+    val badgeVariant: StatusVariant = StatusVariant.Neutral
 )
 
 fun optionFeedbackStateFor(
@@ -36,17 +42,23 @@ fun optionFeedbackStateFor(
     return when (feedback.kind) {
         AnswerFeedbackKind.Incorrect -> OptionFeedbackState(
             tone = OptionFeedbackTone.Retry,
-            supportingText = "这是刚才的尝试"
+            supportingText = "刚才选了这个",
+            badgeText = "重试",
+            badgeVariant = StatusVariant.Highlight
         )
 
         AnswerFeedbackKind.Correct -> OptionFeedbackState(
             tone = OptionFeedbackTone.Confirmed,
-            supportingText = "这就是本次提交"
+            supportingText = "这次答对了",
+            badgeText = "已确认",
+            badgeVariant = StatusVariant.Success
         )
 
         AnswerFeedbackKind.TimeoutExpired -> OptionFeedbackState(
             tone = OptionFeedbackTone.TimeoutExpired,
-            supportingText = "这次尝试已超时"
+            supportingText = "这次尝试超时",
+            badgeText = "已超时",
+            badgeVariant = StatusVariant.Caution
         )
 
         AnswerFeedbackKind.TimedWarning -> OptionFeedbackState(OptionFeedbackTone.Neutral)
@@ -62,19 +74,25 @@ fun numberPadDisplayStateFor(
         AnswerFeedbackKind.Correct -> NumberPadDisplayState(
             tone = NumberPadDisplayTone.Confirmed,
             displayText = submittedAnswer ?: enteredAnswer.ifEmpty { "请输入答案" },
-            supportingText = "答案已确认，马上进入下一题"
+            supportingText = "答案已确认，马上进入下一题",
+            badgeText = "已确认",
+            badgeVariant = StatusVariant.Success
         )
 
         AnswerFeedbackKind.Incorrect -> NumberPadDisplayState(
             tone = NumberPadDisplayTone.Retry,
             displayText = submittedAnswer ?: enteredAnswer.ifEmpty { "请输入答案" },
-            supportingText = "先检查刚才的输入，再试一次"
+            supportingText = "先检查这次输入，再试一次",
+            badgeText = "重试中",
+            badgeVariant = StatusVariant.Highlight
         )
 
         AnswerFeedbackKind.TimeoutExpired -> NumberPadDisplayState(
             tone = NumberPadDisplayTone.TimeoutExpired,
             displayText = submittedAnswer ?: enteredAnswer.ifEmpty { "请输入答案" },
-            supportingText = "本题已超时，请直接看下一题。"
+            supportingText = "本题已超时，直接看下一题。",
+            badgeText = "已超时",
+            badgeVariant = StatusVariant.Caution
         )
 
         AnswerFeedbackKind.TimedWarning,
@@ -83,7 +101,9 @@ fun numberPadDisplayStateFor(
             NumberPadDisplayState(
                 tone = NumberPadDisplayTone.Ready,
                 displayText = enteredAnswer,
-                supportingText = "已输入 ${enteredAnswer.length} 位，准备提交"
+                supportingText = "已输入 ${enteredAnswer.length} 位，准备提交",
+                badgeText = "准备提交",
+                badgeVariant = StatusVariant.Recommended
             )
         } else {
             NumberPadDisplayState(

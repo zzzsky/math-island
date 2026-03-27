@@ -19,14 +19,14 @@ fun attemptStatusCardStateFor(
         AnswerFeedbackKind.Correct -> LevelStatusCardState(
             tone = LessonStatusTone.Confirmed,
             title = "当前状态",
-            subtitle = "已确认",
-            body = feedback.body
+            subtitle = "答案已确认",
+            body = "马上进入下一题。"
         )
 
         AnswerFeedbackKind.Incorrect -> LevelStatusCardState(
             tone = LessonStatusTone.Retry,
             title = "当前状态",
-            subtitle = "正在重试",
+            subtitle = "再次尝试",
             body = feedback.body
         )
 
@@ -34,14 +34,14 @@ fun attemptStatusCardStateFor(
             tone = LessonStatusTone.Warning,
             title = "当前状态",
             subtitle = "限时进行中",
-            body = feedback.body
+            body = "先交最有把握的答案。"
         )
 
         AnswerFeedbackKind.TimeoutExpired -> LevelStatusCardState(
             tone = LessonStatusTone.Warning,
             title = "当前状态",
-            subtitle = "已超时",
-            body = feedback.body
+            subtitle = "本题已超时",
+            body = "直接看下一题。"
         )
 
         null -> LevelStatusCardState(
@@ -51,7 +51,7 @@ fun attemptStatusCardStateFor(
             body = if (lesson.isReview) {
                 "这节是回放题，先读提示再作答。"
             } else {
-                "先看题目，再提交这次答案。"
+                "先看题目，再提交答案。"
             }
         )
     }
@@ -69,9 +69,9 @@ fun timerPressureCardStateFor(
         else -> "保持节奏"
     }
     val body = when (subtitle) {
-        "最后冲刺" -> "只剩 ${formatCountdownText(remainingSeconds)}，优先快速提交，不要停在这一题。"
-        "时间过半" -> "还剩 ${formatCountdownText(remainingSeconds)}，先交当前最有把握的答案。"
-        else -> "当前还剩 ${formatCountdownText(remainingSeconds)}，保持节奏继续推进。"
+        "最后冲刺" -> "只剩 ${formatCountdownText(remainingSeconds)}，先交最有把握的答案。"
+        "时间过半" -> "还剩 ${formatCountdownText(remainingSeconds)}，优先提交当前答案。"
+        else -> "还剩 ${formatCountdownText(remainingSeconds)}，继续推进。"
     }
     return LevelStatusCardState(
         tone = when (subtitle) {
