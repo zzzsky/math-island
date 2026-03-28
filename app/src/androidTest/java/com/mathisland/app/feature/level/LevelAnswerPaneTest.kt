@@ -3,6 +3,7 @@ package com.mathisland.app.feature.level
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -114,11 +115,19 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-prompt-chip").assertIsDisplayed()
         composeRule.onAllNodesWithTag("renderer-guidance-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("renderer-guidance-chip").assertCountEquals(1)
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("renderer-action-chip"))
         composeRule.onNodeWithTag("renderer-action-header").assertIsDisplayed()
         composeRule.onNodeWithTag("renderer-action-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("answer-feedback-chip"))
         composeRule.onNodeWithTag("answer-feedback-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasText("重试提示"))
         composeRule.onNodeWithText("重试提示").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasText("先看提示，再换答案。"))
         composeRule.onNodeWithText("先看提示，再换答案。").assertIsDisplayed()
     }
 
@@ -155,11 +164,19 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
         composeRule.onNodeWithTag("renderer-prompt-card").assertIsDisplayed()
         composeRule.onNodeWithTag("renderer-prompt-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("renderer-action-chip"))
         composeRule.onNodeWithTag("renderer-action-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("answer-feedback-title"))
         composeRule.onNodeWithTag("answer-feedback-title").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("answer-feedback-chip"))
         composeRule.onNodeWithTag("answer-feedback-chip").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-status").assertIsDisplayed()
         composeRule.onNodeWithTag("number-pad-tone-chip").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasText("本题已超时，直接看下一题。"))
         composeRule.onNodeWithText("本题已超时，直接看下一题。").assertIsDisplayed()
     }
 

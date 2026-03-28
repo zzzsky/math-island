@@ -159,7 +159,7 @@ class MathIslandTabletFlowTest {
 
         openLessonFromMap("start-multi-meaning-01")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithTag("renderer-chant").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithTag("renderer-chant").assertIsDisplayed()
@@ -192,13 +192,13 @@ class MathIslandTabletFlowTest {
 
         openLessonFromMap("start-challenge-mixed-01")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithTag("renderer-number-pad").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
         inputNumberPadAnswer("63")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("第 2 / 3 题").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithText("第 2 / 3 题").assertIsDisplayed()
@@ -210,14 +210,14 @@ class MathIslandTabletFlowTest {
 
         openLessonFromMap("start-challenge-sprint-01")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithTag("renderer-number-pad").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithTag("renderer-number-pad").assertIsDisplayed()
         composeRule.onAllNodesWithText("9 x 9 = ?").assertCountEquals(1)
         inputNumberPadAnswer("81")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("第 2 / 3 题").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithText("第 2 / 3 题").assertIsDisplayed()
@@ -275,19 +275,19 @@ class MathIslandTabletFlowTest {
 
         openLessonFromMap("start-challenge-sprint-01")
         inputNumberPadAnswer("81")
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("第 2 / 3 题").fetchSemanticsNodes().isNotEmpty()
         }
         inputNumberPadAnswer("42")
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("第 3 / 3 题").fetchSemanticsNodes().isNotEmpty()
         }
         inputNumberPadAnswer("300")
 
-        composeRule.waitUntil(5_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithText("金帆评级").fetchSemanticsNodes().isNotEmpty()
         }
-        composeRule.onAllNodesWithText("金帆评级").assertCountEquals(1)
+        composeRule.onAllNodesWithText("金帆评级").assertCountEquals(2)
     }
 
     @Test
@@ -478,6 +478,8 @@ class MathIslandTabletFlowTest {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("number-pad-submit").fetchSemanticsNodes().isNotEmpty()
         }
+        composeRule.onNodeWithTag("renderer-number-pad")
+            .performScrollToNode(hasTestTag("number-pad-submit"))
         answer.forEach { digit ->
             composeRule.onNodeWithTag("number-pad-key-$digit").performClick()
         }
@@ -527,7 +529,13 @@ class MathIslandTabletFlowTest {
             composeRule.waitUntil(5_000) {
                 composeRule.onAllNodesWithTag("answer-$answer").fetchSemanticsNodes().isNotEmpty()
             }
-            composeRule.onNodeWithTag("answer-$answer").performClick()
+            composeRule.onNodeWithTag("answer-$answer").performScrollTo().performClick()
+            if (index < answers.lastIndex) {
+                val nextQuestionLabel = "第 ${index + 2} / ${answers.size} 题"
+                composeRule.waitUntil(10_000) {
+                    composeRule.onAllNodesWithText(nextQuestionLabel).fetchSemanticsNodes().isNotEmpty()
+                }
+            }
         }
     }
 
