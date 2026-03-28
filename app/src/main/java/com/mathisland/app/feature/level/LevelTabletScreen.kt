@@ -138,6 +138,11 @@ fun LevelTabletScreen(
         remainingSeconds = remainingSeconds,
         feedback = feedbackState
     )
+    val heroState = levelProgressHeroStateFor(
+        state = state,
+        remainingSeconds = remainingSeconds,
+        feedback = feedbackState
+    )
 
     Row(
         modifier = Modifier.fillMaxSize(),
@@ -158,7 +163,7 @@ fun LevelTabletScreen(
                     lesson = lesson,
                     questionIndex = state.questionIndex,
                     totalQuestions = state.totalQuestions,
-                    supportState = supportRailState
+                    heroState = heroState
                 )
 
                 LevelSupportRail(

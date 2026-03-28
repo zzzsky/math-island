@@ -31,13 +31,13 @@ fun LevelProgressHeroCard(
     lesson: Lesson,
     questionIndex: Int,
     totalQuestions: Int,
-    supportState: LevelSupportRailState,
+    heroState: LevelProgressHeroState,
     modifier: Modifier = Modifier
 ) {
     StoryPanelCard(
         modifier = modifier.fillMaxWidth(),
         level = SurfaceLevel.Secondary,
-        containerColor = lessonStatusSurfaceColor(supportState.heroTone),
+        containerColor = lessonStatusSurfaceColor(heroState.heroTone),
         shape = RadiusTokens.CardLg
     ) {
         Column(
@@ -51,19 +51,19 @@ fun LevelProgressHeroCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 StatusChip(
-                    text = supportState.heroBadgeText,
-                    variant = supportState.heroBadgeVariant,
+                    text = heroState.heroBadgeText,
+                    variant = heroState.heroBadgeVariant,
                     modifier = Modifier.testTag("lesson-hero-chip")
                 )
-                if (supportState.timerChipText != null) {
+                if (heroState.timerChipText != null) {
                     StatusChip(
-                        text = supportState.timerChipText,
+                        text = heroState.timerChipText,
                         modifier = Modifier.testTag("lesson-timer"),
                         variant = StatusVariant.Caution
                     )
                 } else {
                     Text(
-                        text = supportState.trailingSummary,
+                        text = heroState.trailingSummary,
                         style = TypographyTokens.SupportingLabel,
                         color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
                     )
@@ -89,17 +89,17 @@ fun LevelProgressHeroCard(
                 color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
             )
             Text(
-                text = supportState.routeSummary,
+                text = heroState.routeSummary,
                 style = TypographyTokens.BodyPrimary,
                 color = TextToneTokens.supporting(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier.testTag("lesson-route-summary")
             )
             StatusChip(
-                text = supportState.routeBadgeText,
-                variant = supportState.routeBadgeVariant,
+                text = heroState.routeBadgeText,
+                variant = heroState.routeBadgeVariant,
                 modifier = Modifier.testTag("lesson-route-chip")
             )
-            supportState.timerNote?.let { timerNote ->
+            heroState.timerNote?.let { timerNote ->
                 Text(
                     text = timerNote,
                     style = TypographyTokens.BodyPrimary,

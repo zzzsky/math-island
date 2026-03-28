@@ -5,9 +5,10 @@ import com.mathisland.app.domain.model.Question
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
-class LevelSupportRailStateTest {
+class LevelProgressHeroStateTest {
     private val baseQuestion = Question(
         prompt = "26 + 18 = ?",
         choices = listOf("44", "45", "34"),
@@ -26,8 +27,8 @@ class LevelSupportRailStateTest {
     )
 
     @Test
-    fun supportRailState_forUntimedLessonKeepsCoreCards() {
-        val state = levelSupportRailStateFor(
+    fun heroState_forUntimedLessonOmitsTimerArtifacts() {
+        val state = levelProgressHeroStateFor(
             state = LevelUiState(
                 lesson = standardLesson,
                 question = baseQuestion,
@@ -40,17 +41,17 @@ class LevelSupportRailStateTest {
             feedback = null
         )
 
-        assertEquals("学习状态", state.headerBadgeText)
-        assertEquals(
-            listOf("lesson-attempt-status", "lesson-next-step-card"),
-            state.cards.map { it.tag }
-        )
-        assertEquals("开始作答", state.cards[1].badgeText)
+        assertEquals("完成本节后会先结算星星，再回地图继续探索。", state.routeSummary)
+        assertEquals("总星星 8", state.trailingSummary)
+        assertNull(state.timerChipText)
+        assertNull(state.timerNote)
+        assertEquals("加法", state.heroBadgeText)
+        assertEquals("当前路线", state.routeBadgeText)
     }
 
     @Test
-    fun supportRailState_forTimedLessonAddsTimerCard() {
-        val state = levelSupportRailStateFor(
+    fun heroState_forTimedLessonIncludesTimerArtifacts() {
+        val state = levelProgressHeroStateFor(
             state = LevelUiState(
                 lesson = Lesson(
                     id = "challenge-sprint-01",
@@ -71,17 +72,16 @@ class LevelSupportRailStateTest {
             feedback = null
         )
 
-        assertEquals("学习状态", state.headerBadgeText)
-        assertEquals(
-            listOf("lesson-attempt-status", "lesson-next-step-card", "lesson-timer-status"),
-            state.cards.map { it.tag }
-        )
-        assertEquals("开始作答", state.cards[1].badgeText)
+        assertEquals("冲刺结束后会显示评级，并决定是否优先进入错题回放。", state.routeSummary)
+        assertEquals("限时 00:05", state.timerChipText)
+        assertEquals("超时会直接结算，本题不计通关。", state.timerNote)
+        assertEquals("综合挑战", state.heroBadgeText)
+        assertEquals("冲刺提示", state.routeBadgeText)
     }
 
     @Test
-    fun supportRailState_forRetryPromotesRetryHeroAndRouteBadges() {
-        val state = levelSupportRailStateFor(
+    fun heroState_forRetryPromotesRetryHeroAndRouteBadges() {
+        val state = levelProgressHeroStateFor(
             state = LevelUiState(
                 lesson = standardLesson,
                 question = baseQuestion,
@@ -99,8 +99,7 @@ class LevelSupportRailStateTest {
             )
         )
 
-        assertEquals("重试状态", state.headerBadgeText)
-        assertEquals("继续作答", state.cards[1].badgeText)
-        assertEquals(2, state.cards.size)
+        assertEquals("再次尝试", state.heroBadgeText)
+        assertEquals("重试提示", state.routeBadgeText)
     }
 }
