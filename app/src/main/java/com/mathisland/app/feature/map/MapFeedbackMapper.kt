@@ -29,9 +29,8 @@ fun rewardToMapFeedback(reward: RewardSummary): MapFeedbackUiState? {
         else -> MapFeedbackKind.Progress
     }
 
-    val summaryLabel = when (kind) {
-        else -> mapReturnCopy(kind).summaryLabel
-    }
+    val copy = mapReturnCopy(kind)
+    val summaryLabel = copy.summaryLabel
 
     return MapFeedbackUiState(
         kind = kind,
@@ -42,7 +41,10 @@ fun rewardToMapFeedback(reward: RewardSummary): MapFeedbackUiState? {
         chestReady = reward.newStickerName != null,
         summaryLabel = summaryLabel,
         summaryTitle = reward.mapFeedbackSummaryTitle(),
-        summaryBody = reward.mapFeedbackSummaryBody()
+        summaryBody = reward.mapFeedbackSummaryBody(),
+        detailLabel = copy.detailLabel,
+        detailTitle = copy.detailTitle,
+        detailBody = copy.detailBody
     )
 }
 

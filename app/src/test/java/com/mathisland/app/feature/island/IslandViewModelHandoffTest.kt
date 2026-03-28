@@ -34,6 +34,7 @@ class IslandViewModelHandoffTest {
 
         assertEquals("计算岛", state.island.title)
         assertEquals("打开宝箱", state.handoffLabel)
+        assertEquals("先开宝箱，再回到课程", state.handoffDetailTitle)
     }
 
     @Test
@@ -63,6 +64,7 @@ class IslandViewModelHandoffTest {
         assertNull(state.handoffLabel)
         assertNull(state.handoffTitle)
         assertNull(state.handoffBody)
+        assertNull(state.handoffDetailTitle)
     }
 
     private fun island(id: String, title: String) = MapTabletIslandUiState(

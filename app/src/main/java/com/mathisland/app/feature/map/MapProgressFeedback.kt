@@ -41,7 +41,10 @@ data class MapFeedbackUiState(
     val chestReady: Boolean = false,
     val summaryTitle: String = title,
     val summaryBody: String = body,
-    val summaryLabel: String = "回到地图"
+    val summaryLabel: String = "回到地图",
+    val detailLabel: String = "回地图后",
+    val detailTitle: String = summaryTitle,
+    val detailBody: String = summaryBody
 )
 
 @Composable
@@ -136,11 +139,31 @@ fun MapReturnSummaryCard(
         MapFeedbackKind.Replay -> Color(0xFF7FC2D8)
         MapFeedbackKind.Progress -> MaterialTheme.colorScheme.primary
     }
-    com.mathisland.app.ui.components.SummarySpotlightCard(
-        modifier = modifier.testTag("map-return-summary"),
-        label = feedback.summaryLabel,
-        title = feedback.summaryTitle,
-        body = feedback.summaryBody,
-        accent = accent
-    )
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("map-return-summary"),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        com.mathisland.app.ui.components.SummarySpotlightCard(
+            label = feedback.summaryLabel,
+            title = feedback.summaryTitle,
+            body = feedback.summaryBody,
+            accent = accent
+        )
+        com.mathisland.app.ui.components.TabletInfoCard(
+            title = feedback.detailLabel,
+            subtitle = feedback.detailTitle,
+            body = feedback.detailBody,
+            accentColor = accent.copy(alpha = 0.8f),
+            badgeText = feedback.summaryLabel,
+            badgeVariant = when (feedback.kind) {
+                MapFeedbackKind.NewIsland -> StatusVariant.Recommended
+                MapFeedbackKind.Chest -> StatusVariant.Highlight
+                MapFeedbackKind.Replay -> StatusVariant.Highlight
+                MapFeedbackKind.Progress -> StatusVariant.Success
+            },
+            modifier = Modifier.testTag("map-return-detail-card")
+        )
+    }
 }

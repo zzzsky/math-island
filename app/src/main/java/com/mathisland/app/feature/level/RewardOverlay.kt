@@ -125,10 +125,31 @@ fun RewardOverlay(
                         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                     ) {
                         TabletInfoCard(
-                            title = "下一步",
+                            title = state.nextStepLabel,
                             subtitle = state.nextStepTitle,
                             body = state.nextStepBody,
+                            badgeText = state.continueLabel,
+                            badgeVariant = when {
+                                reward.timedOut -> StatusVariant.Highlight
+                                reward.newIslandTitle != null -> StatusVariant.Recommended
+                                reward.newStickerName != null -> StatusVariant.Highlight
+                                else -> StatusVariant.Success
+                            },
                             modifier = Modifier.testTag("reward-next-step-card")
+                        )
+                        TabletInfoCard(
+                            title = "回地图后",
+                            subtitle = state.nextStepDetailTitle,
+                            body = state.nextStepDetailBody,
+                            accentColor = accentMint.copy(alpha = 0.8f),
+                            badgeText = state.continueLabel,
+                            badgeVariant = when {
+                                reward.timedOut -> StatusVariant.Highlight
+                                reward.newIslandTitle != null -> StatusVariant.Recommended
+                                reward.newStickerName != null -> StatusVariant.Highlight
+                                else -> StatusVariant.Success
+                            },
+                            modifier = Modifier.testTag("reward-next-step-detail-card")
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),

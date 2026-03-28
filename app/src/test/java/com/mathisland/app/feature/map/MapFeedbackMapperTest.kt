@@ -24,6 +24,7 @@ class MapFeedbackMapperTest {
         assertEquals(MapFeedbackKind.NewIsland, feedback.kind)
         assertEquals("measurement-island", feedback.highlightedIslandId)
         assertEquals("主线继续", feedback.summaryLabel)
+        assertEquals("先看新岛，再开始主线课", feedback.detailTitle)
     }
 
     @Test
@@ -44,6 +45,7 @@ class MapFeedbackMapperTest {
         assertEquals(MapFeedbackKind.Chest, feedback.kind)
         assertNull(feedback.highlightedIslandId)
         assertEquals("先看收藏", feedback.summaryLabel)
+        assertEquals("先开宝箱，再回到课程", feedback.detailTitle)
     }
 
     @Test
@@ -67,5 +69,6 @@ class MapFeedbackMapperTest {
         assertEquals(MapFeedbackKind.Replay, feedback.kind)
         assertEquals("先做回放", feedback.summaryLabel)
         assertEquals("回放路线已就位", feedback.summaryTitle)
+        assertEquals("先回放，再决定是否重试", feedback.detailTitle)
     }
 }

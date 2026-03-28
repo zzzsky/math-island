@@ -46,7 +46,10 @@ fun IslandOverlaySheet(
                     kind = state.handoffKind,
                     label = state.handoffLabel,
                     title = state.handoffTitle,
-                    body = state.handoffBody
+                    body = state.handoffBody,
+                    detailLabel = state.handoffDetailLabel,
+                    detailTitle = state.handoffDetailTitle,
+                    detailBody = state.handoffDetailBody
                 )
             }
             IslandStoryCard(island = island)

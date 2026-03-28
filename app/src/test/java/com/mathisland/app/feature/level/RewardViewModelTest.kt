@@ -50,7 +50,9 @@ class RewardViewModelTest {
         val uiState = RewardViewModel.uiState(progress)
 
         assertEquals("主线继续", uiState?.continueLabel)
+        assertEquals("回地图后", uiState?.nextStepLabel)
         assertEquals("新主线已就位", uiState?.nextStepTitle)
+        assertEquals("先看新岛，再开始主线课", uiState?.nextStepDetailTitle)
     }
 
     @Test
@@ -72,6 +74,7 @@ class RewardViewModelTest {
 
         assertEquals("先看收藏", uiState?.continueLabel)
         assertEquals("宝箱收藏已更新", uiState?.nextStepTitle)
+        assertEquals("先开宝箱，再回到课程", uiState?.nextStepDetailTitle)
     }
 
     @Test
@@ -96,5 +99,6 @@ class RewardViewModelTest {
 
         assertEquals("先做回放", uiState?.continueLabel)
         assertEquals("回放路线已就位", uiState?.nextStepTitle)
+        assertEquals("先回放，再决定是否重试", uiState?.nextStepDetailTitle)
     }
 }

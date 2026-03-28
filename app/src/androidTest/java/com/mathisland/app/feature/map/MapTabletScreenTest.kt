@@ -328,6 +328,8 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("panel-header-icon").assertCountEquals(1)
         composeRule.onAllNodesWithTag("panel-story-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("panel-start-measure-ruler").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-return-detail-card").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("island-handoff-detail-card").assertCountEquals(1)
     }
 
     @Test

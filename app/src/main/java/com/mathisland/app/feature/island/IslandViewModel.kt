@@ -17,6 +17,9 @@ data class IslandUiState(
     val handoffLabel: String? = null,
     val handoffTitle: String? = null,
     val handoffBody: String? = null,
+    val handoffDetailLabel: String? = null,
+    val handoffDetailTitle: String? = null,
+    val handoffDetailBody: String? = null,
     val primaryLessonId: String? = null,
     val primaryActionLabel: String? = null,
     val primaryActionMode: IslandPrimaryActionMode = IslandPrimaryActionMode.StartLesson,
@@ -33,6 +36,7 @@ object IslandViewModel {
         val feedback = mapState.feedback
         val handoffVisible = feedback != null &&
             (feedback.highlightedIslandId == null || feedback.highlightedIslandId == island.id)
+        val handoffCopy = feedback?.kind?.let(::mapReturnCopy)
         val primaryLesson = preferredPrimaryLesson(island, feedback?.kind)
         return IslandUiState(
             island = island,
@@ -40,6 +44,15 @@ object IslandViewModel {
             handoffLabel = feedback?.summaryLabel?.takeIf { handoffVisible },
             handoffTitle = feedback?.summaryTitle?.takeIf { handoffVisible },
             handoffBody = feedback?.summaryBody?.takeIf { handoffVisible },
+            handoffDetailLabel = feedback?.detailLabel
+                ?.takeIf { handoffVisible }
+                ?: handoffCopy?.detailLabel?.takeIf { handoffVisible },
+            handoffDetailTitle = feedback?.detailTitle
+                ?.takeIf { handoffVisible && it != feedback.summaryTitle }
+                ?: handoffCopy?.detailTitle?.takeIf { handoffVisible },
+            handoffDetailBody = feedback?.detailBody
+                ?.takeIf { handoffVisible && it != feedback.summaryBody }
+                ?: handoffCopy?.detailBody?.takeIf { handoffVisible },
             primaryLessonId = primaryLesson?.id,
             primaryActionLabel = primaryActionLabel(primaryLesson, feedback?.kind),
             primaryActionMode = if (feedback?.kind == MapFeedbackKind.Chest) {

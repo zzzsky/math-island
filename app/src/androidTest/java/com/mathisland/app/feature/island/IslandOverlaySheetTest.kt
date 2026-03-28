@@ -67,4 +67,47 @@ class IslandOverlaySheetTest {
         composeRule.onNodeWithText("图形搭搭乐").assertIsDisplayed()
         composeRule.onAllNodesWithTag("panel-start-geometry-shape-01").assertCountEquals(1)
     }
+
+    @Test
+    fun overlay_showsHandoffDetailCardWhenProvided() {
+        composeRule.setContent {
+            MathIslandTheme {
+                IslandOverlaySheet(
+                    state = IslandUiState(
+                        island = MapTabletIslandUiState(
+                            id = "measurement-island",
+                            title = "测量与图形岛",
+                            subtitle = "长度与图形",
+                            description = "米和厘米",
+                            unlocked = true,
+                            completed = false,
+                            progress = 0.5f,
+                            lessons = listOf(
+                                MapTabletLessonUiState(
+                                    id = "measure-ruler-01",
+                                    title = "尺子工坊",
+                                    summary = "用尺子量一量",
+                                    completed = false,
+                                    enabled = true
+                                )
+                            )
+                        ),
+                        handoffKind = com.mathisland.app.feature.map.MapFeedbackKind.NewIsland,
+                        handoffLabel = "主线继续",
+                        handoffTitle = "新主线已就位",
+                        handoffBody = "地图已经切到新岛，右侧会直接显示推荐课。",
+                        handoffDetailLabel = "回地图后",
+                        handoffDetailTitle = "先看新岛，再开始主线课",
+                        handoffDetailBody = "焦点会落到新岛，右侧面板会直接给出下一节主线课。",
+                        primaryLessonId = "measure-ruler-01",
+                        primaryActionLabel = "开始主线 尺子工坊"
+                    ),
+                    onStartLesson = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("island-handoff-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-handoff-detail-card").assertIsDisplayed()
+    }
 }
