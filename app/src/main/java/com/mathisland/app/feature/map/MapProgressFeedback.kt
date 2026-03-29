@@ -63,6 +63,18 @@ fun MapProgressFeedback(
                 tint = motionSpec.accent.copy(alpha = 0.90f + (motionProgress * 0.10f))
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                AnimatedVisibility(
+                    visible = motionProgress >= motionSpec.chipRevealAt,
+                    enter = fadeIn(tween(120)) +
+                        slideInVertically(tween(120)) { fullHeight -> fullHeight / 8 } +
+                        scaleIn(tween(120), initialScale = 0.94f)
+                ) {
+                    StatusChip(
+                        text = feedback.summaryLabel,
+                        modifier = Modifier.testTag("map-feedback-kind-pill"),
+                        variant = motionSpec.badgeVariant
+                    )
+                }
                 Text(
                     text = feedback.title,
                     style = MaterialTheme.typography.titleMedium,
@@ -77,7 +89,7 @@ fun MapProgressFeedback(
                 )
                 if (feedback.starsEarned > 0 || feedback.chestReady) {
                     AnimatedVisibility(
-                        visible = motionProgress >= motionSpec.summaryRevealAt,
+                        visible = motionProgress >= motionSpec.spotlightRevealAt,
                         enter = fadeIn(tween(140)) +
                             slideInVertically(tween(140)) { fullHeight -> fullHeight / 6 } +
                             scaleIn(tween(140), initialScale = 0.96f)
@@ -91,21 +103,28 @@ fun MapProgressFeedback(
                         )
                     }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    if (feedback.starsEarned > 0) {
-                        StatusChip(
-                            text = "+${feedback.starsEarned} 星星",
-                            modifier = Modifier.testTag("map-feedback-stars-pill"),
-                            variant = motionSpec.badgeVariant,
-                            leadingIcon = Icons.Default.Star,
-                        )
-                    }
-                    if (feedback.chestReady) {
-                        StatusChip(
-                            text = "宝箱有新收藏",
-                            modifier = Modifier.testTag("map-feedback-chest-pill"),
-                            variant = motionSpec.badgeVariant,
-                        )
+                AnimatedVisibility(
+                    visible = motionProgress >= motionSpec.supportingRevealAt,
+                    enter = fadeIn(tween(160)) +
+                        slideInVertically(tween(180)) { fullHeight -> fullHeight / 7 } +
+                        scaleIn(tween(160), initialScale = 0.98f)
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        if (feedback.starsEarned > 0) {
+                            StatusChip(
+                                text = "+${feedback.starsEarned} 星星",
+                                modifier = Modifier.testTag("map-feedback-stars-pill"),
+                                variant = motionSpec.badgeVariant,
+                                leadingIcon = Icons.Default.Star,
+                            )
+                        }
+                        if (feedback.chestReady) {
+                            StatusChip(
+                                text = "宝箱有新收藏",
+                                modifier = Modifier.testTag("map-feedback-chest-pill"),
+                                variant = motionSpec.badgeVariant,
+                            )
+                        }
                     }
                 }
             }
@@ -133,6 +152,18 @@ fun MapReturnSummaryCard(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AnimatedVisibility(
+            visible = motionProgress >= motionSpec.chipRevealAt,
+            enter = fadeIn(tween(140)) +
+                slideInVertically(tween(160)) { fullHeight -> fullHeight / 8 } +
+                scaleIn(tween(140), initialScale = 0.95f)
+        ) {
+            StatusChip(
+                text = feedback.summaryLabel,
+                variant = motionSpec.badgeVariant,
+                modifier = Modifier.testTag("map-return-kind-pill")
+            )
+        }
+        AnimatedVisibility(
             visible = motionProgress >= motionSpec.summaryRevealAt,
             enter = fadeIn(tween(160)) +
                 slideInVertically(tween(180)) { fullHeight -> fullHeight / 7 } +
@@ -146,7 +177,7 @@ fun MapReturnSummaryCard(
             )
         }
         AnimatedVisibility(
-            visible = motionProgress >= motionSpec.detailRevealAt,
+            visible = motionProgress >= motionSpec.supportingRevealAt,
             enter = fadeIn(tween(180)) +
                 slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
                 scaleIn(tween(180), initialScale = 0.98f)

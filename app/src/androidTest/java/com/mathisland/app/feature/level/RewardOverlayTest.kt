@@ -54,6 +54,8 @@ class RewardOverlayTest {
         composeRule.onNodeWithText("本次表现").assertIsDisplayed()
         composeRule.onNodeWithText("整备评级").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithText("继续航线").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-return-kind-pill").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-step-kind-pill").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-detail-card").performScrollTo().assertIsDisplayed()
         composeRule.onAllNodesWithTag("reward-return-map").assertCountEquals(1)

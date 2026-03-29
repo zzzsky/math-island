@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import com.mathisland.app.feature.map.MapFeedbackKind
 import com.mathisland.app.feature.map.motionSpec
+import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.TabletInfoCard
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -57,6 +58,18 @@ fun IslandHandoffCard(
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
     ) {
         AnimatedVisibility(
+            visible = motionValue >= motionSpec.chipRevealAt,
+            enter = fadeIn(tween(120)) +
+                slideInVertically(tween(140)) { fullHeight -> fullHeight / 8 } +
+                scaleIn(tween(120), initialScale = 0.95f)
+        ) {
+            StatusChip(
+                text = label,
+                variant = motionSpec.badgeVariant,
+                modifier = Modifier.testTag("island-handoff-kind-pill")
+            )
+        }
+        AnimatedVisibility(
             visible = motionValue >= motionSpec.summaryRevealAt,
             enter = fadeIn(tween(140)) +
                 slideInVertically(tween(160)) { fullHeight -> fullHeight / 7 } +
@@ -71,7 +84,7 @@ fun IslandHandoffCard(
         }
         if (detailLabel != null && detailTitle != null && detailBody != null) {
             AnimatedVisibility(
-                visible = motionValue >= motionSpec.detailRevealAt,
+                visible = motionValue >= motionSpec.supportingRevealAt,
                 enter = fadeIn(tween(160)) +
                     slideInVertically(tween(180)) { fullHeight -> fullHeight / 8 } +
                     scaleIn(tween(160), initialScale = 0.98f)

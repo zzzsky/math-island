@@ -252,6 +252,8 @@ class MapTabletScreenTest {
 
         composeRule.onAllNodesWithTag("map-feedback-stars-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-feedback-chest-pill").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-feedback-kind-pill").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-return-kind-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-open-chest-pulse").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
@@ -328,6 +330,8 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("panel-header-icon").assertCountEquals(1)
         composeRule.onAllNodesWithTag("panel-story-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("panel-start-measure-ruler").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-feedback-kind-pill").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-return-kind-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-detail-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("island-handoff-detail-card").assertCountEquals(1)
     }

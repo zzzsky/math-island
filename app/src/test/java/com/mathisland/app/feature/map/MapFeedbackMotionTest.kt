@@ -17,7 +17,11 @@ class MapFeedbackMotionTest {
         assertEquals(Color(0xFFF2D48B), newIsland.accent)
         assertEquals(StatusVariant.Highlight, replay.badgeVariant)
         assertEquals(Color(0xFF7FC2D8), replay.accent)
+        assertTrue(newIsland.chipRevealAt < newIsland.summaryRevealAt)
+        assertTrue(newIsland.summaryRevealAt < newIsland.spotlightRevealAt)
         assertTrue(replay.detailRevealAt > newIsland.detailRevealAt)
+        assertTrue(replay.supportingRevealAt > replay.detailRevealAt)
+        assertTrue(replay.trailingRevealAt > replay.supportingRevealAt)
     }
 
     @Test

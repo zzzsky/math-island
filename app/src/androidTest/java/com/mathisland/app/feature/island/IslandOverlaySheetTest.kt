@@ -108,6 +108,7 @@ class IslandOverlaySheetTest {
         }
 
         composeRule.onNodeWithTag("island-handoff-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-handoff-kind-pill").assertIsDisplayed()
         composeRule.onNodeWithTag("island-handoff-detail-card").assertIsDisplayed()
     }
 }
