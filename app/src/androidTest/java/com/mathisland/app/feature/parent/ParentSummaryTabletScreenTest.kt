@@ -34,6 +34,12 @@ class ParentSummaryTabletScreenTest {
         composeRule.onNodeWithText("测量与图形").assertIsDisplayed()
         composeRule.onNodeWithText("3 天").assertIsDisplayed()
         composeRule.onNodeWithText("测量与图形岛").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-today-stat").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-streak-stat").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-weak-stat").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-today-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-weak-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-recommended-card").assertIsDisplayed()
     }
 
     @Test

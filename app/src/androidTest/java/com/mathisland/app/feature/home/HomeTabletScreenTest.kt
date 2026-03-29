@@ -45,4 +45,34 @@ class HomeTabletScreenTest {
         composeRule.onNodeWithTag("home-open-chest").assertIsDisplayed()
         composeRule.onNodeWithTag("home-open-parent").assertIsDisplayed()
     }
+
+    @Test
+    fun homeScreen_showsStandardAdventureCopyAndPrimaryActions() {
+        composeRule.setContent {
+            MathIslandTheme {
+                HomeTabletScreen(
+                    state = HomeState(
+                        totalStars = 12,
+                        stickerCount = 4,
+                        nextLessonId = "start-calc-carry-01",
+                        nextLessonTitle = "继续冒险",
+                        nextLessonFocus = "计算闯关",
+                        nextLessonSummary = "从当前解锁的第一节继续出发。",
+                        isReview = false
+                    ),
+                    onContinue = {},
+                    onOpenMap = {},
+                    onOpenChest = {},
+                    onOpenParent = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("数学岛").assertIsDisplayed()
+        composeRule.onNodeWithText("开始闯关").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-continue-adventure").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-open-map").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-open-chest").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-open-parent").assertIsDisplayed()
+    }
 }

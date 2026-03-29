@@ -114,7 +114,8 @@ fun MapTabletScreen(
                 MapProgressFeedback(feedback = feedback, motionProgress = motionValue)
                 MapReturnSummaryCard(
                     feedback = feedback,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    motionProgress = motionValue
                 )
             }
 

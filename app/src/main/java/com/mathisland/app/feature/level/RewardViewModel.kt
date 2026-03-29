@@ -2,8 +2,8 @@ package com.mathisland.app.feature.level
 
 import com.mathisland.app.domain.model.GameProgress
 import com.mathisland.app.domain.model.RewardSummary
-import com.mathisland.app.feature.map.MapFeedbackKind
 import com.mathisland.app.feature.map.mapReturnCopy
+import com.mathisland.app.feature.map.rewardFeedbackKind
 
 data class RewardOverlayUiState(
     val reward: RewardSummary,
@@ -19,12 +19,7 @@ data class RewardOverlayUiState(
 object RewardViewModel {
     fun uiState(progress: GameProgress): RewardOverlayUiState? {
         val reward = progress.pendingReward ?: return null
-        val copy = when {
-            reward.timedOut -> mapReturnCopy(MapFeedbackKind.Replay)
-            reward.newIslandTitle != null -> mapReturnCopy(MapFeedbackKind.NewIsland)
-            reward.newStickerName != null -> mapReturnCopy(MapFeedbackKind.Chest)
-            else -> mapReturnCopy(MapFeedbackKind.Progress)
-        }
+        val copy = mapReturnCopy(rewardFeedbackKind(reward))
         return RewardOverlayUiState(
             reward = reward,
             totalStars = progress.totalStars,

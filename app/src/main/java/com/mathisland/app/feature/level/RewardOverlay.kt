@@ -1,5 +1,12 @@
 package com.mathisland.app.feature.level
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -15,15 +22,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.domain.model.RewardSummary
+import com.mathisland.app.feature.map.motionSpec
+import com.mathisland.app.feature.map.rewardFeedbackKind
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SummarySpotlightCard
@@ -46,15 +58,40 @@ fun RewardOverlay(
     onSecondaryAction: (() -> Unit)? = null
 ) {
     val reward = state.reward
+    val motionSpec = rewardFeedbackKind(reward).motionSpec()
+    val revealProgress = remember { Animatable(0f) }
+
+    LaunchedEffect(
+        reward.lessonTitle,
+        reward.starsEarned,
+        reward.correctAnswers,
+        reward.totalQuestions,
+        reward.newIslandTitle,
+        reward.newStickerName,
+        reward.timedOut
+    ) {
+        revealProgress.stop()
+        revealProgress.snapTo(0f)
+        revealProgress.animateTo(1f, tween(durationMillis = 300, easing = FastOutSlowInEasing))
+    }
+
+    val motionValue = revealProgress.value
     val panelColor = Color(0xF3183A49)
-    val accentGold = Color(0xFFF2D48B)
     val accentMint = Color(0xFF9ADBC7)
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         SurfaceCard(
-            modifier = Modifier.fillMaxWidth(0.72f),
+            modifier = Modifier
+                .fillMaxWidth(0.72f)
+                .graphicsLayer {
+                    val lift = 1f + (motionValue * motionSpec.cardScaleBoost)
+                    scaleX = lift
+                    scaleY = lift
+                    alpha = 0.92f + (motionValue * 0.08f)
+                    translationY = (1f - motionValue) * 10f
+                },
             level = SurfaceLevel.Page,
             containerColor = panelColor,
             shape = RadiusTokens.Sheet
@@ -69,7 +106,7 @@ fun RewardOverlay(
                 RewardSummaryHeader(
                     reward = reward,
                     totalStars = state.totalStars,
-                    accentGold = accentGold,
+                    primaryAccent = motionSpec.accent,
                     accentMint = accentMint
                 )
                 RewardSectionHeader(
@@ -84,7 +121,7 @@ fun RewardOverlay(
                         modifier = Modifier.weight(1f),
                         title = "本关星星",
                         value = reward.starsEarned.toString(),
-                        accent = accentGold
+                        accent = motionSpec.accent
                     )
                     TabletStatTile(
                         modifier = Modifier.weight(1f),
@@ -103,7 +140,7 @@ fun RewardOverlay(
                     label = "本轮结论",
                     title = rewardSpotlightTitle(reward),
                     body = rewardSpotlightBody(reward),
-                    accent = accentGold
+                    accent = motionSpec.accent
                 )
                 RewardHighlights(
                     reward = reward
@@ -116,7 +153,7 @@ fun RewardOverlay(
                     level = SurfaceLevel.Secondary,
                     shape = RadiusTokens.CardLg,
                     containerColor = Color.White.copy(alpha = 0.06f),
-                    borderColor = accentGold.copy(alpha = 0.22f)
+                    borderColor = motionSpec.accent.copy(alpha = 0.22f)
                 ) {
                     Column(
                         modifier = Modifier
@@ -124,59 +161,79 @@ fun RewardOverlay(
                             .padding(SpacingTokens.Xl),
                         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                     ) {
-                        TabletInfoCard(
-                            title = state.nextStepLabel,
-                            subtitle = state.nextStepTitle,
-                            body = state.nextStepBody,
-                            badgeText = state.continueLabel,
-                            badgeVariant = when {
-                                reward.timedOut -> StatusVariant.Highlight
-                                reward.newIslandTitle != null -> StatusVariant.Recommended
-                                reward.newStickerName != null -> StatusVariant.Highlight
-                                else -> StatusVariant.Success
-                            },
-                            modifier = Modifier.testTag("reward-next-step-card")
-                        )
-                        TabletInfoCard(
-                            title = "回地图后",
-                            subtitle = state.nextStepDetailTitle,
-                            body = state.nextStepDetailBody,
-                            accentColor = accentMint.copy(alpha = 0.8f),
-                            badgeText = state.continueLabel,
-                            badgeVariant = when {
-                                reward.timedOut -> StatusVariant.Highlight
-                                reward.newIslandTitle != null -> StatusVariant.Recommended
-                                reward.newStickerName != null -> StatusVariant.Highlight
-                                else -> StatusVariant.Success
-                            },
-                            modifier = Modifier.testTag("reward-next-step-detail-card")
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
+                        AnimatedVisibility(
+                            visible = motionValue >= motionSpec.summaryRevealAt,
+                            enter = fadeIn(tween(150)) +
+                                slideInVertically(tween(170)) { fullHeight -> fullHeight / 7 } +
+                                scaleIn(tween(150), initialScale = 0.96f)
                         ) {
-                            reward.secondaryActionLabel?.let { label ->
-                                onSecondaryAction?.let { action ->
-                                    ActionButton(
-                                        text = label,
-                                        modifier = Modifier
-                                            .testTag("reward-retry-sprint")
-                                            .padding(end = 12.dp),
-                                        onClick = action,
-                                        role = ActionRole.OutlinedSecondary,
-                                        contentColor = MaterialTheme.colorScheme.secondary,
-                                        borderColor = MaterialTheme.colorScheme.secondary
-                                    )
-                                }
-                            }
-                            ActionButton(
-                                text = state.continueLabel,
-                                modifier = Modifier.testTag("reward-return-map"),
-                                onClick = onContinue,
-                                role = ActionRole.Primary,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            TabletInfoCard(
+                                title = state.nextStepLabel,
+                                subtitle = state.nextStepTitle,
+                                body = state.nextStepBody,
+                                badgeText = state.continueLabel,
+                                badgeVariant = when {
+                                    reward.timedOut -> StatusVariant.Highlight
+                                    reward.newIslandTitle != null -> StatusVariant.Recommended
+                                    reward.newStickerName != null -> StatusVariant.Highlight
+                                    else -> StatusVariant.Success
+                                },
+                                modifier = Modifier.testTag("reward-next-step-card")
                             )
+                        }
+                        AnimatedVisibility(
+                            visible = motionValue >= motionSpec.detailRevealAt,
+                            enter = fadeIn(tween(180)) +
+                                slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
+                                scaleIn(tween(180), initialScale = 0.98f)
+                        ) {
+                            TabletInfoCard(
+                                title = "回地图后",
+                                subtitle = state.nextStepDetailTitle,
+                                body = state.nextStepDetailBody,
+                                accentColor = motionSpec.accent.copy(alpha = 0.8f),
+                                badgeText = state.continueLabel,
+                                badgeVariant = when {
+                                    reward.timedOut -> StatusVariant.Highlight
+                                    reward.newIslandTitle != null -> StatusVariant.Recommended
+                                    reward.newStickerName != null -> StatusVariant.Highlight
+                                    else -> StatusVariant.Success
+                                },
+                                modifier = Modifier.testTag("reward-next-step-detail-card")
+                            )
+                        }
+                        AnimatedVisibility(
+                            visible = motionValue >= motionSpec.trailingRevealAt,
+                            enter = fadeIn(tween(180)) +
+                                slideInVertically(tween(220)) { fullHeight -> fullHeight / 8 }
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                reward.secondaryActionLabel?.let { label ->
+                                    onSecondaryAction?.let { action ->
+                                        ActionButton(
+                                            text = label,
+                                            modifier = Modifier
+                                                .testTag("reward-retry-sprint")
+                                                .padding(end = 12.dp),
+                                            onClick = action,
+                                            role = ActionRole.OutlinedSecondary,
+                                            contentColor = MaterialTheme.colorScheme.secondary,
+                                            borderColor = MaterialTheme.colorScheme.secondary
+                                        )
+                                    }
+                                }
+                                ActionButton(
+                                    text = state.continueLabel,
+                                    modifier = Modifier.testTag("reward-return-map"),
+                                    onClick = onContinue,
+                                    role = ActionRole.Primary,
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
                         }
                     }
                 }
@@ -189,7 +246,7 @@ fun RewardOverlay(
 private fun RewardSummaryHeader(
     reward: RewardSummary,
     totalStars: Int,
-    accentGold: Color,
+    primaryAccent: Color,
     accentMint: Color
 ) {
     StoryPanelCard(
@@ -205,7 +262,7 @@ private fun RewardSummaryHeader(
                 .background(
                     Brush.linearGradient(
                         listOf(
-                            accentGold.copy(alpha = 0.14f),
+                            primaryAccent.copy(alpha = 0.14f),
                             Color.White.copy(alpha = 0.04f),
                             accentMint.copy(alpha = 0.12f)
                         )
@@ -256,7 +313,7 @@ private fun RewardSummaryHeader(
                         text = totalStars.toString(),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
-                        color = accentGold
+                        color = primaryAccent
                     )
                     Text(
                         text = if (reward.timedOut) "复习优先级已更新" else "进度已写入航线",

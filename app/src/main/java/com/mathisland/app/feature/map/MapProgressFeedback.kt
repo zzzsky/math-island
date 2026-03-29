@@ -1,5 +1,10 @@
 package com.mathisland.app.feature.map
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,61 +20,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.StatusChip
-import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
-
-enum class MapFeedbackKind {
-    NewIsland,
-    Chest,
-    Replay,
-    Progress
-}
-
-data class MapFeedbackUiState(
-    val kind: MapFeedbackKind = MapFeedbackKind.Progress,
-    val title: String,
-    val body: String,
-    val highlightedIslandId: String? = null,
-    val starsEarned: Int = 0,
-    val chestReady: Boolean = false,
-    val summaryTitle: String = title,
-    val summaryBody: String = body,
-    val summaryLabel: String = "回到地图",
-    val detailLabel: String = "回地图后",
-    val detailTitle: String = summaryTitle,
-    val detailBody: String = summaryBody
-)
 
 @Composable
 fun MapProgressFeedback(
     feedback: MapFeedbackUiState,
     motionProgress: Float = 0f
 ) {
-    val accent = when (feedback.kind) {
-        MapFeedbackKind.NewIsland -> Color(0xFFF2D48B)
-        MapFeedbackKind.Chest -> Color(0xFFE8B86D)
-        MapFeedbackKind.Replay -> Color(0xFF7FC2D8)
-        MapFeedbackKind.Progress -> MaterialTheme.colorScheme.primary
-    }
+    val motionSpec = feedback.kind.motionSpec()
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .graphicsLayer {
-                val pulseScale = 1f + (motionProgress * 0.012f)
+                val pulseScale = 1f + (motionProgress * motionSpec.cardScaleBoost)
                 scaleX = pulseScale
                 scaleY = pulseScale
-                alpha = 0.94f + (motionProgress * 0.06f)
+                alpha = 0.92f + (motionProgress * 0.08f)
+                translationY = (1f - motionProgress) * 8f
             }
             .testTag("map-progress-feedback"),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xCC215A6D).copy(alpha = 0.88f + (motionProgress * 0.12f))
+            containerColor = Color(0xCC215A6D).copy(alpha = 0.86f + (motionProgress * 0.12f))
         ),
         shape = RoundedCornerShape(22.dp)
     ) {
@@ -82,7 +60,7 @@ fun MapProgressFeedback(
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = accent.copy(alpha = 0.92f + (motionProgress * 0.08f))
+                tint = motionSpec.accent.copy(alpha = 0.90f + (motionProgress * 0.10f))
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
@@ -98,20 +76,27 @@ fun MapProgressFeedback(
                     modifier = Modifier.testTag("map-feedback-body")
                 )
                 if (feedback.starsEarned > 0 || feedback.chestReady) {
-                    Text(
-                        text = "本次推进",
-                        style = TypographyTokens.SupportingLabel,
-                        fontWeight = FontWeight.SemiBold,
-                        color = accent,
-                        modifier = Modifier.testTag("map-feedback-summary")
-                    )
+                    AnimatedVisibility(
+                        visible = motionProgress >= motionSpec.summaryRevealAt,
+                        enter = fadeIn(tween(140)) +
+                            slideInVertically(tween(140)) { fullHeight -> fullHeight / 6 } +
+                            scaleIn(tween(140), initialScale = 0.96f)
+                    ) {
+                        Text(
+                            text = "本次推进",
+                            style = TypographyTokens.SupportingLabel,
+                            fontWeight = FontWeight.SemiBold,
+                            color = motionSpec.accent,
+                            modifier = Modifier.testTag("map-feedback-summary")
+                        )
+                    }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (feedback.starsEarned > 0) {
                         StatusChip(
                             text = "+${feedback.starsEarned} 星星",
                             modifier = Modifier.testTag("map-feedback-stars-pill"),
-                            variant = StatusVariant.Recommended,
+                            variant = motionSpec.badgeVariant,
                             leadingIcon = Icons.Default.Star,
                         )
                     }
@@ -119,7 +104,7 @@ fun MapProgressFeedback(
                         StatusChip(
                             text = "宝箱有新收藏",
                             modifier = Modifier.testTag("map-feedback-chest-pill"),
-                            variant = StatusVariant.Highlight,
+                            variant = motionSpec.badgeVariant,
                         )
                     }
                 }
@@ -131,39 +116,50 @@ fun MapProgressFeedback(
 @Composable
 fun MapReturnSummaryCard(
     feedback: MapFeedbackUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    motionProgress: Float = 0f
 ) {
-    val accent = when (feedback.kind) {
-        MapFeedbackKind.NewIsland -> Color(0xFFF2D48B)
-        MapFeedbackKind.Chest -> Color(0xFFE8B86D)
-        MapFeedbackKind.Replay -> Color(0xFF7FC2D8)
-        MapFeedbackKind.Progress -> MaterialTheme.colorScheme.primary
-    }
+    val motionSpec = feedback.kind.motionSpec()
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .graphicsLayer {
+                scaleX = 1f + (motionProgress * motionSpec.cardScaleBoost)
+                scaleY = 1f + (motionProgress * motionSpec.cardScaleBoost)
+                alpha = 0.88f + (motionProgress * 0.12f)
+                translationY = (1f - motionProgress) * 10f
+            }
             .testTag("map-return-summary"),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        com.mathisland.app.ui.components.SummarySpotlightCard(
-            label = feedback.summaryLabel,
-            title = feedback.summaryTitle,
-            body = feedback.summaryBody,
-            accent = accent
-        )
-        com.mathisland.app.ui.components.TabletInfoCard(
-            title = feedback.detailLabel,
-            subtitle = feedback.detailTitle,
-            body = feedback.detailBody,
-            accentColor = accent.copy(alpha = 0.8f),
-            badgeText = feedback.summaryLabel,
-            badgeVariant = when (feedback.kind) {
-                MapFeedbackKind.NewIsland -> StatusVariant.Recommended
-                MapFeedbackKind.Chest -> StatusVariant.Highlight
-                MapFeedbackKind.Replay -> StatusVariant.Highlight
-                MapFeedbackKind.Progress -> StatusVariant.Success
-            },
-            modifier = Modifier.testTag("map-return-detail-card")
-        )
+        AnimatedVisibility(
+            visible = motionProgress >= motionSpec.summaryRevealAt,
+            enter = fadeIn(tween(160)) +
+                slideInVertically(tween(180)) { fullHeight -> fullHeight / 7 } +
+                scaleIn(tween(160), initialScale = 0.96f)
+        ) {
+            com.mathisland.app.ui.components.SummarySpotlightCard(
+                label = feedback.summaryLabel,
+                title = feedback.summaryTitle,
+                body = feedback.summaryBody,
+                accent = motionSpec.accent
+            )
+        }
+        AnimatedVisibility(
+            visible = motionProgress >= motionSpec.detailRevealAt,
+            enter = fadeIn(tween(180)) +
+                slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
+                scaleIn(tween(180), initialScale = 0.98f)
+        ) {
+            com.mathisland.app.ui.components.TabletInfoCard(
+                title = feedback.detailLabel,
+                subtitle = feedback.detailTitle,
+                body = feedback.detailBody,
+                accentColor = motionSpec.accent.copy(alpha = 0.8f),
+                badgeText = feedback.summaryLabel,
+                badgeVariant = motionSpec.badgeVariant,
+                modifier = Modifier.testTag("map-return-detail-card")
+            )
+        }
     }
 }
