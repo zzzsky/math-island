@@ -37,7 +37,7 @@ class IslandViewModelHandoffTest {
 
         assertEquals("计算岛", state.island.title)
         assertEquals("打开宝箱", state.handoffLabel)
-        assertEquals("先开宝箱，再回到课程", state.handoffDetailTitle)
+        assertEquals("先开宝箱", state.handoffDetailTitle)
         assertEquals("先开宝箱", state.handoffActionTitle)
     }
 

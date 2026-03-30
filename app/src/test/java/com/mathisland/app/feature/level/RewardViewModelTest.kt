@@ -52,8 +52,8 @@ class RewardViewModelTest {
         assertEquals("主线继续", uiState?.continueLabel)
         assertEquals("回地图看新岛", uiState?.continueCtaLabel)
         assertEquals("回地图后", uiState?.nextStepLabel)
-        assertEquals("新主线已就位", uiState?.nextStepTitle)
-        assertEquals("先看新岛，再开始主线课", uiState?.nextStepDetailTitle)
+        assertEquals("新岛可出发", uiState?.nextStepTitle)
+        assertEquals("先看新岛", uiState?.nextStepDetailTitle)
         assertEquals("优先动作", uiState?.nextActionLabel)
         assertEquals("开始主线课", uiState?.nextActionTitle)
     }
@@ -77,8 +77,8 @@ class RewardViewModelTest {
 
         assertEquals("先看收藏", uiState?.continueLabel)
         assertEquals("回地图开宝箱", uiState?.continueCtaLabel)
-        assertEquals("宝箱收藏已更新", uiState?.nextStepTitle)
-        assertEquals("先开宝箱，再回到课程", uiState?.nextStepDetailTitle)
+        assertEquals("宝箱可打开", uiState?.nextStepTitle)
+        assertEquals("先开宝箱", uiState?.nextStepDetailTitle)
         assertEquals("先开宝箱", uiState?.nextActionTitle)
     }
 
@@ -104,8 +104,8 @@ class RewardViewModelTest {
 
         assertEquals("先做回放", uiState?.continueLabel)
         assertEquals("回地图做回放", uiState?.continueCtaLabel)
-        assertEquals("回放路线已就位", uiState?.nextStepTitle)
-        assertEquals("先回放，再决定是否重试", uiState?.nextStepDetailTitle)
+        assertEquals("回放已就位", uiState?.nextStepTitle)
+        assertEquals("先做回放", uiState?.nextStepDetailTitle)
         assertEquals("先做回放", uiState?.nextActionTitle)
     }
 }

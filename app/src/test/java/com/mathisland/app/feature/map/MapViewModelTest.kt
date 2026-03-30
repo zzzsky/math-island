@@ -89,7 +89,7 @@ class MapViewModelTest {
 
         val highlighted = state.islands.single { it.id == "measurement-island" }
         assertEquals("主线推荐", highlighted.handoffBadge)
-        assertEquals("下一节主线课已就位", highlighted.handoffBody)
+        assertEquals("主线课已就位", highlighted.handoffBody)
     }
 
     @Test
@@ -116,7 +116,7 @@ class MapViewModelTest {
 
         val island = state.islands.single()
         assertEquals("宝箱优先", island.handoffBadge)
-        assertEquals("先看收藏，再回到当前课程", island.handoffBody)
+        assertEquals("先看收藏更新", island.handoffBody)
     }
 
     @Test
