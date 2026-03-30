@@ -25,8 +25,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.components.ReturnResultStage
+import com.mathisland.app.ui.components.ReturnResultStageState
 import com.mathisland.app.ui.components.StatusChip
-import com.mathisland.app.ui.components.ReturnActionCard
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
@@ -152,62 +153,29 @@ fun MapReturnSummaryCard(
             .testTag("map-return-summary"),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        AnimatedVisibility(
-            visible = motionProgress >= motionSpec.chipRevealAt,
-            enter = fadeIn(tween(140)) +
-                slideInVertically(tween(160)) { fullHeight -> fullHeight / 8 } +
-                scaleIn(tween(140), initialScale = 0.95f)
-        ) {
-            StatusChip(
-                text = feedback.summaryLabel,
-                variant = motionSpec.badgeVariant,
-                modifier = Modifier.testTag("map-return-kind-pill")
-            )
-        }
-        AnimatedVisibility(
-            visible = motionProgress >= motionSpec.summaryRevealAt,
-            enter = fadeIn(tween(160)) +
-                slideInVertically(tween(180)) { fullHeight -> fullHeight / 7 } +
-                scaleIn(tween(160), initialScale = 0.96f)
-        ) {
-            com.mathisland.app.ui.components.SummarySpotlightCard(
-                label = feedback.summaryLabel,
-                title = feedback.summaryTitle,
-                body = feedback.summaryBody,
-                accent = motionSpec.accent
-            )
-        }
-        AnimatedVisibility(
-            visible = motionProgress >= motionSpec.supportingRevealAt,
-            enter = fadeIn(tween(180)) +
-                slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
-                scaleIn(tween(180), initialScale = 0.98f)
-        ) {
-            com.mathisland.app.ui.components.TabletInfoCard(
-                title = feedback.detailLabel,
-                subtitle = feedback.detailTitle,
-                body = feedback.detailBody,
-                accentColor = motionSpec.accent.copy(alpha = 0.8f),
-                badgeText = feedback.summaryLabel,
-                badgeVariant = motionSpec.badgeVariant,
-                modifier = Modifier.testTag("map-return-detail-card")
-            )
-        }
-        AnimatedVisibility(
-            visible = motionProgress >= motionSpec.trailingRevealAt,
-            enter = fadeIn(tween(180)) +
-                slideInVertically(tween(220)) { fullHeight -> fullHeight / 8 } +
-                scaleIn(tween(180), initialScale = 0.98f)
-        ) {
-            ReturnActionCard(
-                label = feedback.actionLabel,
-                title = feedback.actionTitle,
-                body = feedback.actionBody,
-                accentColor = motionSpec.accent.copy(alpha = 0.8f),
-                badgeVariant = motionSpec.badgeVariant,
-                modifier = Modifier.testTag("map-return-action-card"),
-                badgeTag = "map-return-action-pill"
-            )
-        }
+        ReturnResultStage(
+            state = ReturnResultStageState(
+                kindLabel = feedback.summaryLabel,
+                summaryTitle = feedback.summaryTitle,
+                summaryBody = feedback.summaryBody,
+                detailLabel = feedback.detailLabel,
+                detailTitle = feedback.detailTitle,
+                detailBody = feedback.detailBody,
+                actionLabel = feedback.actionLabel,
+                actionTitle = feedback.actionTitle,
+                actionBody = feedback.actionBody
+            ),
+            accentColor = motionSpec.accent,
+            badgeVariant = motionSpec.badgeVariant,
+            motionProgress = motionProgress,
+            chipRevealAt = motionSpec.chipRevealAt,
+            summaryRevealAt = motionSpec.summaryRevealAt,
+            supportingRevealAt = motionSpec.supportingRevealAt,
+            trailingRevealAt = motionSpec.trailingRevealAt,
+            kindPillTag = "map-return-kind-pill",
+            detailCardTag = "map-return-detail-card",
+            actionCardTag = "map-return-action-card",
+            actionPillTag = "map-return-action-pill"
+        )
     }
 }

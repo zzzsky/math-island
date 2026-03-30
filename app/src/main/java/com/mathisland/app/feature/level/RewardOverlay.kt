@@ -37,7 +37,8 @@ import com.mathisland.app.domain.model.RewardSummary
 import com.mathisland.app.feature.map.motionSpec
 import com.mathisland.app.feature.map.rewardFeedbackKind
 import com.mathisland.app.ui.components.ActionButton
-import com.mathisland.app.ui.components.ReturnActionCard
+import com.mathisland.app.ui.components.ReturnResultStage
+import com.mathisland.app.ui.components.ReturnResultStageState
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.SurfaceCard
@@ -190,52 +191,30 @@ fun RewardOverlay(
                                         slideInVertically(tween(170)) { fullHeight -> fullHeight / 7 } +
                                         scaleIn(tween(150), initialScale = 0.96f)
                                 ) {
-                                    Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
-                                        StatusChip(
-                                            text = state.continueLabel,
-                                            variant = rewardStatusVariant(reward),
-                                            modifier = Modifier.testTag("reward-next-step-kind-pill")
-                                        )
-                                        TabletInfoCard(
-                                            title = state.nextStepLabel,
-                                            subtitle = state.nextStepTitle,
-                                            body = state.nextStepBody,
-                                            badgeText = state.continueLabel,
-                                            badgeVariant = rewardStatusVariant(reward),
-                                            modifier = Modifier.testTag("reward-next-step-card")
-                                        )
-                                    }
-                                }
-                                AnimatedVisibility(
-                                    visible = motionValue >= motionSpec.supportingRevealAt,
-                                    enter = fadeIn(tween(180)) +
-                                        slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
-                                        scaleIn(tween(180), initialScale = 0.98f)
-                                ) {
-                                    TabletInfoCard(
-                                        title = "回地图后",
-                                        subtitle = state.nextStepDetailTitle,
-                                        body = state.nextStepDetailBody,
-                                        accentColor = motionSpec.accent.copy(alpha = 0.8f),
-                                        badgeText = state.continueLabel,
+                                    ReturnResultStage(
+                                        state = ReturnResultStageState(
+                                            kindLabel = state.continueLabel,
+                                            summaryTitle = state.nextStepTitle,
+                                            summaryBody = state.nextStepBody,
+                                            detailLabel = "回地图后",
+                                            detailTitle = state.nextStepDetailTitle,
+                                            detailBody = state.nextStepDetailBody,
+                                            actionLabel = state.nextActionLabel,
+                                            actionTitle = state.nextActionTitle,
+                                            actionBody = state.nextActionBody
+                                        ),
+                                        accentColor = motionSpec.accent,
                                         badgeVariant = rewardStatusVariant(reward),
-                                        modifier = Modifier.testTag("reward-next-step-detail-card")
-                                    )
-                                }
-                                AnimatedVisibility(
-                                    visible = motionValue >= motionSpec.trailingRevealAt,
-                                    enter = fadeIn(tween(180)) +
-                                        slideInVertically(tween(220)) { fullHeight -> fullHeight / 8 } +
-                                        scaleIn(tween(180), initialScale = 0.98f)
-                                ) {
-                                    ReturnActionCard(
-                                        label = state.nextActionLabel,
-                                        title = state.nextActionTitle,
-                                        body = state.nextActionBody,
-                                        accentColor = motionSpec.accent.copy(alpha = 0.8f),
-                                        badgeVariant = rewardStatusVariant(reward),
-                                        modifier = Modifier.testTag("reward-next-action-card"),
-                                        badgeTag = "reward-next-action-pill"
+                                        motionProgress = motionValue,
+                                        chipRevealAt = motionSpec.detailRevealAt,
+                                        summaryRevealAt = motionSpec.detailRevealAt,
+                                        supportingRevealAt = motionSpec.supportingRevealAt,
+                                        trailingRevealAt = motionSpec.trailingRevealAt,
+                                        kindPillTag = "reward-next-step-kind-pill",
+                                        detailCardTag = "reward-next-step-detail-card",
+                                        actionCardTag = "reward-next-action-card",
+                                        actionPillTag = "reward-next-action-pill",
+                                        modifier = Modifier.testTag("reward-next-step-card")
                                     )
                                 }
                                 AnimatedVisibility(
