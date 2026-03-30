@@ -126,6 +126,7 @@ class IslandOverlaySheetTest {
             }.getOrDefault(false)
         }
         composeRule.onNodeWithTag("island-handoff-action-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-handoff-action-emphasis").assertIsDisplayed()
         composeRule.onAllNodesWithTag("island-handoff-action-pill").assertCountEquals(1)
     }
 }

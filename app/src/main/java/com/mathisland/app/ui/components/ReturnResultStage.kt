@@ -42,6 +42,7 @@ fun ReturnResultStage(
     detailCardTag: String? = null,
     actionCardTag: String? = null,
     actionPillTag: String? = null,
+    actionEmphasisTag: String? = null,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -101,10 +102,12 @@ fun ReturnResultStage(
                     label = state.actionLabel,
                     title = state.actionTitle,
                     body = state.actionBody,
-                    accentColor = accentColor.copy(alpha = 0.8f),
+                    accentColor = accentColor,
                     badgeVariant = badgeVariant,
                     modifier = actionCardTag?.let { Modifier.testTag(it) } ?: Modifier,
                     badgeTag = actionPillTag
+                    ,
+                    emphasisTag = actionEmphasisTag
                 )
             }
         }

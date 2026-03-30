@@ -69,6 +69,7 @@ fun IslandHandoffCard(
         kindPillTag = "island-handoff-kind-pill",
         detailCardTag = "island-handoff-detail-card",
         actionCardTag = "island-handoff-action-card",
-        actionPillTag = "island-handoff-action-pill"
+        actionPillTag = "island-handoff-action-pill",
+        actionEmphasisTag = "island-handoff-action-emphasis"
     )
 }

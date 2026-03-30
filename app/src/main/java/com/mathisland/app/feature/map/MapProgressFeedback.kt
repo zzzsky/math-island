@@ -175,7 +175,8 @@ fun MapReturnSummaryCard(
             kindPillTag = "map-return-kind-pill",
             detailCardTag = "map-return-detail-card",
             actionCardTag = "map-return-action-card",
-            actionPillTag = "map-return-action-pill"
+            actionPillTag = "map-return-action-pill",
+            actionEmphasisTag = "map-return-action-emphasis"
         )
     }
 }

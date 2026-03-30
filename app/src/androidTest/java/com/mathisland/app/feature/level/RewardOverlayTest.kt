@@ -65,6 +65,7 @@ class RewardOverlayTest {
         composeRule.onNodeWithTag("reward-next-step-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-detail-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-action-card").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-action-emphasis").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-action-pill").performScrollTo().assertIsDisplayed()
         composeRule.onAllNodesWithTag("reward-return-map").assertCountEquals(1)
     }

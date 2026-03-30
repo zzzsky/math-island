@@ -133,6 +133,7 @@ fun MapIslandListCard(
             )
             if (island.handoffBadge != null && island.handoffBody != null) {
                 StoryPanelCard(
+                    modifier = Modifier.testTag("map-list-handoff-card-${island.id}"),
                     level = SurfaceLevel.Secondary,
                     containerColor = handoffMotionSpec?.accent?.copy(alpha = 0.10f) ?: Color.White.copy(alpha = 0.05f),
                     borderColor = handoffMotionSpec?.accent?.copy(alpha = 0.22f)

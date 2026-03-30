@@ -214,6 +214,7 @@ fun RewardOverlay(
                                         detailCardTag = "reward-next-step-detail-card",
                                         actionCardTag = "reward-next-action-card",
                                         actionPillTag = "reward-next-action-pill",
+                                        actionEmphasisTag = "reward-next-action-emphasis",
                                         modifier = Modifier.testTag("reward-next-step-card")
                                     )
                                 }

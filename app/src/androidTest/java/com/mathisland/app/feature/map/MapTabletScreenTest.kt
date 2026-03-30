@@ -4,11 +4,13 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -231,6 +233,9 @@ class MapTabletScreenTest {
                                 unlocked = true,
                                 completed = false,
                                 progress = 0f,
+                                handoffKind = MapFeedbackKind.NewIsland,
+                                handoffBadge = "主线推荐",
+                                handoffBody = "主线课已就位",
                                 lessons = listOf(
                                     MapTabletLessonUiState(
                                         id = "measure-ruler",
@@ -255,7 +260,11 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("map-feedback-kind-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-kind-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-card").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-return-action-emphasis").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-pill").assertCountEquals(1)
+        composeRule.onNodeWithTag("map-islands-list")
+            .performScrollToNode(hasTestTag("map-list-handoff-card-measurement-island"))
+        composeRule.onNodeWithTag("map-list-handoff-card-measurement-island").assertIsDisplayed()
         composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-open-chest-pulse").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
@@ -304,6 +313,9 @@ class MapTabletScreenTest {
                                 unlocked = true,
                                 completed = false,
                                 progress = 0f,
+                                handoffKind = MapFeedbackKind.NewIsland,
+                                handoffBadge = "主线推荐",
+                                handoffBody = "主线课已就位",
                                 lessons = listOf(
                                     MapTabletLessonUiState(
                                         id = "measure-ruler",
@@ -336,6 +348,10 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("map-return-kind-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-detail-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-card").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("map-return-action-emphasis").assertCountEquals(1)
+        composeRule.onNodeWithTag("map-islands-list")
+            .performScrollToNode(hasTestTag("map-list-handoff-card-measurement-island"))
+        composeRule.onNodeWithTag("map-list-handoff-card-measurement-island").assertIsDisplayed()
         composeRule.onAllNodesWithTag("island-handoff-detail-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("island-handoff-action-card").assertCountEquals(1)
     }
