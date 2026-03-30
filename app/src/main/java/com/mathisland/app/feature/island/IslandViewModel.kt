@@ -5,6 +5,7 @@ import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.feature.map.MapTabletUiState
 import com.mathisland.app.feature.map.mapReturnCopy
+import com.mathisland.app.ui.theme.ActionRole
 
 enum class IslandPrimaryActionMode {
     StartLesson,
@@ -26,6 +27,7 @@ data class IslandUiState(
     val primaryLessonId: String? = null,
     val primaryActionLabel: String? = null,
     val primaryActionMode: IslandPrimaryActionMode = IslandPrimaryActionMode.StartLesson,
+    val primaryActionRole: ActionRole = ActionRole.Primary,
 )
 
 object IslandViewModel {
@@ -64,6 +66,7 @@ object IslandViewModel {
                 ?: handoffCopy?.actionBody?.takeIf { handoffVisible },
             primaryLessonId = primaryLesson?.id,
             primaryActionLabel = primaryActionLabel(primaryLesson, feedback?.kind),
+            primaryActionRole = primaryActionRole(primaryLesson, feedback?.kind),
             primaryActionMode = if (feedback?.kind == MapFeedbackKind.Chest) {
                 IslandPrimaryActionMode.OpenChest
             } else {
@@ -102,12 +105,22 @@ object IslandViewModel {
             return null
         }
         return when (kind) {
-            MapFeedbackKind.NewIsland -> lesson?.let { "开始主线 ${it.title}" }
-            MapFeedbackKind.Chest -> mapReturnCopy(MapFeedbackKind.Chest).summaryLabel
+            MapFeedbackKind.NewIsland -> lesson?.let { "马上开始 ${it.title}" }
+            MapFeedbackKind.Chest -> mapReturnCopy(MapFeedbackKind.Chest).actionTitle
             MapFeedbackKind.Replay -> lesson?.let { "先做回放 ${it.title}" }
             MapFeedbackKind.Progress, null -> lesson?.let {
-                if (it.completed) "再次练习 ${it.title}" else "继续 ${it.title}"
+                if (it.completed) "再次练习 ${it.title}" else "继续当前课 ${it.title}"
             }
         }
+    }
+
+    private fun primaryActionRole(
+        lesson: MapTabletLessonUiState?,
+        kind: MapFeedbackKind?
+    ): ActionRole = when (kind) {
+        MapFeedbackKind.NewIsland -> ActionRole.Primary
+        MapFeedbackKind.Chest -> ActionRole.Recommended
+        MapFeedbackKind.Replay -> ActionRole.Secondary
+        MapFeedbackKind.Progress, null -> if (lesson?.completed == true) ActionRole.Completed else ActionRole.Primary
     }
 }

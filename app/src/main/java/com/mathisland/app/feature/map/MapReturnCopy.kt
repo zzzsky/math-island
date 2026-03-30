@@ -10,6 +10,7 @@ data class MapReturnCopy(
     val actionLabel: String,
     val actionTitle: String,
     val actionBody: String,
+    val continueCtaLabel: String,
     val listBadge: String,
     val listBody: String
 )
@@ -25,6 +26,7 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionLabel = "优先动作",
         actionTitle = "开始主线课",
         actionBody = "先看新岛，再直接开始当前推荐的主线课程。",
+        continueCtaLabel = "回地图看新岛",
         listBadge = "主线推荐",
         listBody = "下一节主线课已就位"
     )
@@ -38,6 +40,7 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionLabel = "优先动作",
         actionTitle = "先开宝箱",
         actionBody = "先看收藏更新，再回到当前推荐课程。",
+        continueCtaLabel = "回地图开宝箱",
         listBadge = "宝箱优先",
         listBody = "先看收藏，再回到当前课程"
     )
@@ -51,6 +54,7 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionLabel = "优先动作",
         actionTitle = "先做回放",
         actionBody = "先完成回放或复习，再决定是否重新发起冲刺。",
+        continueCtaLabel = "回地图做回放",
         listBadge = "回放优先",
         listBody = "先做回放，再决定是否继续冲刺"
     )
@@ -64,6 +68,7 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionLabel = "优先动作",
         actionTitle = "继续当前课程",
         actionBody = "直接进入当前推荐路线，不需要先切别的入口。",
+        continueCtaLabel = "回地图继续",
         listBadge = "继续推进",
         listBody = "当前推荐课程已经整理好"
     )

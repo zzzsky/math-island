@@ -21,6 +21,7 @@ fun ReturnActionCard(
         subtitle = title,
         body = body,
         accentColor = accentColor,
+        containerColor = accentColor.copy(alpha = 0.12f),
         badgeText = label,
         badgeVariant = badgeVariant,
         badgeTag = badgeTag

@@ -67,7 +67,7 @@ class IslandViewModelTest {
         )
 
         assertEquals(IslandPrimaryActionMode.OpenChest, state.primaryActionMode)
-        assertEquals("先看收藏", state.primaryActionLabel)
+        assertEquals("先开宝箱", state.primaryActionLabel)
     }
 
     @Test

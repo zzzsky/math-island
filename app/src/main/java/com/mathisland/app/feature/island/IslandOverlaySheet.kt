@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.components.WoodButton
-import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.ActionTokens
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.SpacingTokens
 
@@ -69,20 +69,9 @@ fun IslandOverlaySheet(
                             IslandPrimaryActionMode.OpenChest -> onOpenChest()
                         }
                     },
-                    role = if (state.primaryActionMode == IslandPrimaryActionMode.OpenChest) {
-                        ActionRole.Recommended
-                    } else if (primaryLesson?.completed == true) {
-                        ActionRole.Completed
-                    } else {
-                        ActionRole.Recommended
-                    },
-                    containerColor = if (primaryLesson?.completed == true &&
-                        state.primaryActionMode == IslandPrimaryActionMode.StartLesson
-                    ) {
-                        IslandPanelTokens.CompletedButton
-                    } else {
-                        IslandPanelTokens.RecommendedButton
-                    }
+                    role = state.primaryActionRole,
+                    containerColor = ActionTokens.colors(state.primaryActionRole).containerColor,
+                    contentColor = ActionTokens.colors(state.primaryActionRole).contentColor
                 )
             }
             LazyColumn(

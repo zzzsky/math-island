@@ -241,12 +241,10 @@ fun RewardOverlay(
                                             }
                                         }
                                         ActionButton(
-                                            text = state.continueLabel,
+                                            text = state.continueCtaLabel,
                                             modifier = Modifier.testTag("reward-return-map"),
                                             onClick = onContinue,
-                                            role = ActionRole.Primary,
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = MaterialTheme.colorScheme.onPrimary
+                                            role = state.continueActionRole
                                         )
                                     }
                                 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollTo
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.RewardSummary
+import com.mathisland.app.ui.theme.ActionRole
 import org.junit.Rule
 import org.junit.Test
 
@@ -38,7 +39,9 @@ class RewardOverlayTest {
                             secondaryActionLessonId = "challenge-sprint-01"
                         ),
                         totalStars = 12,
-                        continueLabel = "回地图看回放",
+                        continueLabel = "先做回放",
+                        continueCtaLabel = "回地图做回放",
+                        continueActionRole = ActionRole.Secondary,
                         nextStepLabel = "回地图后",
                         nextStepTitle = "下一步先回放再冲刺",
                         nextStepBody = "先回地图查看错题回放站，再决定是否立刻再试一次冲刺。",
