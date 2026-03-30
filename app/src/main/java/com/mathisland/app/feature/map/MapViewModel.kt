@@ -20,6 +20,7 @@ data class MapTabletIslandUiState(
     val completed: Boolean,
     val progress: Float,
     val lessons: List<MapTabletLessonUiState>,
+    val handoffKind: MapFeedbackKind? = null,
     val handoffBadge: String? = null,
     val handoffBody: String? = null
 )
@@ -43,7 +44,7 @@ object MapViewModel {
         val islands = controller.islands.map { island ->
             val unlocked = progress.unlockedIslandIds.contains(island.id)
             val completed = island.lessons.all { lesson -> controller.lessonCompleted(progress, lesson) }
-            val handoffBadge = islandHandoffBadge(
+            val handoffKind = islandHandoffKind(
                 islandId = island.id,
                 recommendedIslandId = controller.recommendedLesson(progress)?.islandId,
                 feedback = feedback
@@ -65,8 +66,9 @@ object MapViewModel {
                         enabled = unlocked
                     )
                 },
-                handoffBadge = handoffBadge,
-                handoffBody = handoffBody(handoffBadge)
+                handoffKind = handoffKind,
+                handoffBadge = handoffKind?.let { mapReturnCopy(it).listBadge },
+                handoffBody = handoffKind?.let { mapReturnCopy(it).listBody }
             )
         }
         val recommendedIslandId = controller.recommendedLesson(progress)?.islandId
@@ -81,11 +83,11 @@ object MapViewModel {
         )
     }
 
-    private fun islandHandoffBadge(
+    private fun islandHandoffKind(
         islandId: String,
         recommendedIslandId: String?,
         feedback: MapFeedbackUiState?
-    ): String? {
+    ): MapFeedbackKind? {
         val kind = feedback?.kind ?: return null
         val appliesToIsland = when (kind) {
             MapFeedbackKind.NewIsland -> feedback.highlightedIslandId == islandId
@@ -96,16 +98,6 @@ object MapViewModel {
         if (!appliesToIsland) {
             return null
         }
-        return when (kind) {
-            else -> mapReturnCopy(kind).listBadge
-        }
-    }
-
-    private fun handoffBody(handoffBadge: String?): String? = when (handoffBadge) {
-        mapReturnCopy(MapFeedbackKind.NewIsland).listBadge -> mapReturnCopy(MapFeedbackKind.NewIsland).listBody
-        mapReturnCopy(MapFeedbackKind.Chest).listBadge -> mapReturnCopy(MapFeedbackKind.Chest).listBody
-        mapReturnCopy(MapFeedbackKind.Replay).listBadge -> mapReturnCopy(MapFeedbackKind.Replay).listBody
-        mapReturnCopy(MapFeedbackKind.Progress).listBadge -> mapReturnCopy(MapFeedbackKind.Progress).listBody
-        else -> null
+        return kind
     }
 }

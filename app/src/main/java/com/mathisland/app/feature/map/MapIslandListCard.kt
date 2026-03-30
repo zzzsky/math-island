@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +52,7 @@ fun MapIslandListCard(
         island.completed -> IslandPanelTokens.CompletedBorder
         else -> IslandPanelTokens.LessonBorder
     }
+    val handoffMotionSpec = island.handoffKind?.motionSpec()
 
     StoryPanelCard(
         modifier = modifier
@@ -130,22 +132,33 @@ fun MapIslandListCard(
                 modifier = Modifier.testTag("map-list-card-surface-${island.id}")
             )
             if (island.handoffBadge != null && island.handoffBody != null) {
-                StatusChip(
-                    text = island.handoffBadge,
-                    variant = when (island.handoffBadge) {
-                        "主线推荐" -> StatusVariant.Recommended
-                        "宝箱优先" -> StatusVariant.Highlight
-                        "回放优先" -> StatusVariant.Caution
-                        else -> StatusVariant.Highlight
-                    },
-                    modifier = Modifier.testTag("map-list-handoff-badge-${island.id}")
-                )
-                Text(
-                    text = island.handoffBody,
-                    color = TextToneTokens.medium(IslandPanelTokens.DescriptionText),
-                    style = TypographyTokens.Caption,
-                    modifier = Modifier.testTag("map-list-handoff-body-${island.id}")
-                )
+                StoryPanelCard(
+                    level = SurfaceLevel.Secondary,
+                    containerColor = handoffMotionSpec?.accent?.copy(alpha = 0.10f) ?: Color.White.copy(alpha = 0.05f),
+                    borderColor = handoffMotionSpec?.accent?.copy(alpha = 0.22f)
+                        ?: IslandPanelTokens.LessonBorder,
+                    shape = RoundedCornerShape(18.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        StatusChip(
+                            text = island.handoffBadge,
+                            variant = handoffMotionSpec?.badgeVariant ?: StatusVariant.Highlight,
+                            modifier = Modifier.testTag("map-list-handoff-badge-${island.id}")
+                        )
+                        Text(
+                            text = island.handoffBody,
+                            color = handoffMotionSpec?.accent?.copy(alpha = 0.92f)
+                                ?: TextToneTokens.medium(IslandPanelTokens.DescriptionText),
+                            style = TypographyTokens.Caption,
+                            modifier = Modifier.testTag("map-list-handoff-body-${island.id}")
+                        )
+                    }
+                }
             }
         }
     }

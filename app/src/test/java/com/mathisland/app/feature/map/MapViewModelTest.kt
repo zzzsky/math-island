@@ -88,6 +88,7 @@ class MapViewModelTest {
         )
 
         val highlighted = state.islands.single { it.id == "measurement-island" }
+        assertEquals(MapFeedbackKind.NewIsland, highlighted.handoffKind)
         assertEquals("主线推荐", highlighted.handoffBadge)
         assertEquals("主线课已就位", highlighted.handoffBody)
     }
@@ -115,6 +116,7 @@ class MapViewModelTest {
         )
 
         val island = state.islands.single()
+        assertEquals(MapFeedbackKind.Chest, island.handoffKind)
         assertEquals("宝箱优先", island.handoffBadge)
         assertEquals("先看收藏更新", island.handoffBody)
     }
@@ -144,6 +146,7 @@ class MapViewModelTest {
         )
 
         val neutral = state.islands.single { it.id == "calculation-island" }
+        assertNull(neutral.handoffKind)
         assertNull(neutral.handoffBadge)
         assertNull(neutral.handoffBody)
     }
