@@ -1,5 +1,7 @@
 package com.mathisland.app.feature.map
 
+import com.mathisland.app.ui.components.ReturnResultStageState
+
 enum class MapFeedbackKind {
     NewIsland,
     Chest,
@@ -22,5 +24,6 @@ data class MapFeedbackUiState(
     val detailBody: String = summaryBody,
     val actionLabel: String = "优先动作",
     val actionTitle: String = summaryTitle,
-    val actionBody: String = detailBody
+    val actionBody: String = detailBody,
+    val stageState: ReturnResultStageState? = null
 )

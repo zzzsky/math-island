@@ -47,7 +47,11 @@ fun rewardToMapFeedback(reward: RewardSummary): MapFeedbackUiState? {
         detailBody = copy.detailBody,
         actionLabel = copy.actionLabel,
         actionTitle = copy.actionTitle,
-        actionBody = copy.actionBody
+        actionBody = copy.actionBody,
+        stageState = copy.toReturnResultStageState(
+            summaryTitle = reward.mapFeedbackSummaryTitle(),
+            summaryBody = reward.mapFeedbackSummaryBody()
+        )
     )
 }
 

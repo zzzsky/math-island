@@ -154,14 +154,11 @@ fun MapReturnSummaryCard(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         ReturnResultStage(
-            state = ReturnResultStageState(
-                kindLabel = feedback.summaryLabel,
+            state = feedback.stageState ?: mapReturnCopy(feedback.kind).toReturnResultStageState(
                 summaryTitle = feedback.summaryTitle,
                 summaryBody = feedback.summaryBody,
-                detailLabel = feedback.detailLabel,
                 detailTitle = feedback.detailTitle,
                 detailBody = feedback.detailBody,
-                actionLabel = feedback.actionLabel,
                 actionTitle = feedback.actionTitle,
                 actionBody = feedback.actionBody
             ),

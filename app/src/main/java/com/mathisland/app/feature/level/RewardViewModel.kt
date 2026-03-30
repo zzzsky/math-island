@@ -2,9 +2,10 @@ package com.mathisland.app.feature.level
 
 import com.mathisland.app.domain.model.GameProgress
 import com.mathisland.app.domain.model.RewardSummary
-import com.mathisland.app.feature.map.MapFeedbackKind
 import com.mathisland.app.feature.map.mapReturnCopy
 import com.mathisland.app.feature.map.rewardFeedbackKind
+import com.mathisland.app.feature.map.toReturnResultStageState
+import com.mathisland.app.ui.components.ReturnResultStageState
 import com.mathisland.app.ui.theme.ActionRole
 
 data class RewardOverlayUiState(
@@ -20,7 +21,8 @@ data class RewardOverlayUiState(
     val nextStepDetailBody: String,
     val nextActionLabel: String,
     val nextActionTitle: String,
-    val nextActionBody: String
+    val nextActionBody: String,
+    val resultStageState: ReturnResultStageState? = null
 )
 
 object RewardViewModel {
@@ -33,7 +35,7 @@ object RewardViewModel {
             totalStars = progress.totalStars,
             continueLabel = copy.summaryLabel,
             continueCtaLabel = copy.continueCtaLabel,
-            continueActionRole = continueActionRole(kind),
+            continueActionRole = copy.continueActionRole,
             nextStepLabel = copy.detailLabel,
             nextStepTitle = copy.summaryTitle,
             nextStepBody = copy.summaryBody,
@@ -41,14 +43,8 @@ object RewardViewModel {
             nextStepDetailBody = copy.detailBody,
             nextActionLabel = copy.actionLabel,
             nextActionTitle = copy.actionTitle,
-            nextActionBody = copy.actionBody
+            nextActionBody = copy.actionBody,
+            resultStageState = copy.toReturnResultStageState()
         )
-    }
-
-    private fun continueActionRole(kind: MapFeedbackKind): ActionRole = when (kind) {
-        MapFeedbackKind.NewIsland -> ActionRole.Primary
-        MapFeedbackKind.Chest -> ActionRole.Recommended
-        MapFeedbackKind.Replay -> ActionRole.Secondary
-        MapFeedbackKind.Progress -> ActionRole.Primary
     }
 }

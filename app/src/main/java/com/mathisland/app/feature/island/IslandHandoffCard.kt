@@ -17,21 +17,33 @@ import com.mathisland.app.ui.components.ReturnResultStageState
 @Composable
 fun IslandHandoffCard(
     kind: MapFeedbackKind?,
-    label: String,
-    title: String,
-    body: String,
-    detailLabel: String?,
-    detailTitle: String?,
-    detailBody: String?,
-    actionLabel: String?,
-    actionTitle: String?,
-    actionBody: String?,
+    stageState: ReturnResultStageState? = null,
+    fallbackLabel: String?,
+    fallbackTitle: String?,
+    fallbackBody: String?,
+    fallbackDetailLabel: String?,
+    fallbackDetailTitle: String?,
+    fallbackDetailBody: String?,
+    fallbackActionLabel: String?,
+    fallbackActionTitle: String?,
+    fallbackActionBody: String?,
     modifier: Modifier = Modifier,
 ) {
     val motionSpec = (kind ?: MapFeedbackKind.Progress).motionSpec()
     val revealProgress = remember { Animatable(0f) }
+    val resolvedStageState = stageState ?: ReturnResultStageState(
+        kindLabel = fallbackLabel ?: "",
+        summaryTitle = fallbackTitle ?: "",
+        summaryBody = fallbackBody ?: "",
+        detailLabel = fallbackDetailLabel,
+        detailTitle = fallbackDetailTitle,
+        detailBody = fallbackDetailBody,
+        actionLabel = fallbackActionLabel,
+        actionTitle = fallbackActionTitle,
+        actionBody = fallbackActionBody
+    )
 
-    LaunchedEffect(kind, label, title, body, detailLabel, detailTitle, detailBody, actionLabel, actionTitle, actionBody) {
+    LaunchedEffect(kind, resolvedStageState) {
         revealProgress.stop()
         revealProgress.snapTo(0f)
         revealProgress.animateTo(1f, tween(durationMillis = 240, easing = FastOutSlowInEasing))
@@ -39,17 +51,7 @@ fun IslandHandoffCard(
 
     val motionValue = revealProgress.value
     ReturnResultStage(
-        state = ReturnResultStageState(
-            kindLabel = label,
-            summaryTitle = title,
-            summaryBody = body,
-            detailLabel = detailLabel,
-            detailTitle = detailTitle,
-            detailBody = detailBody,
-            actionLabel = actionLabel,
-            actionTitle = actionTitle,
-            actionBody = actionBody
-        ),
+        state = resolvedStageState,
         accentColor = motionSpec.accent,
         badgeVariant = motionSpec.badgeVariant,
         motionProgress = motionValue,

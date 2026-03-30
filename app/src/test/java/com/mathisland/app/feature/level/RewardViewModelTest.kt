@@ -56,6 +56,7 @@ class RewardViewModelTest {
         assertEquals("先看新岛", uiState?.nextStepDetailTitle)
         assertEquals("优先动作", uiState?.nextActionLabel)
         assertEquals("开始主线课", uiState?.nextActionTitle)
+        assertEquals("新主线", uiState?.resultStageState?.spotlightLabel)
     }
 
     @Test
@@ -80,6 +81,7 @@ class RewardViewModelTest {
         assertEquals("宝箱可打开", uiState?.nextStepTitle)
         assertEquals("先开宝箱", uiState?.nextStepDetailTitle)
         assertEquals("先开宝箱", uiState?.nextActionTitle)
+        assertEquals("新收藏", uiState?.resultStageState?.spotlightLabel)
     }
 
     @Test
@@ -107,5 +109,6 @@ class RewardViewModelTest {
         assertEquals("回放已就位", uiState?.nextStepTitle)
         assertEquals("先做回放", uiState?.nextStepDetailTitle)
         assertEquals("先做回放", uiState?.nextActionTitle)
+        assertEquals("回放路线", uiState?.resultStageState?.spotlightLabel)
     }
 }

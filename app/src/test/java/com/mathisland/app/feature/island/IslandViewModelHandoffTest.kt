@@ -39,6 +39,7 @@ class IslandViewModelHandoffTest {
         assertEquals("打开宝箱", state.handoffLabel)
         assertEquals("先开宝箱", state.handoffDetailTitle)
         assertEquals("先开宝箱", state.handoffActionTitle)
+        assertEquals("新收藏", state.handoffStageState?.spotlightLabel)
     }
 
     @Test
@@ -73,6 +74,7 @@ class IslandViewModelHandoffTest {
         assertNull(state.handoffBody)
         assertNull(state.handoffDetailTitle)
         assertNull(state.handoffActionTitle)
+        assertNull(state.handoffStageState)
     }
 
     private fun island(id: String, title: String) = MapTabletIslandUiState(

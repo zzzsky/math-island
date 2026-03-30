@@ -12,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import com.mathisland.app.ui.theme.ActionRole
 import com.mathisland.app.ui.theme.SpacingTokens
 import com.mathisland.app.ui.theme.StatusVariant
 
 data class ReturnResultStageState(
     val kindLabel: String,
+    val spotlightLabel: String = kindLabel,
     val summaryTitle: String,
     val summaryBody: String,
     val detailLabel: String? = null,
@@ -25,6 +27,7 @@ data class ReturnResultStageState(
     val actionLabel: String? = null,
     val actionTitle: String? = null,
     val actionBody: String? = null,
+    val actionRole: ActionRole = ActionRole.Primary,
 )
 
 @Composable
@@ -67,7 +70,7 @@ fun ReturnResultStage(
                 scaleIn(tween(160), initialScale = 0.96f)
         ) {
             SummarySpotlightCard(
-                label = state.kindLabel,
+                label = state.spotlightLabel,
                 title = state.summaryTitle,
                 body = state.summaryBody,
                 accent = accentColor
@@ -104,6 +107,7 @@ fun ReturnResultStage(
                     body = state.actionBody,
                     accentColor = accentColor,
                     badgeVariant = badgeVariant,
+                    actionRole = state.actionRole,
                     modifier = actionCardTag?.let { Modifier.testTag(it) } ?: Modifier,
                     badgeTag = actionPillTag
                     ,

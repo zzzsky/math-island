@@ -41,18 +41,19 @@ fun IslandOverlaySheet(
             verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
         ) {
             IslandPanelHeader(island = island)
-            if (state.handoffLabel != null && state.handoffTitle != null && state.handoffBody != null) {
+            if (state.handoffStageState != null || (state.handoffLabel != null && state.handoffTitle != null && state.handoffBody != null)) {
                 IslandHandoffCard(
                     kind = state.handoffKind,
-                    label = state.handoffLabel,
-                    title = state.handoffTitle,
-                    body = state.handoffBody,
-                    detailLabel = state.handoffDetailLabel,
-                    detailTitle = state.handoffDetailTitle,
-                    detailBody = state.handoffDetailBody,
-                    actionLabel = state.handoffActionLabel,
-                    actionTitle = state.handoffActionTitle,
-                    actionBody = state.handoffActionBody
+                    stageState = state.handoffStageState,
+                    fallbackLabel = state.handoffLabel,
+                    fallbackTitle = state.handoffTitle,
+                    fallbackBody = state.handoffBody,
+                    fallbackDetailLabel = state.handoffDetailLabel,
+                    fallbackDetailTitle = state.handoffDetailTitle,
+                    fallbackDetailBody = state.handoffDetailBody,
+                    fallbackActionLabel = state.handoffActionLabel,
+                    fallbackActionTitle = state.handoffActionTitle,
+                    fallbackActionBody = state.handoffActionBody
                 )
             }
             IslandStoryCard(island = island)

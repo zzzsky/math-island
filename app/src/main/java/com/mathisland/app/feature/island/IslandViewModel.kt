@@ -5,6 +5,8 @@ import com.mathisland.app.feature.map.MapTabletIslandUiState
 import com.mathisland.app.feature.map.MapTabletLessonUiState
 import com.mathisland.app.feature.map.MapTabletUiState
 import com.mathisland.app.feature.map.mapReturnCopy
+import com.mathisland.app.feature.map.toReturnResultStageState
+import com.mathisland.app.ui.components.ReturnResultStageState
 import com.mathisland.app.ui.theme.ActionRole
 
 enum class IslandPrimaryActionMode {
@@ -24,6 +26,7 @@ data class IslandUiState(
     val handoffActionLabel: String? = null,
     val handoffActionTitle: String? = null,
     val handoffActionBody: String? = null,
+    val handoffStageState: ReturnResultStageState? = null,
     val primaryLessonId: String? = null,
     val primaryActionLabel: String? = null,
     val primaryActionMode: IslandPrimaryActionMode = IslandPrimaryActionMode.StartLesson,
@@ -64,6 +67,14 @@ object IslandViewModel {
                 ?: handoffCopy?.actionTitle?.takeIf { handoffVisible },
             handoffActionBody = feedback?.actionBody?.takeIf { handoffVisible }
                 ?: handoffCopy?.actionBody?.takeIf { handoffVisible },
+            handoffStageState = handoffCopy?.takeIf { handoffVisible }?.toReturnResultStageState(
+                summaryTitle = feedback?.summaryTitle ?: handoffCopy.summaryTitle,
+                summaryBody = feedback?.summaryBody ?: handoffCopy.summaryBody,
+                detailTitle = feedback?.detailTitle ?: handoffCopy.detailTitle,
+                detailBody = feedback?.detailBody ?: handoffCopy.detailBody,
+                actionTitle = feedback?.actionTitle ?: handoffCopy.actionTitle,
+                actionBody = feedback?.actionBody ?: handoffCopy.actionBody
+            ),
             primaryLessonId = primaryLesson?.id,
             primaryActionLabel = primaryActionLabel(primaryLesson, feedback?.kind),
             primaryActionRole = primaryActionRole(primaryLesson, feedback?.kind),

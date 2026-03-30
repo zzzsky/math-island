@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.mathisland.app.ui.theme.ActionRole
+import com.mathisland.app.ui.theme.ActionTokens
 import com.mathisland.app.ui.theme.StatusVariant
 
 @Composable
@@ -19,15 +21,24 @@ fun ReturnActionCard(
     body: String,
     accentColor: Color,
     badgeVariant: StatusVariant,
+    actionRole: ActionRole,
     modifier: Modifier = Modifier,
     badgeTag: String? = null,
     emphasisTag: String? = null
 ) {
+    val roleColors = ActionTokens.colors(actionRole)
+    val emphasisColor = when (actionRole) {
+        ActionRole.Primary -> accentColor.copy(alpha = 0.16f)
+        ActionRole.Recommended -> roleColors.containerColor.copy(alpha = 0.22f)
+        ActionRole.Secondary -> roleColors.containerColor.copy(alpha = 0.18f)
+        ActionRole.Completed -> roleColors.containerColor.copy(alpha = 0.22f)
+        ActionRole.OutlinedSecondary -> accentColor.copy(alpha = 0.14f)
+    }
     Box(
         modifier = (emphasisTag?.let { Modifier.testTag(it) } ?: Modifier)
             .fillMaxWidth()
             .background(
-                color = accentColor.copy(alpha = 0.10f),
+                color = emphasisColor,
                 shape = RoundedCornerShape(24.dp)
             )
             .padding(2.dp)

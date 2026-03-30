@@ -1,7 +1,11 @@
 package com.mathisland.app.feature.map
 
+import com.mathisland.app.ui.components.ReturnResultStageState
+import com.mathisland.app.ui.theme.ActionRole
+
 data class MapReturnCopy(
     val summaryLabel: String,
+    val spotlightLabel: String,
     val summaryTitle: String,
     val summaryBody: String,
     val detailLabel: String,
@@ -11,13 +15,36 @@ data class MapReturnCopy(
     val actionTitle: String,
     val actionBody: String,
     val continueCtaLabel: String,
+    val continueActionRole: ActionRole,
     val listBadge: String,
     val listBody: String
+)
+
+fun MapReturnCopy.toReturnResultStageState(
+    summaryTitle: String = this.summaryTitle,
+    summaryBody: String = this.summaryBody,
+    detailTitle: String = this.detailTitle,
+    detailBody: String = this.detailBody,
+    actionTitle: String = this.actionTitle,
+    actionBody: String = this.actionBody,
+): ReturnResultStageState = ReturnResultStageState(
+    kindLabel = summaryLabel,
+    spotlightLabel = spotlightLabel,
+    summaryTitle = summaryTitle,
+    summaryBody = summaryBody,
+    detailLabel = detailLabel,
+    detailTitle = detailTitle,
+    detailBody = detailBody,
+    actionLabel = actionLabel,
+    actionTitle = actionTitle,
+    actionBody = actionBody,
+    actionRole = continueActionRole
 )
 
 fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
     MapFeedbackKind.NewIsland -> MapReturnCopy(
         summaryLabel = "主线继续",
+        spotlightLabel = "新主线",
         summaryTitle = "新岛可出发",
         summaryBody = "地图已经切到新岛，推荐主线课已经对齐。",
         detailLabel = "回地图后",
@@ -27,11 +54,13 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionTitle = "开始主线课",
         actionBody = "看完新岛后，直接开始当前推荐主线课。",
         continueCtaLabel = "回地图看新岛",
+        continueActionRole = ActionRole.Primary,
         listBadge = "主线推荐",
         listBody = "主线课已就位"
     )
     MapFeedbackKind.Chest -> MapReturnCopy(
         summaryLabel = "先看收藏",
+        spotlightLabel = "新收藏",
         summaryTitle = "宝箱可打开",
         summaryBody = "先看收藏更新，再回到当前推荐课。",
         detailLabel = "回地图后",
@@ -41,11 +70,13 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionTitle = "先开宝箱",
         actionBody = "先看这次收藏更新，再回到当前推荐课。",
         continueCtaLabel = "回地图开宝箱",
+        continueActionRole = ActionRole.Recommended,
         listBadge = "宝箱优先",
         listBody = "先看收藏更新"
     )
     MapFeedbackKind.Replay -> MapReturnCopy(
         summaryLabel = "先做回放",
+        spotlightLabel = "回放路线",
         summaryTitle = "回放已就位",
         summaryBody = "先做回放，再决定是否重新冲刺。",
         detailLabel = "回地图后",
@@ -55,11 +86,13 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionTitle = "先做回放",
         actionBody = "先完成回放或复习，再决定是否重开冲刺。",
         continueCtaLabel = "回地图做回放",
+        continueActionRole = ActionRole.Secondary,
         listBadge = "回放优先",
         listBody = "先做回放"
     )
     MapFeedbackKind.Progress -> MapReturnCopy(
         summaryLabel = "继续推进",
+        spotlightLabel = "当前推进",
         summaryTitle = "当前课已就位",
         summaryBody = "当前推荐课已经对齐，可以直接继续。",
         detailLabel = "回地图后",
@@ -69,6 +102,7 @@ fun mapReturnCopy(kind: MapFeedbackKind): MapReturnCopy = when (kind) {
         actionTitle = "继续当前课程",
         actionBody = "直接进入当前推荐课，不需要先切别的入口。",
         continueCtaLabel = "回地图继续",
+        continueActionRole = ActionRole.Primary,
         listBadge = "继续推进",
         listBody = "当前课程已整理好"
     )

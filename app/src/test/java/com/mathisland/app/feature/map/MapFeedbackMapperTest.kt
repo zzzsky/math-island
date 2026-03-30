@@ -26,6 +26,7 @@ class MapFeedbackMapperTest {
         assertEquals("主线继续", feedback.summaryLabel)
         assertEquals("先看新岛", feedback.detailTitle)
         assertEquals("开始主线课", feedback.actionTitle)
+        assertEquals("新主线", feedback.stageState?.spotlightLabel)
     }
 
     @Test
@@ -48,6 +49,7 @@ class MapFeedbackMapperTest {
         assertEquals("先看收藏", feedback.summaryLabel)
         assertEquals("先开宝箱", feedback.detailTitle)
         assertEquals("先开宝箱", feedback.actionTitle)
+        assertEquals("新收藏", feedback.stageState?.spotlightLabel)
     }
 
     @Test
@@ -73,5 +75,6 @@ class MapFeedbackMapperTest {
         assertEquals("回放已就位", feedback.summaryTitle)
         assertEquals("先做回放", feedback.detailTitle)
         assertEquals("先做回放", feedback.actionTitle)
+        assertEquals("回放路线", feedback.stageState?.spotlightLabel)
     }
 }

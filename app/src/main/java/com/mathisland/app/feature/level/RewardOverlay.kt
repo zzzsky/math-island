@@ -80,6 +80,18 @@ fun RewardOverlay(
     val motionValue = revealProgress.value
     val panelColor = Color(0xF3183A49)
     val accentMint = Color(0xFF9ADBC7)
+    val resultStageState = state.resultStageState ?: ReturnResultStageState(
+        kindLabel = state.continueLabel,
+        summaryTitle = state.nextStepTitle,
+        summaryBody = state.nextStepBody,
+        detailLabel = state.nextStepLabel,
+        detailTitle = state.nextStepDetailTitle,
+        detailBody = state.nextStepDetailBody,
+        actionLabel = state.nextActionLabel,
+        actionTitle = state.nextActionTitle,
+        actionBody = state.nextActionBody,
+        actionRole = state.continueActionRole
+    )
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -192,17 +204,7 @@ fun RewardOverlay(
                                         scaleIn(tween(150), initialScale = 0.96f)
                                 ) {
                                     ReturnResultStage(
-                                        state = ReturnResultStageState(
-                                            kindLabel = state.continueLabel,
-                                            summaryTitle = state.nextStepTitle,
-                                            summaryBody = state.nextStepBody,
-                                            detailLabel = "回地图后",
-                                            detailTitle = state.nextStepDetailTitle,
-                                            detailBody = state.nextStepDetailBody,
-                                            actionLabel = state.nextActionLabel,
-                                            actionTitle = state.nextActionTitle,
-                                            actionBody = state.nextActionBody
-                                        ),
+                                        state = resultStageState,
                                         accentColor = motionSpec.accent,
                                         badgeVariant = rewardStatusVariant(reward),
                                         motionProgress = motionValue,
