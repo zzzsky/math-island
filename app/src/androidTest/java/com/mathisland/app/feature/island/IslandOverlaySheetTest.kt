@@ -113,7 +113,19 @@ class IslandOverlaySheetTest {
         composeRule.onNodeWithTag("island-handoff-card").assertIsDisplayed()
         composeRule.onNodeWithTag("island-handoff-kind-pill").assertIsDisplayed()
         composeRule.onNodeWithTag("island-handoff-detail-card").assertIsDisplayed()
+        composeRule.waitUntil(5_000) {
+            runCatching {
+                composeRule.onNodeWithTag("island-handoff-action-card").assertIsDisplayed()
+                true
+            }.getOrDefault(false)
+        }
+        composeRule.waitUntil(5_000) {
+            runCatching {
+                composeRule.onAllNodesWithTag("island-handoff-action-pill")
+                    .fetchSemanticsNodes().size == 1
+            }.getOrDefault(false)
+        }
         composeRule.onNodeWithTag("island-handoff-action-card").assertIsDisplayed()
-        composeRule.onNodeWithTag("island-handoff-action-pill").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("island-handoff-action-pill").assertCountEquals(1)
     }
 }
