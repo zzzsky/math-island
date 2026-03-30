@@ -22,7 +22,10 @@ class IslandViewModelHandoffTest {
                     body = "Bridge Builder 已收入宝箱。",
                     summaryLabel = "打开宝箱",
                     summaryTitle = "宝箱里有新的收藏",
-                    summaryBody = "回地图后可以直接打开查看。"
+                    summaryBody = "回地图后可以直接打开查看。",
+                    actionLabel = "优先动作",
+                    actionTitle = "先开宝箱",
+                    actionBody = "先看收藏更新，再回到当前推荐课程。"
                 ),
                 islands = listOf(
                     island(id = "calculation-island", title = "计算岛"),
@@ -35,6 +38,7 @@ class IslandViewModelHandoffTest {
         assertEquals("计算岛", state.island.title)
         assertEquals("打开宝箱", state.handoffLabel)
         assertEquals("先开宝箱，再回到课程", state.handoffDetailTitle)
+        assertEquals("先开宝箱", state.handoffActionTitle)
     }
 
     @Test
@@ -50,7 +54,10 @@ class IslandViewModelHandoffTest {
                     highlightedIslandId = "measurement-island",
                     summaryLabel = "继续主线",
                     summaryTitle = "新主线已经准备好",
-                    summaryBody = "右侧会直接显示推荐课程。"
+                    summaryBody = "右侧会直接显示推荐课程。",
+                    actionLabel = "优先动作",
+                    actionTitle = "开始主线课",
+                    actionBody = "先看新岛，再直接开始当前推荐的主线课程。"
                 ),
                 islands = listOf(
                     island(id = "calculation-island", title = "计算岛"),
@@ -65,6 +72,7 @@ class IslandViewModelHandoffTest {
         assertNull(state.handoffTitle)
         assertNull(state.handoffBody)
         assertNull(state.handoffDetailTitle)
+        assertNull(state.handoffActionTitle)
     }
 
     private fun island(id: String, title: String) = MapTabletIslandUiState(

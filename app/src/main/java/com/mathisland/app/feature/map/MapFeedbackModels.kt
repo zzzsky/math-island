@@ -19,5 +19,8 @@ data class MapFeedbackUiState(
     val summaryLabel: String = "回到地图",
     val detailLabel: String = "回地图后",
     val detailTitle: String = summaryTitle,
-    val detailBody: String = summaryBody
+    val detailBody: String = summaryBody,
+    val actionLabel: String = "优先动作",
+    val actionTitle: String = summaryTitle,
+    val actionBody: String = detailBody
 )

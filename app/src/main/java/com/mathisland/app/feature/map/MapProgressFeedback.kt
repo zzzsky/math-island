@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.StatusChip
+import com.mathisland.app.ui.components.ReturnActionCard
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
@@ -190,6 +191,22 @@ fun MapReturnSummaryCard(
                 badgeText = feedback.summaryLabel,
                 badgeVariant = motionSpec.badgeVariant,
                 modifier = Modifier.testTag("map-return-detail-card")
+            )
+        }
+        AnimatedVisibility(
+            visible = motionProgress >= motionSpec.trailingRevealAt,
+            enter = fadeIn(tween(180)) +
+                slideInVertically(tween(220)) { fullHeight -> fullHeight / 8 } +
+                scaleIn(tween(180), initialScale = 0.98f)
+        ) {
+            ReturnActionCard(
+                label = feedback.actionLabel,
+                title = feedback.actionTitle,
+                body = feedback.actionBody,
+                accentColor = motionSpec.accent.copy(alpha = 0.8f),
+                badgeVariant = motionSpec.badgeVariant,
+                modifier = Modifier.testTag("map-return-action-card"),
+                badgeTag = "map-return-action-pill"
             )
         }
     }

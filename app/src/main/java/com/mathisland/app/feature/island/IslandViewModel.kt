@@ -20,6 +20,9 @@ data class IslandUiState(
     val handoffDetailLabel: String? = null,
     val handoffDetailTitle: String? = null,
     val handoffDetailBody: String? = null,
+    val handoffActionLabel: String? = null,
+    val handoffActionTitle: String? = null,
+    val handoffActionBody: String? = null,
     val primaryLessonId: String? = null,
     val primaryActionLabel: String? = null,
     val primaryActionMode: IslandPrimaryActionMode = IslandPrimaryActionMode.StartLesson,
@@ -53,6 +56,12 @@ object IslandViewModel {
             handoffDetailBody = feedback?.detailBody
                 ?.takeIf { handoffVisible && it != feedback.summaryBody }
                 ?: handoffCopy?.detailBody?.takeIf { handoffVisible },
+            handoffActionLabel = feedback?.actionLabel?.takeIf { handoffVisible }
+                ?: handoffCopy?.actionLabel?.takeIf { handoffVisible },
+            handoffActionTitle = feedback?.actionTitle?.takeIf { handoffVisible }
+                ?: handoffCopy?.actionTitle?.takeIf { handoffVisible },
+            handoffActionBody = feedback?.actionBody?.takeIf { handoffVisible }
+                ?: handoffCopy?.actionBody?.takeIf { handoffVisible },
             primaryLessonId = primaryLesson?.id,
             primaryActionLabel = primaryActionLabel(primaryLesson, feedback?.kind),
             primaryActionMode = if (feedback?.kind == MapFeedbackKind.Chest) {

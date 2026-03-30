@@ -99,6 +99,9 @@ class IslandOverlaySheetTest {
                         handoffDetailLabel = "回地图后",
                         handoffDetailTitle = "先看新岛，再开始主线课",
                         handoffDetailBody = "焦点会落到新岛，右侧面板会直接给出下一节主线课。",
+                        handoffActionLabel = "优先动作",
+                        handoffActionTitle = "开始主线课",
+                        handoffActionBody = "先看新岛，再直接开始当前推荐的主线课程。",
                         primaryLessonId = "measure-ruler-01",
                         primaryActionLabel = "开始主线 尺子工坊"
                     ),
@@ -110,5 +113,7 @@ class IslandOverlaySheetTest {
         composeRule.onNodeWithTag("island-handoff-card").assertIsDisplayed()
         composeRule.onNodeWithTag("island-handoff-kind-pill").assertIsDisplayed()
         composeRule.onNodeWithTag("island-handoff-detail-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-handoff-action-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("island-handoff-action-pill").assertIsDisplayed()
     }
 }

@@ -43,7 +43,10 @@ class RewardOverlayTest {
                         nextStepTitle = "下一步先回放再冲刺",
                         nextStepBody = "先回地图查看错题回放站，再决定是否立刻再试一次冲刺。",
                         nextStepDetailTitle = "先回放，再决定是否重试",
-                        nextStepDetailBody = "地图会先落到回放路线，右侧面板会优先给出复习或回放课程。"
+                        nextStepDetailBody = "地图会先落到回放路线，右侧面板会优先给出复习或回放课程。",
+                        nextActionLabel = "优先动作",
+                        nextActionTitle = "先做回放",
+                        nextActionBody = "先完成回放或复习，再决定是否重新发起下一次冲刺。"
                     ),
                     onContinue = {},
                     onSecondaryAction = {}
@@ -58,6 +61,8 @@ class RewardOverlayTest {
         composeRule.onNodeWithTag("reward-next-step-kind-pill").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-detail-card").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-action-card").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-action-pill").performScrollTo().assertIsDisplayed()
         composeRule.onAllNodesWithTag("reward-return-map").assertCountEquals(1)
     }
 }

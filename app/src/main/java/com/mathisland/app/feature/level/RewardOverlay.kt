@@ -37,6 +37,7 @@ import com.mathisland.app.domain.model.RewardSummary
 import com.mathisland.app.feature.map.motionSpec
 import com.mathisland.app.feature.map.rewardFeedbackKind
 import com.mathisland.app.ui.components.ActionButton
+import com.mathisland.app.ui.components.ReturnActionCard
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.SurfaceCard
@@ -219,6 +220,22 @@ fun RewardOverlay(
                                         badgeText = state.continueLabel,
                                         badgeVariant = rewardStatusVariant(reward),
                                         modifier = Modifier.testTag("reward-next-step-detail-card")
+                                    )
+                                }
+                                AnimatedVisibility(
+                                    visible = motionValue >= motionSpec.trailingRevealAt,
+                                    enter = fadeIn(tween(180)) +
+                                        slideInVertically(tween(220)) { fullHeight -> fullHeight / 8 } +
+                                        scaleIn(tween(180), initialScale = 0.98f)
+                                ) {
+                                    ReturnActionCard(
+                                        label = state.nextActionLabel,
+                                        title = state.nextActionTitle,
+                                        body = state.nextActionBody,
+                                        accentColor = motionSpec.accent.copy(alpha = 0.8f),
+                                        badgeVariant = rewardStatusVariant(reward),
+                                        modifier = Modifier.testTag("reward-next-action-card"),
+                                        badgeTag = "reward-next-action-pill"
                                     )
                                 }
                                 AnimatedVisibility(

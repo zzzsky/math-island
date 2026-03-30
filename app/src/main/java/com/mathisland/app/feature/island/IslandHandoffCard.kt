@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import com.mathisland.app.feature.map.MapFeedbackKind
 import com.mathisland.app.feature.map.motionSpec
+import com.mathisland.app.ui.components.ReturnActionCard
 import com.mathisland.app.ui.components.StatusChip
 import com.mathisland.app.ui.components.SummarySpotlightCard
 import com.mathisland.app.ui.components.TabletInfoCard
@@ -32,12 +33,15 @@ fun IslandHandoffCard(
     detailLabel: String?,
     detailTitle: String?,
     detailBody: String?,
+    actionLabel: String?,
+    actionTitle: String?,
+    actionBody: String?,
     modifier: Modifier = Modifier,
 ) {
     val motionSpec = (kind ?: MapFeedbackKind.Progress).motionSpec()
     val revealProgress = remember { Animatable(0f) }
 
-    LaunchedEffect(kind, label, title, body, detailLabel, detailTitle, detailBody) {
+    LaunchedEffect(kind, label, title, body, detailLabel, detailTitle, detailBody, actionLabel, actionTitle, actionBody) {
         revealProgress.stop()
         revealProgress.snapTo(0f)
         revealProgress.animateTo(1f, tween(durationMillis = 240, easing = FastOutSlowInEasing))
@@ -97,6 +101,24 @@ fun IslandHandoffCard(
                     badgeText = label,
                     badgeVariant = motionSpec.badgeVariant,
                     modifier = Modifier.testTag("island-handoff-detail-card")
+                )
+            }
+        }
+        if (actionLabel != null && actionTitle != null && actionBody != null) {
+            AnimatedVisibility(
+                visible = motionValue >= motionSpec.trailingRevealAt,
+                enter = fadeIn(tween(180)) +
+                    slideInVertically(tween(200)) { fullHeight -> fullHeight / 8 } +
+                    scaleIn(tween(180), initialScale = 0.98f)
+            ) {
+                ReturnActionCard(
+                    label = actionLabel,
+                    title = actionTitle,
+                    body = actionBody,
+                    accentColor = accent.copy(alpha = 0.8f),
+                    badgeVariant = motionSpec.badgeVariant,
+                    modifier = Modifier.testTag("island-handoff-action-card"),
+                    badgeTag = "island-handoff-action-pill"
                 )
             }
         }

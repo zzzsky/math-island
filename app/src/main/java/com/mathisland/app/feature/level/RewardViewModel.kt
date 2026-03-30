@@ -13,7 +13,10 @@ data class RewardOverlayUiState(
     val nextStepTitle: String,
     val nextStepBody: String,
     val nextStepDetailTitle: String,
-    val nextStepDetailBody: String
+    val nextStepDetailBody: String,
+    val nextActionLabel: String,
+    val nextActionTitle: String,
+    val nextActionBody: String
 )
 
 object RewardViewModel {
@@ -28,7 +31,10 @@ object RewardViewModel {
             nextStepTitle = copy.summaryTitle,
             nextStepBody = copy.summaryBody,
             nextStepDetailTitle = copy.detailTitle,
-            nextStepDetailBody = copy.detailBody
+            nextStepDetailBody = copy.detailBody,
+            nextActionLabel = copy.actionLabel,
+            nextActionTitle = copy.actionTitle,
+            nextActionBody = copy.actionBody
         )
     }
 }
