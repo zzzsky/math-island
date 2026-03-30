@@ -37,6 +37,12 @@ For stage or release acceptance, also run:
 ./gradlew.bat connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.MathIslandTabletFlowTest"
 ```
 
+If Gradle UTP becomes unstable during focused emulator work, use the scripted sequential fallback:
+
+```powershell
+./scripts/run-focused-emulator-regression.ps1
+```
+
 ## Structure
 
 - `app/src/main/assets/content`

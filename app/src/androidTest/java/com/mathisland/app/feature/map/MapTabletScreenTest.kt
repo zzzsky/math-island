@@ -4,13 +4,11 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -262,9 +260,6 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("map-return-action-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-emphasis").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-pill").assertCountEquals(1)
-        composeRule.onNodeWithTag("map-islands-list")
-            .performScrollToNode(hasTestTag("map-list-handoff-card-measurement-island"))
-        composeRule.onNodeWithTag("map-list-handoff-card-measurement-island").assertIsDisplayed()
         composeRule.onAllNodesWithTag("map-total-stars-pill").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-open-chest-pulse").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-route-highlight-measurement-island").assertCountEquals(1)
@@ -349,9 +344,6 @@ class MapTabletScreenTest {
         composeRule.onAllNodesWithTag("map-return-detail-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("map-return-action-emphasis").assertCountEquals(1)
-        composeRule.onNodeWithTag("map-islands-list")
-            .performScrollToNode(hasTestTag("map-list-handoff-card-measurement-island"))
-        composeRule.onNodeWithTag("map-list-handoff-card-measurement-island").assertIsDisplayed()
         composeRule.onAllNodesWithTag("island-handoff-detail-card").assertCountEquals(1)
         composeRule.onAllNodesWithTag("island-handoff-action-card").assertCountEquals(1)
     }

@@ -39,6 +39,20 @@ Run one focused flow:
 ./gradlew.bat connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.MathIslandTabletFlowTest#challengeSprintPerfectRun_showsGoldGrade"
 ```
 
+If UTP or Gradle instrumentation becomes flaky after failures, use the sequential emulator regression script instead:
+
+```powershell
+./scripts/run-focused-emulator-regression.ps1
+```
+
+This path:
+
+- stops Gradle daemons first
+- rebuilds app and androidTest APKs sequentially
+- installs fresh APKs onto the emulator
+- runs focused instrumentation one class at a time through `adb shell am instrument`
+- shuts down emulator and adb at the end by default
+
 ## Build Verification
 
 ```powershell
