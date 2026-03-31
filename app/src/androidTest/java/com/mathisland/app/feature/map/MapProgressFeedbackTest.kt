@@ -24,7 +24,8 @@ class MapProgressFeedbackTest {
                         highlightedIslandId = "measurement-island",
                         starsEarned = 3,
                         chestReady = true
-                    )
+                    ),
+                    motionProgress = 1f
                 )
             }
         }

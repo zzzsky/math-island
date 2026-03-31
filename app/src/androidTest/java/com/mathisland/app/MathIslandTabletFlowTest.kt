@@ -51,7 +51,11 @@ class MathIslandTabletFlowTest {
         returnToMapFromReward()
 
         composeRule.onNodeWithTag("map-total-stars").assertIsDisplayed()
-        composeRule.onAllNodesWithText("再次练习").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("panel-lessons-list")
+            .performScrollToNode(hasTestTag("panel-start-calc-carry-01"))
+        composeRule.onNodeWithTag("panel-start-calc-carry-01")
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
