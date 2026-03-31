@@ -347,4 +347,33 @@ class LevelAnswerPaneTest {
             .performScrollToNode(hasTestTag("matching-submit"))
         composeRule.onNodeWithTag("matching-submit").assertIsDisplayed()
     }
+
+    @Test
+    fun fillBlankQuestion_usesFillBlankRenderer() {
+        val question = Question(
+            prompt = "把空格补完整。",
+            choices = emptyList(),
+            correctChoice = "100,200",
+            hint = "先看单位，再把数字放进空格。",
+            family = "fill-blank",
+            blankParts = listOf("1 米 = ", " 厘米，2 米 = ", " 厘米。"),
+            blankOptions = listOf("200", "100", "20")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("fill-blank-slot-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("fill-blank-slot-1").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-submit"))
+        composeRule.onNodeWithTag("fill-blank-submit").assertIsDisplayed()
+    }
 }

@@ -111,6 +111,17 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             leftItems = listOf("尺子", "秤", "时钟"),
             rightItems = listOf("时间", "重量", "长度")
         )
+    ),
+    "measure-fill-01" to listOf(
+        Question(
+            prompt = "把空格补完整。",
+            choices = emptyList(),
+            correctChoice = "100,200",
+            hint = "先看单位，再把数字放进空格。",
+            family = "fill-blank",
+            blankParts = listOf("1 米 = ", " 厘米，2 米 = ", " 厘米。"),
+            blankOptions = listOf("200", "100", "20")
+        )
     )
 )
 
@@ -260,6 +271,8 @@ private fun questionsForFamily(questionFamily: String): List<Question> = when (q
     )
 
     "MATCHING" -> lessonQuestionBanks.getValue("classification-match-01")
+
+    "FILL_BLANK" -> lessonQuestionBanks.getValue("measure-fill-01")
 
     "CHALLENGE" -> lessonQuestionBanks.getValue("challenge-mixed-01")
 

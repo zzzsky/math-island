@@ -22,6 +22,12 @@
       "title": "图形变化坡道",
       "summary": "认识平行四边形和七巧板拼组。",
       "questionFamily": "MEASUREMENT"
+    },
+    {
+      "id": "measure-fill-01",
+      "title": "单位填空桥",
+      "summary": "把单位换算数字拖到正确的空格里。",
+      "questionFamily": "FILL_BLANK"
     }
   ]
 }

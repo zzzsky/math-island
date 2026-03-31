@@ -7,6 +7,7 @@ import com.mathisland.app.feature.level.renderers.RendererActionState
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.ChantQuestionPane
 import com.mathisland.app.feature.level.renderers.ChoiceQuestionPane
+import com.mathisland.app.feature.level.renderers.FillBlankQuestionPane
 import com.mathisland.app.feature.level.renderers.GroupQuestionPane
 import com.mathisland.app.feature.level.renderers.MatchingQuestionPane
 import com.mathisland.app.feature.level.renderers.NumberPadQuestionPane
@@ -68,6 +69,13 @@ fun LevelAnswerPane(
         )
 
         QuestionRendererType.MATCHING -> MatchingQuestionPane(
+            question = question,
+            feedback = feedback,
+            actionState = actionState,
+            onAnswer = onAnswer
+        )
+
+        QuestionRendererType.FILL_BLANK -> FillBlankQuestionPane(
             question = question,
             feedback = feedback,
             actionState = actionState,

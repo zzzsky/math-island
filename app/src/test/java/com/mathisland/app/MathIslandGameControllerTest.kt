@@ -191,4 +191,22 @@ class MathIslandGameControllerTest {
         assertEquals(listOf("尺子", "秤", "时钟"), lesson.questions.first().leftItems)
         assertEquals(listOf("时间", "重量", "长度"), lesson.questions.first().rightItems)
     }
+
+    @Test
+    fun measurementFillBlankLesson_resolvesFillBlankQuestions() {
+        val lesson = curriculumController.islands
+            .first { it.id == "measurement-geometry-island" }
+            .lessons
+            .first { it.id == "measure-fill-01" }
+
+        assertEquals("fill-blank", lesson.questions.first().family)
+        assertEquals(
+            listOf("1 米 = ", " 厘米，2 米 = ", " 厘米。"),
+            lesson.questions.first().blankParts
+        )
+        assertEquals(
+            listOf("200", "100", "20"),
+            lesson.questions.first().blankOptions
+        )
+    }
 }
