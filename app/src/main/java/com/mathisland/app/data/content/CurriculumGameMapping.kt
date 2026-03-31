@@ -100,6 +100,17 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             hint = "1 米 = 100 厘米。",
             family = "challenge"
         )
+    ),
+    "classification-match-01" to listOf(
+        Question(
+            prompt = "把数学工具和它最适合表示的意思连起来。",
+            choices = emptyList(),
+            correctChoice = "尺子=长度,秤=重量,时钟=时间",
+            hint = "先看左边工具，再找到右边最贴切的意思。",
+            family = "matching",
+            leftItems = listOf("尺子", "秤", "时钟"),
+            rightItems = listOf("时间", "重量", "长度")
+        )
     )
 )
 
@@ -247,6 +258,8 @@ private fun questionsForFamily(questionFamily: String): List<Question> = when (q
             family = "classification"
         )
     )
+
+    "MATCHING" -> lessonQuestionBanks.getValue("classification-match-01")
 
     "CHALLENGE" -> lessonQuestionBanks.getValue("challenge-mixed-01")
 

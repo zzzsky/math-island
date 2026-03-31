@@ -179,4 +179,16 @@ class MathIslandGameControllerTest {
         assertEquals("金帆评级", state.pendingReward?.gradeLabel)
         assertNotNull(state.pendingReward?.gradeDescription)
     }
+
+    @Test
+    fun classificationMatchingLesson_resolvesMatchingQuestions() {
+        val lesson = curriculumController.islands
+            .first { it.id == "classification-island" }
+            .lessons
+            .first { it.id == "classification-match-01" }
+
+        assertEquals("matching", lesson.questions.first().family)
+        assertEquals(listOf("尺子", "秤", "时钟"), lesson.questions.first().leftItems)
+        assertEquals(listOf("时间", "重量", "长度"), lesson.questions.first().rightItems)
+    }
 }

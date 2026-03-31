@@ -6,7 +6,8 @@ enum class QuestionRendererType {
     RULER,
     CHANT,
     GROUP,
-    SORT
+    SORT,
+    MATCHING
 }
 
 fun rendererTypeFor(family: String): QuestionRendererType = when (family) {
@@ -15,5 +16,6 @@ fun rendererTypeFor(family: String): QuestionRendererType = when (family) {
     "multiplication" -> QuestionRendererType.CHANT
     "division", "classification" -> QuestionRendererType.GROUP
     "big-number" -> QuestionRendererType.SORT
+    "matching" -> QuestionRendererType.MATCHING
     else -> QuestionRendererType.CHOICE
 }

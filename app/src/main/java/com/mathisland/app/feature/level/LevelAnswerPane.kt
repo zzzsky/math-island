@@ -8,6 +8,7 @@ import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.ChantQuestionPane
 import com.mathisland.app.feature.level.renderers.ChoiceQuestionPane
 import com.mathisland.app.feature.level.renderers.GroupQuestionPane
+import com.mathisland.app.feature.level.renderers.MatchingQuestionPane
 import com.mathisland.app.feature.level.renderers.NumberPadQuestionPane
 import com.mathisland.app.feature.level.renderers.RulerQuestionPane
 import com.mathisland.app.feature.level.renderers.SortQuestionPane
@@ -60,6 +61,13 @@ fun LevelAnswerPane(
         )
 
         QuestionRendererType.SORT -> SortQuestionPane(
+            question = question,
+            feedback = feedback,
+            actionState = actionState,
+            onAnswer = onAnswer
+        )
+
+        QuestionRendererType.MATCHING -> MatchingQuestionPane(
             question = question,
             feedback = feedback,
             actionState = actionState,

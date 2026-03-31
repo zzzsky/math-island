@@ -15,7 +15,9 @@ data class Question(
     val choices: List<String>,
     val correctChoice: String,
     val hint: String,
-    val family: String
+    val family: String,
+    val leftItems: List<String> = emptyList(),
+    val rightItems: List<String> = emptyList()
 )
 
 data class Lesson(

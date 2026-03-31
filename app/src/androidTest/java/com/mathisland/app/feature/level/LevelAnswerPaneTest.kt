@@ -318,4 +318,33 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("sort-signal-lights").assertIsDisplayed()
         composeRule.onNodeWithText("先比较顺序，再选答案。").assertIsDisplayed()
     }
+
+    @Test
+    fun matchingQuestion_usesMatchingRenderer() {
+        val question = Question(
+            prompt = "把数学工具和它最适合表示的意思连起来。",
+            choices = emptyList(),
+            correctChoice = "尺子=长度,秤=重量,时钟=时间",
+            hint = "先看左边工具，再找到右边最贴切的意思。",
+            family = "matching",
+            leftItems = listOf("尺子", "秤", "时钟"),
+            rightItems = listOf("时间", "重量", "长度")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-matching").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-left-column").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-right-column").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-submit"))
+        composeRule.onNodeWithTag("matching-submit").assertIsDisplayed()
+    }
 }

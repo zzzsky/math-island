@@ -13,6 +13,12 @@
       "title": "纽扣分类台",
       "summary": "按形状和扣眼数切换标准分类。",
       "questionFamily": "CLASSIFICATION"
+    },
+    {
+      "id": "classification-match-01",
+      "title": "工具配对架",
+      "summary": "把数学工具和它最适合表示的意思连起来。",
+      "questionFamily": "MATCHING"
     }
   ]
 }
