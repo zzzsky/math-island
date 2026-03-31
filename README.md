@@ -37,6 +37,11 @@ For stage or release acceptance, also run:
 ./gradlew.bat connectedDebugAndroidTest "-Pandroid.testInstrumentationRunnerArguments.class=com.mathisland.app.MathIslandTabletFlowTest"
 ```
 
+Release-candidate notes and the current manual checklist live at:
+
+- [docs/release-candidate-2026-03-31.md](/D:/Practice/codex/math-island/docs/release-candidate-2026-03-31.md)
+- [docs/manual-testing-checklist.md](/D:/Practice/codex/math-island/docs/manual-testing-checklist.md)
+
 If Gradle UTP becomes unstable during focused emulator work, use the scripted sequential fallback:
 
 ```powershell

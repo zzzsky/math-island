@@ -1,7 +1,8 @@
 # Math Island 手测 Checklist（Android Tablet）
 
-> 适用版本：当前 `main` 开发分支  
-> 更新时间：2026-03-20
+> 适用版本：`0.1.0` 候选版  
+> 基线提交：`a6a695a`  
+> 更新时间：2026-03-31
 
 ## 1. 测试准备
 
@@ -25,8 +26,9 @@
 - [ ] 地图加载成功，岛屿与路径可见
 - [ ] 已解锁/未解锁/已完成状态显示正确
 - [ ] 点击岛屿可打开 Overlay 面板
-- [ ] 面板内课程卡 `开始` 可进入关卡（`panel-start-<lessonId>` 链路）
-- [ ] 从地图列表卡进入关卡链路可用（`start-<lessonId>`）
+- [ ] 面板内课程卡 `开始` 可进入关卡（稳定合同：`panel-start-<lessonId>`）
+- [ ] 地图回流摘要、左侧岛屿列表、右侧 handoff 文案保持一致
+- [ ] 新岛 / 宝箱 / 回放 / 继续推进 4 类回流 CTA 与强调样式正确
 
 ### 2.3 关卡 Level（答题流程）
 
@@ -34,11 +36,15 @@
 - [ ] 未作答时提交按钮状态正确（禁用或不可继续）
 - [ ] 正确作答反馈正确，可继续下一题
 - [ ] 错误作答反馈正确，可重试/继续逻辑正确
+- [ ] 限时课超时后进入统一 timeout 语义，不出现卡死或错误继续提交
+- [ ] 左侧 support rail、右侧反馈 banner、题面 prompt 的状态语言一致
 - [ ] 关卡结束可进入奖励弹层
 
 ### 2.4 奖励 Reward + 宝箱 Chest
 
 - [ ] 奖励弹层信息正确（奖励、按钮、文案）
+- [ ] staged reveal 节奏正确，不出现核心内容缺失或闪烁
+- [ ] 结果舞台（kind pill / spotlight / detail / action）层级完整
 - [ ] 奖励后进度已更新到地图/首页
 - [ ] 宝箱页面可展示贴纸或空态
 - [ ] 宝箱返回地图按钮可用（`chest-open-map`）
@@ -75,6 +81,12 @@
 - [ ] App 切后台再回前台，页面与进度不异常
 - [ ] 重启 App 后进度持久化正确（DataStore）
 
+### 3.4 外围页面设备侧检查
+
+- [ ] Home 的 hero、推荐卡、操作列在 `1280x800` 下无重叠
+- [ ] Chest 页面滚动正常，贴纸网格换行正确
+- [ ] Parent Gate 答案区自动换行，Parent Summary 内部滚动正常
+
 ## 4. P2 稳定性与体验
 
 - [ ] 连续快速点击关键按钮，不出现重复提交/卡死
@@ -96,7 +108,14 @@
 - [ ] 组合 B（功能 30 分钟）：Map 多岛切换 -> 不同题型各 1 题 -> Parent Gate -> Parent Summary
 - [ ] 组合 C（专项 20 分钟）：Challenge 全链路（冲刺/评级/replay/retry）
 
-## 7. 缺陷记录建议
+## 7. 自动化验收基线
+
+- [ ] `./gradlew.bat testDebugUnitTest`
+- [ ] `./gradlew.bat assembleDebug`
+- [ ] `./gradlew.bat connectedDebugAndroidTest`
+- [ ] 如果 UTP 不稳定，改跑 `./scripts/run-focused-emulator-regression.ps1`
+
+## 8. 缺陷记录建议
 
 - [ ] 记录格式：`[模块][严重级别] 标题`
 - [ ] 必填信息：设备/分辨率、构建版本、复现步骤、期望结果、实际结果、截图或录屏

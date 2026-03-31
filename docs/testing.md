@@ -61,6 +61,11 @@ This path:
 
 This is the default build check paired with `testDebugUnitTest` during day-to-day development.
 
+For release-candidate context and current manual signoff scope, also see:
+
+- [release-candidate-2026-03-31.md](/D:/Practice/codex/math-island/docs/release-candidate-2026-03-31.md)
+- [manual-testing-checklist.md](/D:/Practice/codex/math-island/docs/manual-testing-checklist.md)
+
 ## What The Main Device Suite Covers
 
 - Home -> map -> lesson -> reward happy path
