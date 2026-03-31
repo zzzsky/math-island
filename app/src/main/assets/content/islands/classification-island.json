@@ -19,6 +19,18 @@
       "title": "工具配对架",
       "summary": "把数学工具和它最适合表示的意思连起来。",
       "questionFamily": "MATCHING"
+    },
+    {
+      "id": "classification-match-02",
+      "title": "数量标签台",
+      "summary": "把分类数量和对应的标签连起来。",
+      "questionFamily": "MATCHING"
+    },
+    {
+      "id": "classification-match-03",
+      "title": "物品归类绳",
+      "summary": "把物品和它所属的一类连起来。",
+      "questionFamily": "MATCHING"
     }
   ]
 }

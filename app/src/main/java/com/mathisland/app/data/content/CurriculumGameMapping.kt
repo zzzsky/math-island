@@ -112,6 +112,28 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             rightItems = listOf("时间", "重量", "长度")
         )
     ),
+    "classification-match-02" to listOf(
+        Question(
+            prompt = "把分类数量和对应的标签连起来。",
+            choices = emptyList(),
+            correctChoice = "红贝壳=5 个,蓝贝壳=3 个,绿贝壳=4 个",
+            hint = "先看贝壳名称，再找对应数量标签。",
+            family = "matching",
+            leftItems = listOf("红贝壳", "蓝贝壳", "绿贝壳"),
+            rightItems = listOf("4 个", "5 个", "3 个")
+        )
+    ),
+    "classification-match-03" to listOf(
+        Question(
+            prompt = "把物品和它所属的一类连起来。",
+            choices = emptyList(),
+            correctChoice = "纽扣=生活用品,树叶=植物,石子=自然材料",
+            hint = "先看物品，再判断它最适合放进哪一类。",
+            family = "matching",
+            leftItems = listOf("纽扣", "树叶", "石子"),
+            rightItems = listOf("植物", "自然材料", "生活用品")
+        )
+    ),
     "measure-fill-01" to listOf(
         Question(
             prompt = "把空格补完整。",
@@ -121,6 +143,28 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             family = "fill-blank",
             blankParts = listOf("1 米 = ", " 厘米，2 米 = ", " 厘米。"),
             blankOptions = listOf("200", "100", "20")
+        )
+    ),
+    "measure-fill-02" to listOf(
+        Question(
+            prompt = "把分米换算结果填进空格。",
+            choices = emptyList(),
+            correctChoice = "30,50",
+            hint = "先想 1 分米 = 10 厘米。",
+            family = "fill-blank",
+            blankParts = listOf("3 分米 = ", " 厘米，5 分米 = ", " 厘米。"),
+            blankOptions = listOf("50", "30", "8")
+        )
+    ),
+    "measure-fill-03" to listOf(
+        Question(
+            prompt = "把长度换算结果填进空格。",
+            choices = emptyList(),
+            correctChoice = "200,70",
+            hint = "先统一成厘米，再把数字放进空格。",
+            family = "fill-blank",
+            blankParts = listOf("2 米 = ", " 厘米，7 分米 = ", " 厘米。"),
+            blankOptions = listOf("70", "200", "20")
         )
     ),
     "division-steps-01" to listOf(
@@ -137,6 +181,40 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             stepChoices = listOf(
                 listOf("平均分给 3 只小猴", "先把 12 和 3 相加", "先比较水果颜色"),
                 listOf("每只 3 个", "每只 4 个", "每只 5 个")
+            )
+        )
+    ),
+    "division-steps-02" to listOf(
+        Question(
+            prompt = "按步骤完成租船判断。",
+            choices = emptyList(),
+            correctChoice = "先算 22 ÷ 4,6 条",
+            hint = "先求商和余数，再判断要不要多租一条船。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：这题先要算什么？",
+                "第二步：22 ÷ 4 = 5 余 2，至少租几条船？"
+            ),
+            stepChoices = listOf(
+                listOf("先算 22 ÷ 4", "先算 22 + 4", "先比较船的颜色"),
+                listOf("5 条", "6 条", "7 条")
+            )
+        )
+    ),
+    "division-steps-03" to listOf(
+        Question(
+            prompt = "按步骤完成装盒分配。",
+            choices = emptyList(),
+            correctChoice = "把 18 平均分给 6 个盒子,每个 3 个",
+            hint = "先判断怎么平均分，再求每盒数量。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：这题先要做什么？",
+                "第二步：每个盒子装几个？"
+            ),
+            stepChoices = listOf(
+                listOf("把 18 平均分给 6 个盒子", "先把 18 和 6 相减", "先数盒子颜色"),
+                listOf("2 个", "3 个", "4 个")
             )
         )
     )

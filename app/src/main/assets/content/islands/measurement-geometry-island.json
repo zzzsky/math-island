@@ -28,6 +28,18 @@
       "title": "单位填空桥",
       "summary": "把单位换算数字拖到正确的空格里。",
       "questionFamily": "FILL_BLANK"
+    },
+    {
+      "id": "measure-fill-02",
+      "title": "分米换算台",
+      "summary": "把分米换成厘米，填进对应空格。",
+      "questionFamily": "FILL_BLANK"
+    },
+    {
+      "id": "measure-fill-03",
+      "title": "长度对照卡",
+      "summary": "把不同长度换算结果填进空格。",
+      "questionFamily": "FILL_BLANK"
     }
   ]
 }

@@ -28,6 +28,18 @@
       "title": "分水果两步桥",
       "summary": "按顺序完成平均分的两步判断。",
       "questionFamily": "MULTI_STEP"
+    },
+    {
+      "id": "division-steps-02",
+      "title": "租船判断阶梯",
+      "summary": "按顺序完成有余数除法的取舍判断。",
+      "questionFamily": "MULTI_STEP"
+    },
+    {
+      "id": "division-steps-03",
+      "title": "装盒分配站",
+      "summary": "按顺序完成平均分装盒的两步判断。",
+      "questionFamily": "MULTI_STEP"
     }
   ]
 }

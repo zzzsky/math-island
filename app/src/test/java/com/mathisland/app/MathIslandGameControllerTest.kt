@@ -230,4 +230,36 @@ class MathIslandGameControllerTest {
             lesson.questions.first().stepChoices
         )
     }
+
+    @Test
+    fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
+        val classificationLessons = curriculumController.islands
+            .first { it.id == "classification-island" }
+            .lessons
+            .map { it.id }
+        val measurementLessons = curriculumController.islands
+            .first { it.id == "measurement-geometry-island" }
+            .lessons
+            .map { it.id }
+        val divisionLessons = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .map { it.id }
+
+        assertTrue(classificationLessons.containsAll(listOf(
+            "classification-match-01",
+            "classification-match-02",
+            "classification-match-03"
+        )))
+        assertTrue(measurementLessons.containsAll(listOf(
+            "measure-fill-01",
+            "measure-fill-02",
+            "measure-fill-03"
+        )))
+        assertTrue(divisionLessons.containsAll(listOf(
+            "division-steps-01",
+            "division-steps-02",
+            "division-steps-03"
+        )))
+    }
 }
