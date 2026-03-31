@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.verticalScroll
 import com.mathisland.app.ui.components.ActionButton
 import com.mathisland.app.ui.components.SurfaceCard
 import com.mathisland.app.ui.theme.ActionRole
@@ -24,7 +27,9 @@ fun ParentSummaryTabletScreen(
     onBackHome: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("parent-summary-screen"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
     ) {
         Row(
@@ -44,12 +49,15 @@ fun ParentSummaryTabletScreen(
             )
         }
         SurfaceCard(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             level = SurfaceLevel.Page
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
                     .padding(SpacingTokens.Xxl),
                 verticalArrangement = Arrangement.spacedBy(SpacingTokens.Lg)
             ) {

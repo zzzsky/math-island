@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.usecase.HomeState
 import com.mathisland.app.ui.components.StatusChip
@@ -29,7 +30,7 @@ fun HomeHeroPanel(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.testTag("home-hero-panel"),
         colors = CardDefaults.cardColors(containerColor = Color(0xCC113B4A)),
         shape = RadiusTokens.CardLg
     ) {
@@ -53,6 +54,7 @@ fun HomeHeroPanel(
                 )
                 state.nextLessonTitle?.let { lessonTitle ->
                     TabletInfoCard(
+                        modifier = Modifier.testTag("home-recommendation-card"),
                         title = if (state.isReview) "小海鸥求助" else "继续冒险",
                         subtitle = listOfNotNull(lessonTitle, state.nextLessonFocus)
                             .joinToString(" · "),
@@ -61,7 +63,10 @@ fun HomeHeroPanel(
                 }
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
+            Row(
+                modifier = Modifier.testTag("home-stats-row"),
+                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+            ) {
                 TabletStatTile(
                     modifier = Modifier.weight(1f),
                     title = "星星",

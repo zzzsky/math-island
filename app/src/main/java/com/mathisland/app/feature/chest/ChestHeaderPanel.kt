@@ -23,7 +23,7 @@ fun ChestHeaderPanel(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("chest-header-panel"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {

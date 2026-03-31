@@ -18,7 +18,9 @@ fun ParentSummaryHeroPanel(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("parent-summary-hero-panel"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
         SummarySpotlightCard(

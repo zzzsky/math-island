@@ -28,6 +28,10 @@ class ChestTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("chest-screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("chest-header-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("chest-sticker-grid").assertIsDisplayed()
+        composeRule.onNodeWithTag("chest-sticker-card-0").assertIsDisplayed()
         composeRule.onNodeWithText("宝箱收藏").assertIsDisplayed()
         composeRule.onNodeWithText("灯塔徽章").assertIsDisplayed()
         composeRule.onNodeWithText("累计星星 9 · 收集到 2 张岛屿贴纸").assertIsDisplayed()
@@ -49,6 +53,9 @@ class ChestTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("chest-screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("chest-header-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("chest-empty-state-card").assertIsDisplayed()
         composeRule.onNodeWithText("宝箱收藏").assertIsDisplayed()
         composeRule.onNodeWithText("还没有贴纸").assertIsDisplayed()
         composeRule.onNodeWithText("先去完成一整座主岛").assertIsDisplayed()

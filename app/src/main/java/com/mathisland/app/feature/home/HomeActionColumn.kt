@@ -21,7 +21,7 @@ fun HomeActionColumn(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("home-action-column"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
     ) {
         TabletActionCard(

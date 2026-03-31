@@ -16,7 +16,7 @@ fun ParentSummarySections(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("parent-summary-sections"),
         verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {

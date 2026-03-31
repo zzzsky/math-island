@@ -29,6 +29,9 @@ class ParentSummaryTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("parent-summary-screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-hero-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-sections").assertIsDisplayed()
         composeRule.onNodeWithText("家长学习摘要").assertIsDisplayed()
         composeRule.onNodeWithText("修桥加减法").assertIsDisplayed()
         composeRule.onNodeWithText("测量与图形").assertIsDisplayed()
@@ -54,6 +57,8 @@ class ParentSummaryTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("parent-gate-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-answer-row").assertIsDisplayed()
         composeRule.onNodeWithText("请先完成一道口算").assertIsDisplayed()
         composeRule.onNodeWithTag("parent-answer-15").assertIsDisplayed()
     }

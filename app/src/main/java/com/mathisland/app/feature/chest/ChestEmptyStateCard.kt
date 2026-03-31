@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.ui.theme.RadiusTokens
 import com.mathisland.app.ui.theme.SpacingTokens
@@ -22,6 +23,7 @@ import com.mathisland.app.ui.theme.TypographyTokens
 @Composable
 fun ChestEmptyStateCard() {
     Card(
+        modifier = Modifier.testTag("chest-empty-state-card"),
         colors = CardDefaults.cardColors(containerColor = Color(0x80244C5E)),
         shape = RadiusTokens.CardMd
     ) {

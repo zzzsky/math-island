@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathisland.app.ui.components.StatusChip
@@ -24,10 +25,11 @@ import com.mathisland.app.ui.theme.TypographyTokens
 @Composable
 fun StickerCard(
     sticker: String,
+    index: Int,
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.testTag("chest-sticker-card-$index"),
         colors = CardDefaults.cardColors(containerColor = Color(0xCC1C4D5F)),
         shape = RadiusTokens.CardMd
     ) {

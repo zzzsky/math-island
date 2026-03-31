@@ -2,6 +2,8 @@ package com.mathisland.app.feature.parent
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +25,7 @@ import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ParentGatePanel(
     state: ParentGateUiState,
@@ -31,7 +34,7 @@ fun ParentGatePanel(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.testTag("parent-gate-panel"),
         colors = CardDefaults.cardColors(containerColor = Color(0xEE173C4C)),
         shape = RoundedCornerShape(28.dp)
     ) {
@@ -52,7 +55,11 @@ fun ParentGatePanel(
                 subtitle = state.question,
                 body = state.subtitle
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            FlowRow(
+                modifier = Modifier.testTag("parent-answer-row"),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 state.answers.forEach { answer ->
                     ActionButton(
                         text = answer,

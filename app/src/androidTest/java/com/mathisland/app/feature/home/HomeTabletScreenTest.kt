@@ -36,6 +36,11 @@ class HomeTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("home-screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-hero-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-recommendation-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-action-column").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-stats-row").assertIsDisplayed()
         composeRule.onNodeWithText("数学岛").assertIsDisplayed()
         composeRule.onNodeWithText("小海鸥求助").assertIsDisplayed()
         composeRule.onNodeWithText("8").assertIsDisplayed()
@@ -68,6 +73,9 @@ class HomeTabletScreenTest {
             }
         }
 
+        composeRule.onNodeWithTag("home-screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-hero-panel").assertIsDisplayed()
+        composeRule.onNodeWithTag("home-action-column").assertIsDisplayed()
         composeRule.onNodeWithText("数学岛").assertIsDisplayed()
         composeRule.onNodeWithText("开始闯关").assertIsDisplayed()
         composeRule.onNodeWithTag("home-continue-adventure").assertIsDisplayed()

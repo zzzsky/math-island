@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.mathisland.app.domain.usecase.HomeState
 import com.mathisland.app.ui.theme.SpacingTokens
 
@@ -17,7 +18,9 @@ fun HomeTabletScreen(
     onOpenParent: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("home-screen"),
         horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xl)
     ) {
         HomeHeroPanel(
