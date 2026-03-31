@@ -122,6 +122,23 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             blankParts = listOf("1 米 = ", " 厘米，2 米 = ", " 厘米。"),
             blankOptions = listOf("200", "100", "20")
         )
+    ),
+    "division-steps-01" to listOf(
+        Question(
+            prompt = "按步骤完成平均分。",
+            choices = emptyList(),
+            correctChoice = "平均分给 3 只小猴,每只 4 个",
+            hint = "先想平均分，再判断每份有几个。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：先判断这题要怎么分？",
+                "第二步：每只小猴分到几个？"
+            ),
+            stepChoices = listOf(
+                listOf("平均分给 3 只小猴", "先把 12 和 3 相加", "先比较水果颜色"),
+                listOf("每只 3 个", "每只 4 个", "每只 5 个")
+            )
+        )
     )
 )
 
@@ -273,6 +290,8 @@ private fun questionsForFamily(questionFamily: String): List<Question> = when (q
     "MATCHING" -> lessonQuestionBanks.getValue("classification-match-01")
 
     "FILL_BLANK" -> lessonQuestionBanks.getValue("measure-fill-01")
+
+    "MULTI_STEP" -> lessonQuestionBanks.getValue("division-steps-01")
 
     "CHALLENGE" -> lessonQuestionBanks.getValue("challenge-mixed-01")
 

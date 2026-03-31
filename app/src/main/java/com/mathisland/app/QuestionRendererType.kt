@@ -8,7 +8,8 @@ enum class QuestionRendererType {
     GROUP,
     SORT,
     MATCHING,
-    FILL_BLANK
+    FILL_BLANK,
+    MULTI_STEP
 }
 
 fun rendererTypeFor(family: String): QuestionRendererType = when (family) {
@@ -19,5 +20,6 @@ fun rendererTypeFor(family: String): QuestionRendererType = when (family) {
     "big-number" -> QuestionRendererType.SORT
     "matching" -> QuestionRendererType.MATCHING
     "fill-blank" -> QuestionRendererType.FILL_BLANK
+    "multi-step" -> QuestionRendererType.MULTI_STEP
     else -> QuestionRendererType.CHOICE
 }

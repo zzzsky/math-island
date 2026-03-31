@@ -19,7 +19,9 @@ data class Question(
     val leftItems: List<String> = emptyList(),
     val rightItems: List<String> = emptyList(),
     val blankParts: List<String> = emptyList(),
-    val blankOptions: List<String> = emptyList()
+    val blankOptions: List<String> = emptyList(),
+    val stepPrompts: List<String> = emptyList(),
+    val stepChoices: List<List<String>> = emptyList()
 )
 
 data class Lesson(

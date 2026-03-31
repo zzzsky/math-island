@@ -22,6 +22,12 @@
       "title": "租船进一法",
       "summary": "练习有余数除法和情境取舍。",
       "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-steps-01",
+      "title": "分水果两步桥",
+      "summary": "按顺序完成平均分的两步判断。",
+      "questionFamily": "MULTI_STEP"
     }
   ]
 }

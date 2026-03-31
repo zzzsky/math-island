@@ -209,4 +209,25 @@ class MathIslandGameControllerTest {
             lesson.questions.first().blankOptions
         )
     }
+
+    @Test
+    fun divisionMultiStepLesson_resolvesMultiStepQuestions() {
+        val lesson = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .first { it.id == "division-steps-01" }
+
+        assertEquals("multi-step", lesson.questions.first().family)
+        assertEquals(
+            listOf("第一步：先判断这题要怎么分？", "第二步：每只小猴分到几个？"),
+            lesson.questions.first().stepPrompts
+        )
+        assertEquals(
+            listOf(
+                listOf("平均分给 3 只小猴", "先把 12 和 3 相加", "先比较水果颜色"),
+                listOf("每只 3 个", "每只 4 个", "每只 5 个")
+            ),
+            lesson.questions.first().stepChoices
+        )
+    }
 }

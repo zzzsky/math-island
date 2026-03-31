@@ -10,6 +10,7 @@ import com.mathisland.app.feature.level.renderers.ChoiceQuestionPane
 import com.mathisland.app.feature.level.renderers.FillBlankQuestionPane
 import com.mathisland.app.feature.level.renderers.GroupQuestionPane
 import com.mathisland.app.feature.level.renderers.MatchingQuestionPane
+import com.mathisland.app.feature.level.renderers.MultiStepQuestionPane
 import com.mathisland.app.feature.level.renderers.NumberPadQuestionPane
 import com.mathisland.app.feature.level.renderers.RulerQuestionPane
 import com.mathisland.app.feature.level.renderers.SortQuestionPane
@@ -76,6 +77,13 @@ fun LevelAnswerPane(
         )
 
         QuestionRendererType.FILL_BLANK -> FillBlankQuestionPane(
+            question = question,
+            feedback = feedback,
+            actionState = actionState,
+            onAnswer = onAnswer
+        )
+
+        QuestionRendererType.MULTI_STEP -> MultiStepQuestionPane(
             question = question,
             feedback = feedback,
             actionState = actionState,
