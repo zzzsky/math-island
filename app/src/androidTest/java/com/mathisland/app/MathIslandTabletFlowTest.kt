@@ -181,6 +181,18 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun matchingLesson_flowCompletesAndReturnsToMap() {
+        unlockClassificationIsland()
+
+        openLessonFromMap("start-classification-match-02")
+        answerMatchingSequence(listOf(1, 2, 0))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun bigNumberLesson_showsSortSignalLights() {
         unlockBigNumberIsland()
 
@@ -206,6 +218,30 @@ class MathIslandTabletFlowTest {
             composeRule.onAllNodesWithText("第 2 / 3 题").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithText("第 2 / 3 题").assertIsDisplayed()
+    }
+
+    @Test
+    fun fillBlankLesson_flowCompletesAndReturnsToMap() {
+        clearCalculationIsland()
+
+        openLessonFromMap("start-measure-fill-02")
+        answerFillBlankSequence(listOf(1 to 0, 0 to 1))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
+    fun multiStepLesson_flowCompletesAndReturnsToMap() {
+        unlockBigNumberIsland()
+
+        openLessonFromMap("start-division-steps-02")
+        answerMultiStepSequence(listOf(0, 1))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
     }
 
     @Test
@@ -322,28 +358,27 @@ class MathIslandTabletFlowTest {
     }
 
     private fun unlockMultiplicationIsland() {
-        clearCalculationIsland()
-        completeLesson(
-            startTag = "start-measure-ruler-01",
-            answers = listOf("厘米", "100", "平行四边形")
-        )
-        completeLesson(
-            startTag = "start-geometry-shape-01",
-            answers = listOf("厘米", "100", "平行四边形")
+        seedProgressForLessons(
+            completedLessonIds = calculationLessonIds + measurementLessonIds,
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island"
+            ),
+            stickerNames = setOf(
+                "Bridge Builder",
+                "Ruler Ranger"
+            )
         )
     }
 
     private fun unlockBigNumberIsland() {
         seedProgressForLessons(
             completedLessonIds = setOf(
-                "calc-carry-01",
-                "calc-big-number-01",
-                "measure-ruler-01",
-                "geometry-shape-01",
-                "multi-meaning-01",
-                "multi-chant-01",
-                "division-share-01",
-                "division-remainder-01"
+                *calculationLessonIds.toTypedArray(),
+                *measurementLessonIds.toTypedArray(),
+                *multiplicationLessonIds.toTypedArray(),
+                *divisionLessonIds.toTypedArray()
             ),
             unlockedIslandIds = setOf(
                 "calculation-island",
@@ -364,16 +399,11 @@ class MathIslandTabletFlowTest {
     private fun unlockClassificationIsland() {
         seedProgressForLessons(
             completedLessonIds = setOf(
-                "calc-carry-01",
-                "calc-big-number-01",
-                "measure-ruler-01",
-                "geometry-shape-01",
-                "multi-meaning-01",
-                "multi-chant-01",
-                "division-share-01",
-                "division-remainder-01",
-                "big-number-read-01",
-                "big-number-sort-01"
+                *calculationLessonIds.toTypedArray(),
+                *measurementLessonIds.toTypedArray(),
+                *multiplicationLessonIds.toTypedArray(),
+                *divisionLessonIds.toTypedArray(),
+                *bigNumberLessonIds.toTypedArray()
             ),
             unlockedIslandIds = setOf(
                 "calculation-island",
@@ -396,17 +426,12 @@ class MathIslandTabletFlowTest {
     private fun unlockChallengeIsland() {
         seedProgressForLessons(
             completedLessonIds = setOf(
-                "calc-carry-01",
-                "calc-big-number-01",
-                "measure-ruler-01",
-                "geometry-shape-01",
-                "multi-meaning-01",
-                "multi-chant-01",
-                "division-share-01",
-                "division-remainder-01",
-                "big-number-read-01",
-                "big-number-sort-01",
-                "classification-shell-01"
+                *calculationLessonIds.toTypedArray(),
+                *measurementLessonIds.toTypedArray(),
+                *multiplicationLessonIds.toTypedArray(),
+                *divisionLessonIds.toTypedArray(),
+                *bigNumberLessonIds.toTypedArray(),
+                *classificationLessonIds.toTypedArray()
             ),
             unlockedIslandIds = setOf(
                 "calculation-island",
@@ -431,16 +456,12 @@ class MathIslandTabletFlowTest {
     private fun unlockChallengeIslandWithPendingCalculationReview() {
         seedProgressForLessons(
             completedLessonIds = setOf(
-                "calc-big-number-01",
-                "measure-ruler-01",
-                "geometry-shape-01",
-                "multi-meaning-01",
-                "multi-chant-01",
-                "division-share-01",
-                "division-remainder-01",
-                "big-number-read-01",
-                "big-number-sort-01",
-                "classification-shell-01"
+                *calculationLessonIds.toTypedArray(),
+                *measurementLessonIds.toTypedArray(),
+                *multiplicationLessonIds.toTypedArray(),
+                *divisionLessonIds.toTypedArray(),
+                *bigNumberLessonIds.toTypedArray(),
+                *classificationLessonIds.toTypedArray()
             ),
             unlockedIslandIds = setOf(
                 "calculation-island",
@@ -478,6 +499,19 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("reward-return-map").performScrollTo().performClick()
     }
 
+    private fun assertReturnedToMap() {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("map-scene-canvas").fetchSemanticsNodes().isNotEmpty() &&
+                composeRule.onAllNodesWithTag("map-total-stars").fetchSemanticsNodes().isNotEmpty()
+        }
+        composeRule.onNodeWithTag("map-total-stars").assertIsDisplayed()
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("map-islands-list").fetchSemanticsNodes().isNotEmpty() &&
+                composeRule.onAllNodesWithTag("island-overlay-sheet").fetchSemanticsNodes().isNotEmpty() &&
+                composeRule.onAllNodesWithTag("panel-lessons-list").fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
     private fun inputNumberPadAnswer(answer: String) {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("number-pad-submit").fetchSemanticsNodes().isNotEmpty()
@@ -488,6 +522,57 @@ class MathIslandTabletFlowTest {
             composeRule.onNodeWithTag("number-pad-key-$digit").performClick()
         }
         composeRule.onNodeWithTag("number-pad-submit").performClick()
+    }
+
+    private fun answerMatchingSequence(leftToRightAssignments: List<Int>) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("renderer-matching").fetchSemanticsNodes().isNotEmpty()
+        }
+        leftToRightAssignments.forEachIndexed { leftIndex, rightIndex ->
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-left-select-$leftIndex"))
+            composeRule.onNodeWithTag("matching-left-select-$leftIndex").performClick()
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-right-assign-$rightIndex"))
+            composeRule.onNodeWithTag("matching-right-assign-$rightIndex").performClick()
+            composeRule.waitForIdle()
+        }
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-submit"))
+        composeRule.onNodeWithTag("matching-submit").performClick()
+    }
+
+    private fun answerFillBlankSequence(optionToSlotAssignments: List<Pair<Int, Int>>) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("renderer-fill-blank").fetchSemanticsNodes().isNotEmpty()
+        }
+        optionToSlotAssignments.forEach { (optionIndex, slotIndex) ->
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-option-select-$optionIndex"))
+            composeRule.onNodeWithTag("fill-blank-option-select-$optionIndex").performClick()
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-slot-action-$slotIndex"))
+            composeRule.onNodeWithTag("fill-blank-slot-action-$slotIndex").performClick()
+            composeRule.waitForIdle()
+        }
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-submit"))
+        composeRule.onNodeWithTag("fill-blank-submit").performClick()
+    }
+
+    private fun answerMultiStepSequence(choiceIndexes: List<Int>) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("renderer-multi-step").fetchSemanticsNodes().isNotEmpty()
+        }
+        choiceIndexes.forEach { choiceIndex ->
+            composeRule.onNodeWithTag("renderer-multi-step")
+                .performScrollToNode(hasTestTag("multi-step-choice-$choiceIndex"))
+            composeRule.onNodeWithTag("multi-step-choice-$choiceIndex").performClick()
+            composeRule.waitForIdle()
+        }
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-submit"))
+        composeRule.onNodeWithTag("multi-step-submit").performClick()
     }
 
     private fun openLessonFromMap(startTag: String) {
@@ -592,5 +677,45 @@ class MathIslandTabletFlowTest {
             lessonId.startsWith("challenge-") -> "challenge-island"
             else -> error("Unknown lesson tag: $startTag")
         }
+    }
+
+    private companion object {
+        val calculationLessonIds = setOf(
+            "calc-carry-01",
+            "calc-big-number-01"
+        )
+
+        val measurementLessonIds = setOf(
+            "measure-ruler-01",
+            "geometry-shape-01",
+            "measure-fill-01",
+            "measure-fill-02",
+            "measure-fill-03"
+        )
+
+        val multiplicationLessonIds = setOf(
+            "multi-meaning-01",
+            "multi-chant-01"
+        )
+
+        val divisionLessonIds = setOf(
+            "division-share-01",
+            "division-remainder-01",
+            "division-steps-01",
+            "division-steps-02",
+            "division-steps-03"
+        )
+
+        val bigNumberLessonIds = setOf(
+            "big-number-read-01",
+            "big-number-sort-01"
+        )
+
+        val classificationLessonIds = setOf(
+            "classification-shell-01",
+            "classification-match-01",
+            "classification-match-02",
+            "classification-match-03"
+        )
     }
 }
