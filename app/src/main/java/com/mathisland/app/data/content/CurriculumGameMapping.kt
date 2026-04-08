@@ -244,7 +244,7 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
         Question(
             prompt = "按步骤完成装袋判断。",
             choices = emptyList(),
-            correctChoice = "先算 17 ÷ 3,商是 5 余 2,至少要 6 个袋子",
+            correctChoice = "先算 17 ÷ 3,商是 5 余 2,6 个袋子",
             hint = "先算除法，再判断余下的要不要多准备一个袋子。",
             family = "multi-step",
             stepPrompts = listOf(
