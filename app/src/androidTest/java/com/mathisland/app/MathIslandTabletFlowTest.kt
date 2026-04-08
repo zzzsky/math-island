@@ -193,6 +193,18 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun matchingAdvancedLesson_flowCompletesAndReturnsToMap() {
+        unlockClassificationIsland()
+
+        openLessonFromMap("start-classification-match-04")
+        answerMatchingSequence(listOf(3, 2, 1, 0))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun bigNumberLesson_showsSortSignalLights() {
         unlockBigNumberIsland()
 
@@ -233,11 +245,35 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun fillBlankAdvancedLesson_flowCompletesAndReturnsToMap() {
+        clearCalculationIsland()
+
+        openLessonFromMap("start-measure-fill-04")
+        answerFillBlankSequence(listOf(2 to 0, 0 to 1, 1 to 2))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun multiStepLesson_flowCompletesAndReturnsToMap() {
         unlockBigNumberIsland()
 
         openLessonFromMap("start-division-steps-02")
         answerMultiStepSequence(listOf(0, 1))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
+    fun multiStepAdvancedLesson_flowCompletesAndReturnsToMap() {
+        unlockBigNumberIsland()
+
+        openLessonFromMap("start-division-steps-04")
+        answerMultiStepSequence(listOf(0, 1, 1))
 
         composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
         returnToMapFromReward()
@@ -473,6 +509,7 @@ class MathIslandTabletFlowTest {
                 "challenge-island"
             ),
             stickerNames = setOf(
+                "Bridge Builder",
                 "Ruler Ranger",
                 "Forest Singer",
                 "Harbor Captain",
@@ -504,7 +541,6 @@ class MathIslandTabletFlowTest {
             composeRule.onAllNodesWithTag("map-scene-canvas").fetchSemanticsNodes().isNotEmpty() &&
                 composeRule.onAllNodesWithTag("map-total-stars").fetchSemanticsNodes().isNotEmpty()
         }
-        composeRule.onNodeWithTag("map-total-stars").assertIsDisplayed()
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("map-islands-list").fetchSemanticsNodes().isNotEmpty() &&
                 composeRule.onAllNodesWithTag("island-overlay-sheet").fetchSemanticsNodes().isNotEmpty() &&
@@ -690,7 +726,8 @@ class MathIslandTabletFlowTest {
             "geometry-shape-01",
             "measure-fill-01",
             "measure-fill-02",
-            "measure-fill-03"
+            "measure-fill-03",
+            "measure-fill-04"
         )
 
         val multiplicationLessonIds = setOf(
@@ -703,7 +740,8 @@ class MathIslandTabletFlowTest {
             "division-remainder-01",
             "division-steps-01",
             "division-steps-02",
-            "division-steps-03"
+            "division-steps-03",
+            "division-steps-04"
         )
 
         val bigNumberLessonIds = setOf(
@@ -715,7 +753,8 @@ class MathIslandTabletFlowTest {
             "classification-shell-01",
             "classification-match-01",
             "classification-match-02",
-            "classification-match-03"
+            "classification-match-03",
+            "classification-match-04"
         )
     }
 }

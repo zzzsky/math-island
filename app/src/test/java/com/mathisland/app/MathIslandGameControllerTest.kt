@@ -249,17 +249,43 @@ class MathIslandGameControllerTest {
         assertTrue(classificationLessons.containsAll(listOf(
             "classification-match-01",
             "classification-match-02",
-            "classification-match-03"
+            "classification-match-03",
+            "classification-match-04"
         )))
         assertTrue(measurementLessons.containsAll(listOf(
             "measure-fill-01",
             "measure-fill-02",
-            "measure-fill-03"
+            "measure-fill-03",
+            "measure-fill-04"
         )))
         assertTrue(divisionLessons.containsAll(listOf(
             "division-steps-01",
             "division-steps-02",
-            "division-steps-03"
+            "division-steps-03",
+            "division-steps-04"
         )))
+    }
+
+    @Test
+    fun advancedRendererLessons_resolveExpandedQuestionShapes() {
+        val matchingLesson = curriculumController.islands
+            .first { it.id == "classification-island" }
+            .lessons
+            .first { it.id == "classification-match-04" }
+        val fillBlankLesson = curriculumController.islands
+            .first { it.id == "measurement-geometry-island" }
+            .lessons
+            .first { it.id == "measure-fill-04" }
+        val multiStepLesson = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .first { it.id == "division-steps-04" }
+
+        assertEquals(4, matchingLesson.questions.first().leftItems.size)
+        assertEquals(4, matchingLesson.questions.first().rightItems.size)
+        assertEquals(4, fillBlankLesson.questions.first().blankOptions.size)
+        assertEquals(4, fillBlankLesson.questions.first().blankParts.size)
+        assertEquals(3, multiStepLesson.questions.first().stepPrompts.size)
+        assertEquals(3, multiStepLesson.questions.first().stepChoices.size)
     }
 }

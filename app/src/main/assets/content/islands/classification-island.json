@@ -31,6 +31,12 @@
       "title": "物品归类绳",
       "summary": "把物品和它所属的一类连起来。",
       "questionFamily": "MATCHING"
+    },
+    {
+      "id": "classification-match-04",
+      "title": "工具用途总检查",
+      "summary": "把四种工具和它最贴切的用途连起来。",
+      "questionFamily": "MATCHING"
     }
   ]
 }

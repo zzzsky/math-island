@@ -40,6 +40,12 @@
       "title": "长度对照卡",
       "summary": "把不同长度换算结果填进空格。",
       "questionFamily": "FILL_BLANK"
+    },
+    {
+      "id": "measure-fill-04",
+      "title": "三段换算跑道",
+      "summary": "把三组长度换算结果依次填进空格。",
+      "questionFamily": "FILL_BLANK"
     }
   ]
 }

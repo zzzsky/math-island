@@ -78,4 +78,47 @@ class MatchingQuestionPaneTest {
 
         assertEquals("尺子=长度,秤=重量,时钟=时间", submittedAnswer)
     }
+
+    @Test
+    fun matchingQuestion_supportsFourPairAssignments() {
+        var submittedAnswer: String? = null
+        val question = Question(
+            prompt = "把工具和它最贴切的用途连起来。",
+            choices = emptyList(),
+            correctChoice = "尺子=长度,秤=重量,日历=日期,温度计=温度",
+            hint = "先看左边工具，再找右边最贴切的用途。",
+            family = "matching",
+            leftItems = listOf("尺子", "秤", "日历", "温度计"),
+            rightItems = listOf("温度", "日期", "重量", "长度")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = { submittedAnswer = it }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-matching").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-submit").assertIsNotEnabled()
+
+        listOf(3, 2, 1, 0).forEachIndexed { leftIndex, rightIndex ->
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-left-select-$leftIndex"))
+            composeRule.onNodeWithTag("matching-left-select-$leftIndex").performClick()
+            composeRule.waitForIdle()
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-right-assign-$rightIndex"))
+            composeRule.onNodeWithTag("matching-right-assign-$rightIndex").performClick()
+            composeRule.waitForIdle()
+        }
+
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-submit"))
+        composeRule.onNodeWithTag("matching-submit").assertIsEnabled().performClick()
+
+        assertEquals("尺子=长度,秤=重量,日历=日期,温度计=温度", submittedAnswer)
+    }
 }

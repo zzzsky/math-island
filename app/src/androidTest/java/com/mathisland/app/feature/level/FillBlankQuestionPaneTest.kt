@@ -68,4 +68,47 @@ class FillBlankQuestionPaneTest {
 
         assertEquals("100,200", submittedAnswer)
     }
+
+    @Test
+    fun fillBlankQuestion_supportsThreeSlots() {
+        var submittedAnswer: String? = null
+        val question = Question(
+            prompt = "把长度换算结果补完整。",
+            choices = emptyList(),
+            correctChoice = "400,90,6",
+            hint = "先统一单位，再把数字拖进空格。",
+            family = "fill-blank",
+            blankParts = listOf("4 米 = ", " 厘米，9 分米 = ", " 厘米，60 厘米 = ", " 分米。"),
+            blankOptions = listOf("90", "6", "400", "600")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = { submittedAnswer = it }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("fill-blank-submit").assertIsNotEnabled()
+
+        listOf(2 to 0, 0 to 1, 1 to 2).forEach { (optionIndex, slotIndex) ->
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-option-select-$optionIndex"))
+            composeRule.onNodeWithTag("fill-blank-option-select-$optionIndex").performClick()
+            composeRule.waitForIdle()
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-slot-$slotIndex"))
+            composeRule.onNodeWithTag("fill-blank-slot-action-$slotIndex").performClick()
+            composeRule.waitForIdle()
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-submit"))
+        composeRule.onNodeWithTag("fill-blank-submit").assertIsEnabled().performClick()
+
+        assertEquals("400,90,6", submittedAnswer)
+    }
 }

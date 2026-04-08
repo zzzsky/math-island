@@ -40,6 +40,12 @@
       "title": "装盒分配站",
       "summary": "按顺序完成平均分装盒的两步判断。",
       "questionFamily": "MULTI_STEP"
+    },
+    {
+      "id": "division-steps-04",
+      "title": "装袋判断塔",
+      "summary": "按顺序完成除法、余数和装袋判断。",
+      "questionFamily": "MULTI_STEP"
     }
   ]
 }

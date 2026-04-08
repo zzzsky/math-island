@@ -134,6 +134,17 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             rightItems = listOf("植物", "自然材料", "生活用品")
         )
     ),
+    "classification-match-04" to listOf(
+        Question(
+            prompt = "把工具和它最贴切的用途连起来。",
+            choices = emptyList(),
+            correctChoice = "尺子=长度,秤=重量,日历=日期,温度计=温度",
+            hint = "先看左边工具，再找右边最贴切的用途。",
+            family = "matching",
+            leftItems = listOf("尺子", "秤", "日历", "温度计"),
+            rightItems = listOf("温度", "日期", "重量", "长度")
+        )
+    ),
     "measure-fill-01" to listOf(
         Question(
             prompt = "把空格补完整。",
@@ -165,6 +176,17 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             family = "fill-blank",
             blankParts = listOf("2 米 = ", " 厘米，7 分米 = ", " 厘米。"),
             blankOptions = listOf("70", "200", "20")
+        )
+    ),
+    "measure-fill-04" to listOf(
+        Question(
+            prompt = "把长度换算结果补完整。",
+            choices = emptyList(),
+            correctChoice = "400,90,6",
+            hint = "先统一单位，再把数字拖进空格。",
+            family = "fill-blank",
+            blankParts = listOf("4 米 = ", " 厘米，9 分米 = ", " 厘米，60 厘米 = ", " 分米。"),
+            blankOptions = listOf("90", "6", "400", "600")
         )
     ),
     "division-steps-01" to listOf(
@@ -215,6 +237,25 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             stepChoices = listOf(
                 listOf("把 18 平均分给 6 个盒子", "先把 18 和 6 相减", "先数盒子颜色"),
                 listOf("2 个", "3 个", "4 个")
+            )
+        )
+    ),
+    "division-steps-04" to listOf(
+        Question(
+            prompt = "按步骤完成装袋判断。",
+            choices = emptyList(),
+            correctChoice = "先算 17 ÷ 3,商是 5 余 2,至少要 6 个袋子",
+            hint = "先算除法，再判断余下的要不要多准备一个袋子。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：先要算什么？",
+                "第二步：17 ÷ 3 的结果是什么？",
+                "第三步：至少需要几个袋子？"
+            ),
+            stepChoices = listOf(
+                listOf("先算 17 ÷ 3", "先算 17 + 3", "先比较袋子颜色"),
+                listOf("商是 4 余 1", "商是 5 余 2", "商是 6 余 1"),
+                listOf("5 个袋子", "6 个袋子", "7 个袋子")
             )
         )
     )
