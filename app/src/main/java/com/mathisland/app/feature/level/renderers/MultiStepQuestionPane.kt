@@ -39,11 +39,11 @@ fun MultiStepQuestionPane(
     var multiStepState by remember(question.prompt, question.stepPrompts, question.stepChoices) {
         mutableStateOf(MultiStepAnswerState())
     }
-    val stepPrompts = question.stepPrompts
-    val stepChoices = question.stepChoices
-    val stepCount = minOf(stepPrompts.size, stepChoices.size)
+    val stepCount = stepCountFor(question)
     val completed = multiStepState.isComplete(stepCount)
     val currentStepIndex = multiStepState.currentStepIndex(stepCount)
+    val currentPrompt = multiStepPromptFor(question, multiStepState)
+    val currentChoices = multiStepChoicesFor(question, multiStepState)
     val canSubmit = actionState.enabled && completed
 
     RendererPanelStack(
@@ -139,7 +139,7 @@ fun MultiStepQuestionPane(
                         text = if (completed) {
                             "本题步骤都已完成"
                         } else {
-                            stepPrompts[currentStepIndex]
+                            currentPrompt
                         },
                         style = TypographyTokens.FeatureTitle,
                         fontWeight = FontWeight.SemiBold,
@@ -156,7 +156,7 @@ fun MultiStepQuestionPane(
                             )
                         }
                     } else {
-                        stepChoices[currentStepIndex].forEachIndexed { index, choice ->
+                        currentChoices.forEachIndexed { index, choice ->
                             StoryPanelCard(
                                 modifier = Modifier.testTag("multi-step-choice-card-$index"),
                                 level = SurfaceLevel.Secondary,
@@ -177,7 +177,11 @@ fun MultiStepQuestionPane(
                                     ActionButton(
                                         text = if (currentStepIndex == stepCount - 1) "完成这一步" else "进入下一步",
                                         onClick = {
-                                            multiStepState = multiStepState.advance(choice, stepCount)
+                                            multiStepState = multiStepState.advance(
+                                                answer = choice,
+                                                stepCount = stepCount,
+                                                nextBranchKey = nextBranchKeyFor(question, multiStepState, choice)
+                                            )
                                         },
                                         modifier = Modifier.testTag("multi-step-choice-$index"),
                                         enabled = actionState.enabled,

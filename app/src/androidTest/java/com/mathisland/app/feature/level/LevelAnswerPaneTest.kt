@@ -14,6 +14,7 @@ import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepBranchRule
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackUiState
 import com.mathisland.app.feature.level.renderers.rendererActionStateFor
@@ -492,5 +493,55 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-submit"))
         composeRule.onNodeWithTag("multi-step-submit").assertIsDisplayed()
+    }
+
+    @Test
+    fun multiStepConditionalQuestion_switchesBranchPrompt() {
+        val question = Question(
+            prompt = "按步骤判断装袋方案。",
+            choices = emptyList(),
+            correctChoice = "有余数,商是4余2,5个袋子",
+            hint = "先看有没有余数。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步：先判断会不会有剩余？", "第二步", "第三步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完", "还要先做加法"),
+                listOf("占位"),
+                listOf("占位")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "step-3"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2"),
+                    StepBranchRule("还要先做加法", "add-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "remainder-step-3"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：18 ÷ 4 的结果是什么？",
+                "remainder-step-3" to "第三步：至少需要几个袋子？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是4余2", "商是5余1"),
+                "remainder-step-3" to listOf("4个袋子", "5个袋子", "6个袋子")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-0"))
+        composeRule.onNodeWithTag("multi-step-choice-0").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText("第二步：18 ÷ 4 的结果是什么？").assertIsDisplayed()
     }
 }

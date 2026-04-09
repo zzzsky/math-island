@@ -244,6 +244,25 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun conditionalMultiStepLesson_resolvesBranchMetadata() {
+        val lesson = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .first { it.id == "division-steps-05" }
+
+        assertEquals("multi-step", lesson.questions.first().family)
+        assertEquals(
+            listOf("branch-start", "step-2", "step-3"),
+            lesson.questions.first().stepBranchKeys
+        )
+        assertTrue(lesson.questions.first().stepBranchRules.containsKey("branch-start"))
+        assertEquals(
+            "第二步：18 ÷ 4 的结果是什么？",
+            lesson.questions.first().stepBranchPrompts["remainder-step-2"]
+        )
+    }
+
+    @Test
     fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
         val classificationLessons = curriculumController.islands
             .first { it.id == "classification-island" }
@@ -275,7 +294,8 @@ class MathIslandGameControllerTest {
             "division-steps-01",
             "division-steps-02",
             "division-steps-03",
-            "division-steps-04"
+            "division-steps-04",
+            "division-steps-05"
         )))
     }
 

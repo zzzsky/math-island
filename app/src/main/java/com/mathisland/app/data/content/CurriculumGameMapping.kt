@@ -7,6 +7,7 @@ import com.mathisland.app.domain.model.Island
 import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepBranchRule
 
 fun curriculumToGameIslands(curriculum: CurriculumBundle): List<Island> =
     curriculum.catalog.islands.map { catalogEntry ->
@@ -290,6 +291,58 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 listOf("先算 17 ÷ 3", "先算 17 + 3", "先比较袋子颜色"),
                 listOf("商是 4 余 1", "商是 5 余 2", "商是 6 余 1"),
                 listOf("5 个袋子", "6 个袋子", "7 个袋子")
+            )
+        )
+    ),
+    "division-steps-05" to listOf(
+        Question(
+            prompt = "按条件步骤完成装袋判断。",
+            choices = emptyList(),
+            correctChoice = "有余数,商是4余2,5个袋子",
+            hint = "先判断有没有余数，再走对应的后续步骤。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：先判断这次平均分会不会有剩余？",
+                "第二步",
+                "第三步"
+            ),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完", "还要先做加法"),
+                listOf("占位"),
+                listOf("占位")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "step-3"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2"),
+                    StepBranchRule("还要先做加法", "add-step-2")
+                ),
+                "remainder-step-2" to listOf(
+                    StepBranchRule("*", "remainder-step-3")
+                ),
+                "exact-step-2" to listOf(
+                    StepBranchRule("*", "exact-step-3")
+                ),
+                "add-step-2" to listOf(
+                    StepBranchRule("*", "add-step-3")
+                )
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：18 ÷ 4 的结果是什么？",
+                "remainder-step-3" to "第三步：至少需要几个袋子？",
+                "exact-step-2" to "第二步：如果正好分完，每袋装几个？",
+                "exact-step-3" to "第三步：这种情况至少需要几个袋子？",
+                "add-step-2" to "第二步：这题先做加法对吗？",
+                "add-step-3" to "第三步：现在该回到哪种判断？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是4余2", "商是5余1", "商是6余0"),
+                "remainder-step-3" to listOf("4个袋子", "5个袋子", "6个袋子"),
+                "exact-step-2" to listOf("每袋4个", "每袋5个", "每袋6个"),
+                "exact-step-3" to listOf("4个袋子", "5个袋子", "6个袋子"),
+                "add-step-2" to listOf("对，先做加法", "不对，应该先做除法", "先比较袋子颜色"),
+                "add-step-3" to listOf("回到有没有余数的判断", "直接结束", "去做乘法")
             )
         )
     )

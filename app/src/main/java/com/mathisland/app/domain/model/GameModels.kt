@@ -23,13 +23,22 @@ data class Question(
     val blankOptions: List<String> = emptyList(),
     val blankSlotKinds: List<String> = emptyList(),
     val stepPrompts: List<String> = emptyList(),
-    val stepChoices: List<List<String>> = emptyList()
+    val stepChoices: List<List<String>> = emptyList(),
+    val stepBranchKeys: List<String> = emptyList(),
+    val stepBranchRules: Map<String, List<StepBranchRule>> = emptyMap(),
+    val stepBranchPrompts: Map<String, String> = emptyMap(),
+    val stepBranchChoices: Map<String, List<String>> = emptyMap()
 )
 
 data class MatchingGroup(
     val title: String,
     val leftItems: List<String>,
     val rightItems: List<String>
+)
+
+data class StepBranchRule(
+    val whenAnswer: String,
+    val nextBranchKey: String
 )
 
 data class Lesson(

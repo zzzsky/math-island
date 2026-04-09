@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepBranchRule
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -123,5 +124,82 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
 
         assertEquals("先算 17 ÷ 3,商是 5 余 2,6 个袋子", submittedAnswer)
+    }
+
+    @Test
+    fun multiStepQuestion_switchesPromptByConditionalBranch() {
+        var submittedAnswer: String? = null
+        val question = Question(
+            prompt = "按步骤判断装袋方案。",
+            choices = emptyList(),
+            correctChoice = "有余数,商是4余2,5个袋子",
+            hint = "先看有没有余数。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步：先判断会不会有剩余？", "第二步", "第三步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完", "还要先做加法"),
+                listOf("占位"),
+                listOf("占位")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "step-3"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2"),
+                    StepBranchRule("还要先做加法", "add-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "remainder-step-3")),
+                "exact-step-2" to listOf(StepBranchRule("*", "exact-step-3")),
+                "add-step-2" to listOf(StepBranchRule("*", "add-step-3"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：18 ÷ 4 的结果是什么？",
+                "remainder-step-3" to "第三步：至少需要几个袋子？",
+                "exact-step-2" to "第二步：如果正好分完，每袋装几个？",
+                "exact-step-3" to "第三步：这种情况至少需要几个袋子？",
+                "add-step-2" to "第二步：这题先算加法对吗？",
+                "add-step-3" to "第三步：现在该回到除法判断。"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是4余2", "商是5余1"),
+                "remainder-step-3" to listOf("4个袋子", "5个袋子", "6个袋子"),
+                "exact-step-2" to listOf("每袋4个", "每袋5个"),
+                "exact-step-3" to listOf("4个袋子", "5个袋子"),
+                "add-step-2" to listOf("不对，要先做除法", "对，先做加法"),
+                "add-step-3" to listOf("回到除法判断", "直接提交")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = { submittedAnswer = it }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-0"))
+        composeRule.onNodeWithTag("multi-step-choice-0").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText("第二步：18 ÷ 4 的结果是什么？").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-0"))
+        composeRule.onNodeWithTag("multi-step-choice-0").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText("第三步：至少需要几个袋子？").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-1"))
+        composeRule.onNodeWithTag("multi-step-choice-1").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-submit"))
+        composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
+
+        assertEquals("有余数,商是4余2,5个袋子", submittedAnswer)
     }
 }
