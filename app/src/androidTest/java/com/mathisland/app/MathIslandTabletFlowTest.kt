@@ -205,6 +205,25 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun groupedMatchingLesson_flowCompletesAndReturnsToMap() {
+        unlockClassificationIsland()
+
+        openLessonFromMap("start-classification-match-05")
+        answerGroupedMatchingSequence(
+            listOf(
+                Triple(0, 0, 1),
+                Triple(0, 1, 0),
+                Triple(1, 0, 1),
+                Triple(1, 1, 0)
+            )
+        )
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun bigNumberLesson_showsSortSignalLights() {
         unlockBigNumberIsland()
 
@@ -590,6 +609,24 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("matching-submit").performClick()
     }
 
+    private fun answerGroupedMatchingSequence(assignments: List<Triple<Int, Int, Int>>) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("renderer-matching").fetchSemanticsNodes().isNotEmpty()
+        }
+        assignments.forEach { (groupIndex, leftIndex, rightIndex) ->
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-left-select-$groupIndex-$leftIndex"))
+            composeRule.onNodeWithTag("matching-left-select-$groupIndex-$leftIndex").performClick()
+            composeRule.onNodeWithTag("renderer-matching")
+                .performScrollToNode(hasTestTag("matching-right-assign-$groupIndex-$rightIndex"))
+            composeRule.onNodeWithTag("matching-right-assign-$groupIndex-$rightIndex").performClick()
+            composeRule.waitForIdle()
+        }
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-submit"))
+        composeRule.onNodeWithTag("matching-submit").performClick()
+    }
+
     private fun answerFillBlankSequence(optionToSlotAssignments: List<Pair<Int, Int>>) {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("renderer-fill-blank").fetchSemanticsNodes().isNotEmpty()
@@ -767,7 +804,8 @@ class MathIslandTabletFlowTest {
             "classification-match-01",
             "classification-match-02",
             "classification-match-03",
-            "classification-match-04"
+            "classification-match-04",
+            "classification-match-05"
         )
     }
 }

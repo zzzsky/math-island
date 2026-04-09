@@ -193,6 +193,18 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun groupedMatchingLesson_resolvesMatchingGroups() {
+        val lesson = curriculumController.islands
+            .first { it.id == "classification-island" }
+            .lessons
+            .first { it.id == "classification-match-05" }
+
+        assertEquals("matching", lesson.questions.first().family)
+        assertEquals(2, lesson.questions.first().matchingGroups.size)
+        assertEquals("看场景选算法", lesson.questions.first().matchingGroups.first().title)
+    }
+
+    @Test
     fun measurementFillBlankLesson_resolvesFillBlankQuestions() {
         val lesson = curriculumController.islands
             .first { it.id == "measurement-geometry-island" }
@@ -250,7 +262,8 @@ class MathIslandGameControllerTest {
             "classification-match-01",
             "classification-match-02",
             "classification-match-03",
-            "classification-match-04"
+            "classification-match-04",
+            "classification-match-05"
         )))
         assertTrue(measurementLessons.containsAll(listOf(
             "measure-fill-01",

@@ -5,6 +5,7 @@ import com.mathisland.app.domain.model.CurriculumIslandContent
 import com.mathisland.app.domain.model.CurriculumLesson
 import com.mathisland.app.domain.model.Island
 import com.mathisland.app.domain.model.Lesson
+import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.Question
 
 fun curriculumToGameIslands(curriculum: CurriculumBundle): List<Island> =
@@ -143,6 +144,27 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             family = "matching",
             leftItems = listOf("尺子", "秤", "日历", "温度计"),
             rightItems = listOf("温度", "日期", "重量", "长度")
+        )
+    ),
+    "classification-match-05" to listOf(
+        Question(
+            prompt = "按两个小组完成语义配对。",
+            choices = emptyList(),
+            correctChoice = "平均分苹果=用除法,合并两堆贝壳=用加法||尺子=测长度,秤=测重量",
+            hint = "先完成一组，再完成下一组。",
+            family = "matching",
+            matchingGroups = listOf(
+                MatchingGroup(
+                    title = "看场景选算法",
+                    leftItems = listOf("平均分苹果", "合并两堆贝壳"),
+                    rightItems = listOf("用加法", "用除法")
+                ),
+                MatchingGroup(
+                    title = "看工具选用途",
+                    leftItems = listOf("尺子", "秤"),
+                    rightItems = listOf("测重量", "测长度")
+                )
+            )
         )
     ),
     "measure-fill-01" to listOf(

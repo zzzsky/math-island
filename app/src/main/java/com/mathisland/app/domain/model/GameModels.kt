@@ -18,11 +18,18 @@ data class Question(
     val family: String,
     val leftItems: List<String> = emptyList(),
     val rightItems: List<String> = emptyList(),
+    val matchingGroups: List<MatchingGroup> = emptyList(),
     val blankParts: List<String> = emptyList(),
     val blankOptions: List<String> = emptyList(),
     val blankSlotKinds: List<String> = emptyList(),
     val stepPrompts: List<String> = emptyList(),
     val stepChoices: List<List<String>> = emptyList()
+)
+
+data class MatchingGroup(
+    val title: String,
+    val leftItems: List<String>,
+    val rightItems: List<String>
 )
 
 data class Lesson(

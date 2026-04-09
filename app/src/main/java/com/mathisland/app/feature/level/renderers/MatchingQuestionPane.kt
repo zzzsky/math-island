@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.feature.level.lessonGuidanceBadgeTextFor
 import com.mathisland.app.feature.level.lessonGuidanceBadgeVariantFor
@@ -36,12 +37,19 @@ fun MatchingQuestionPane(
     actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
-    var matchingState by remember(question.prompt, question.leftItems, question.rightItems) {
+    val groups = question.matchingGroups.takeIf { it.isNotEmpty() }
+        ?: listOf(
+            MatchingGroup(
+                title = "",
+                leftItems = question.leftItems,
+                rightItems = question.rightItems
+            )
+        )
+    val hasGroupedSections = groups.size > 1
+    var matchingState by remember(question.prompt, question.leftItems, question.rightItems, question.matchingGroups) {
         mutableStateOf(MatchingAnswerState())
     }
-    val leftItems = question.leftItems
-    val rightItems = question.rightItems
-    val canSubmit = actionState.enabled && matchingState.isComplete(leftItems.size)
+    val canSubmit = actionState.enabled && matchingState.isComplete(groups)
 
     RendererPanelStack(
         rendererTag = "renderer-matching",
@@ -72,112 +80,141 @@ fun MatchingQuestionPane(
                 title = actionState.sectionTitle(),
                 body = actionState.sectionBody()
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
-            ) {
-                Column(
+            groups.forEachIndexed { groupIndex, group ->
+                val groupAssignments = matchingState.assignmentsForGroup(groupIndex)
+                val selectedLeft = matchingState.selectedLeft
+                StoryPanelCard(
                     modifier = Modifier
-                        .weight(1f)
-                        .testTag("matching-left-column"),
-                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                        .fillMaxWidth()
+                        .testTag("matching-group-$groupIndex"),
+                    level = SurfaceLevel.Secondary,
+                    containerColor = RendererTokens.MatchingSurface,
+                    borderColor = RendererTokens.MatchingSlotBorder,
+                    shape = RadiusTokens.CardMd
                 ) {
-                    leftItems.forEachIndexed { index, item ->
-                        val assignedRightIndex = matchingState.assignments[index]
-                        val selected = matchingState.selectedLeftIndex == index
-                        StoryPanelCard(
-                            modifier = Modifier.testTag("matching-left-$index"),
-                            level = SurfaceLevel.Secondary,
-                            containerColor = when {
-                                assignedRightIndex != null -> RendererTokens.MatchingConnectedSurface
-                                selected -> RendererTokens.MatchingSurface
-                                else -> RendererTokens.OptionSurface
-                            },
-                            borderColor = when {
-                                assignedRightIndex != null -> RendererTokens.MatchingConnectedBorder
-                                selected -> MaterialTheme.colorScheme.primary
-                                else -> null
-                            },
-                            shape = RadiusTokens.CardMd
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(SpacingTokens.Lg),
-                                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
-                            ) {
-                                assignedRightIndex?.let {
-                                    StatusChip(
-                                        text = "已连接",
-                                        variant = StatusVariant.Success,
-                                        modifier = Modifier.testTag("matching-left-chip-$index")
-                                    )
-                                }
-                                Text(
-                                    text = item,
-                                    style = TypographyTokens.FeatureTitle,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                ActionButton(
-                                    text = if (selected) "已选中" else "选中后连接",
-                                    onClick = { matchingState = matchingState.selectLeft(index) },
-                                    modifier = Modifier.testTag("matching-left-select-$index"),
-                                    role = if (selected) ActionRole.Secondary else ActionRole.OutlinedSecondary
-                                )
-                            }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(SpacingTokens.Lg),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
+                    ) {
+                        if (hasGroupedSections) {
+                            Text(
+                                text = group.title,
+                                style = TypographyTokens.SectionTitle,
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("matching-right-column"),
-                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-                ) {
-                    rightItems.forEachIndexed { index, item ->
-                        val linkedLeftIndex = matchingState.assignments.entries
-                            .firstOrNull { it.value == index }
-                            ?.key
-                        StoryPanelCard(
-                            modifier = Modifier.testTag("matching-right-$index"),
-                            level = SurfaceLevel.Secondary,
-                            containerColor = if (linkedLeftIndex != null) {
-                                RendererTokens.MatchingConnectedSurface
-                            } else {
-                                RendererTokens.MatchingSlotSurface
-                            },
-                            borderColor = if (linkedLeftIndex != null) {
-                                RendererTokens.MatchingConnectedBorder
-                            } else {
-                                RendererTokens.MatchingSlotBorder
-                            },
-                            shape = RadiusTokens.CardMd
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(SpacingTokens.Lg),
-                                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                                    .weight(1f)
+                                    .testTag(matchingLeftColumnTag(groupIndex, hasGroupedSections)),
+                                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                             ) {
-                                linkedLeftIndex?.let {
-                                    StatusChip(
-                                        text = "已匹配",
-                                        variant = StatusVariant.Success,
-                                        modifier = Modifier.testTag("matching-right-chip-$index")
-                                    )
+                                group.leftItems.forEachIndexed { leftIndex, item ->
+                                    val assignedRightIndex = groupAssignments[leftIndex]
+                                    val selected = selectedLeft?.groupIndex == groupIndex &&
+                                        selectedLeft.leftIndex == leftIndex
+                                    StoryPanelCard(
+                                        modifier = Modifier.testTag(matchingLeftTag(groupIndex, leftIndex, hasGroupedSections)),
+                                        level = SurfaceLevel.Secondary,
+                                        containerColor = when {
+                                            assignedRightIndex != null -> RendererTokens.MatchingConnectedSurface
+                                            selected -> RendererTokens.MatchingSurface
+                                            else -> RendererTokens.OptionSurface
+                                        },
+                                        borderColor = when {
+                                            assignedRightIndex != null -> RendererTokens.MatchingConnectedBorder
+                                            selected -> MaterialTheme.colorScheme.primary
+                                            else -> null
+                                        },
+                                        shape = RadiusTokens.CardMd
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(SpacingTokens.Lg),
+                                            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                                        ) {
+                                            assignedRightIndex?.let {
+                                                StatusChip(
+                                                    text = "已连接",
+                                                    variant = StatusVariant.Success,
+                                                    modifier = Modifier.testTag(matchingLeftChipTag(groupIndex, leftIndex, hasGroupedSections))
+                                                )
+                                            }
+                                            Text(
+                                                text = item,
+                                                style = TypographyTokens.FeatureTitle,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            ActionButton(
+                                                text = if (selected) "已选中" else "选中后连接",
+                                                onClick = { matchingState = matchingState.selectLeft(groupIndex, leftIndex) },
+                                                modifier = Modifier.testTag(matchingLeftSelectTag(groupIndex, leftIndex, hasGroupedSections)),
+                                                role = if (selected) ActionRole.Secondary else ActionRole.OutlinedSecondary
+                                            )
+                                        }
+                                    }
                                 }
-                                Text(
-                                    text = item,
-                                    style = TypographyTokens.FeatureTitle,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                ActionButton(
-                                    text = if (matchingState.selectedLeftIndex != null) "连接到这里" else "等待选择",
-                                    onClick = { matchingState = matchingState.assignTo(index) },
-                                    enabled = matchingState.selectedLeftIndex != null && actionState.enabled,
-                                    modifier = Modifier.testTag("matching-right-assign-$index"),
-                                    role = ActionRole.Secondary
-                                )
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .testTag(matchingRightColumnTag(groupIndex, hasGroupedSections)),
+                                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                            ) {
+                                group.rightItems.forEachIndexed { rightIndex, item ->
+                                    val linkedLeftIndex = groupAssignments.entries
+                                        .firstOrNull { it.value == rightIndex }
+                                        ?.key
+                                    StoryPanelCard(
+                                        modifier = Modifier.testTag(matchingRightTag(groupIndex, rightIndex, hasGroupedSections)),
+                                        level = SurfaceLevel.Secondary,
+                                        containerColor = if (linkedLeftIndex != null) {
+                                            RendererTokens.MatchingConnectedSurface
+                                        } else {
+                                            RendererTokens.MatchingSlotSurface
+                                        },
+                                        borderColor = if (linkedLeftIndex != null) {
+                                            RendererTokens.MatchingConnectedBorder
+                                        } else {
+                                            RendererTokens.MatchingSlotBorder
+                                        },
+                                        shape = RadiusTokens.CardMd
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(SpacingTokens.Lg),
+                                            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                                        ) {
+                                            linkedLeftIndex?.let {
+                                                StatusChip(
+                                                    text = "已匹配",
+                                                    variant = StatusVariant.Success,
+                                                    modifier = Modifier.testTag(matchingRightChipTag(groupIndex, rightIndex, hasGroupedSections))
+                                                )
+                                            }
+                                            Text(
+                                                text = item,
+                                                style = TypographyTokens.FeatureTitle,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            ActionButton(
+                                                text = if (selectedLeft?.groupIndex == groupIndex) "连接到这里" else "等待选择",
+                                                onClick = { matchingState = matchingState.assignTo(groupIndex, rightIndex) },
+                                                enabled = selectedLeft?.groupIndex == groupIndex && actionState.enabled,
+                                                modifier = Modifier.testTag(matchingRightAssignTag(groupIndex, rightIndex, hasGroupedSections)),
+                                                role = ActionRole.Secondary
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -199,14 +236,18 @@ fun MatchingQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     Text(
-                        text = if (matchingState.isComplete(leftItems.size)) "配对完成" else "配对进度 ${matchingState.assignments.size}/${leftItems.size}",
+                        text = if (matchingState.isComplete(groups)) {
+                            "配对完成"
+                        } else {
+                            "配对进度 ${matchingState.completedPairs(groups)}/${matchingState.totalPairs(groups)}"
+                        },
                         style = TypographyTokens.SupportingLabel,
                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                     )
                     ActionButton(
                         text = actionState.resolveLabel("提交配对"),
                         onClick = {
-                            onAnswer(matchingState.encodedAnswer(leftItems, rightItems))
+                            onAnswer(matchingState.encodedAnswer(groups))
                         },
                         enabled = canSubmit,
                         modifier = Modifier.testTag("matching-submit"),
@@ -217,3 +258,27 @@ fun MatchingQuestionPane(
         }
     }
 }
+
+private fun matchingLeftColumnTag(groupIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-left-column-$groupIndex" else "matching-left-column"
+
+private fun matchingRightColumnTag(groupIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-right-column-$groupIndex" else "matching-right-column"
+
+private fun matchingLeftTag(groupIndex: Int, leftIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-left-$groupIndex-$leftIndex" else "matching-left-$leftIndex"
+
+private fun matchingRightTag(groupIndex: Int, rightIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-right-$groupIndex-$rightIndex" else "matching-right-$rightIndex"
+
+private fun matchingLeftChipTag(groupIndex: Int, leftIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-left-chip-$groupIndex-$leftIndex" else "matching-left-chip-$leftIndex"
+
+private fun matchingRightChipTag(groupIndex: Int, rightIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-right-chip-$groupIndex-$rightIndex" else "matching-right-chip-$rightIndex"
+
+private fun matchingLeftSelectTag(groupIndex: Int, leftIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-left-select-$groupIndex-$leftIndex" else "matching-left-select-$leftIndex"
+
+private fun matchingRightAssignTag(groupIndex: Int, rightIndex: Int, grouped: Boolean): String =
+    if (grouped) "matching-right-assign-$groupIndex-$rightIndex" else "matching-right-assign-$rightIndex"
