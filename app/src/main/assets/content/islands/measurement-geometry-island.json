@@ -46,6 +46,12 @@
       "title": "三段换算跑道",
       "summary": "把三组长度换算结果依次填进空格。",
       "questionFamily": "FILL_BLANK"
+    },
+    {
+      "id": "measure-fill-05",
+      "title": "数字单位混合桥",
+      "summary": "把数字和单位分别填进对应空格。",
+      "questionFamily": "FILL_BLANK"
     }
   ]
 }

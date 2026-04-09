@@ -370,11 +370,49 @@ class LevelAnswerPaneTest {
         }
 
         composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-0"))
         composeRule.onNodeWithTag("fill-blank-slot-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-1"))
         composeRule.onNodeWithTag("fill-blank-slot-1").assertIsDisplayed()
         composeRule.onNodeWithTag("renderer-fill-blank")
             .performScrollToNode(hasTestTag("fill-blank-submit"))
         composeRule.onNodeWithTag("fill-blank-submit").assertIsDisplayed()
+    }
+
+    @Test
+    fun fillBlankQuestion_showsMixedSlotCueChips() {
+        val question = Question(
+            prompt = "把长度换算补完整。",
+            choices = emptyList(),
+            correctChoice = "300,米,90",
+            hint = "先看每个空格需要填数字还是单位。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", "00 厘米，9 分米 = ", " 厘米。"),
+            blankOptions = listOf("米", "90", "300", "厘米"),
+            blankSlotKinds = listOf("number", "unit", "number")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-0"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-1"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-1").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-2"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-2").assertIsDisplayed()
     }
 
     @Test

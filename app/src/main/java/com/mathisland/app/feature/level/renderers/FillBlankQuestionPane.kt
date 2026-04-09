@@ -36,12 +36,14 @@ fun FillBlankQuestionPane(
     actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
-    var fillBlankState by remember(question.prompt, question.blankParts, question.blankOptions) {
+    var fillBlankState by remember(question.prompt, question.blankParts, question.blankOptions, question.blankSlotKinds) {
         mutableStateOf(FillBlankAnswerState())
     }
     val parts = question.blankParts
     val options = question.blankOptions
     val slotCount = (parts.size - 1).coerceAtLeast(0)
+    val slotKinds = question.blankSlotKinds.takeIf { it.size == slotCount }
+        ?: List(slotCount) { "number" }
     val canSubmit = actionState.enabled && slotCount > 0 && fillBlankState.isComplete(slotCount)
 
     RendererPanelStack(
@@ -91,6 +93,9 @@ fun FillBlankQuestionPane(
                 ) {
                     repeat(slotCount) { slotIndex ->
                         val assignedOptionIndex = fillBlankState.assignments[slotIndex]
+                        val slotKind = slotKinds[slotIndex]
+                        val assignedOption = assignedOptionIndex?.let(options::get)
+                        val mismatch = assignedOption != null && optionKindFor(assignedOption) != slotKind
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
@@ -107,12 +112,12 @@ fun FillBlankQuestionPane(
                                     .testTag("fill-blank-slot-$slotIndex"),
                                 level = SurfaceLevel.Secondary,
                                 containerColor = if (assignedOptionIndex != null) {
-                                    RendererTokens.FillBlankFilledSurface
+                                    if (mismatch) RendererTokens.OptionSurface else RendererTokens.FillBlankFilledSurface
                                 } else {
                                     RendererTokens.FillBlankSlotSurface
                                 },
                                 borderColor = if (assignedOptionIndex != null) {
-                                    RendererTokens.FillBlankFilledBorder
+                                    if (mismatch) MaterialTheme.colorScheme.error else RendererTokens.FillBlankFilledBorder
                                 } else {
                                     RendererTokens.FillBlankSlotBorder
                                 },
@@ -126,13 +131,18 @@ fun FillBlankQuestionPane(
                                 ) {
                                     if (assignedOptionIndex != null) {
                                         StatusChip(
-                                            text = "已填入",
-                                            variant = StatusVariant.Success,
+                                            text = if (mismatch) "类型不符" else "已填入",
+                                            variant = if (mismatch) StatusVariant.Caution else StatusVariant.Success,
                                             modifier = Modifier.testTag("fill-blank-slot-chip-$slotIndex")
                                         )
                                     }
+                                    StatusChip(
+                                        text = slotKindLabelFor(slotKind),
+                                        variant = StatusVariant.Neutral,
+                                        modifier = Modifier.testTag("fill-blank-slot-kind-$slotIndex")
+                                    )
                                     Text(
-                                        text = assignedOptionIndex?.let { options[it] } ?: "点这里填空",
+                                        text = assignedOption ?: "点这里填空",
                                         style = TypographyTokens.FeatureTitle,
                                         fontWeight = FontWeight.SemiBold
                                     )
@@ -191,6 +201,11 @@ fun FillBlankQuestionPane(
                                     modifier = Modifier.testTag("fill-blank-option-chip-$index")
                                 )
                             }
+                            StatusChip(
+                                text = slotKindLabelFor(optionKindFor(option)),
+                                variant = StatusVariant.Neutral,
+                                modifier = Modifier.testTag("fill-blank-option-kind-$index")
+                            )
                             Text(
                                 text = option,
                                 style = TypographyTokens.FeatureTitle,
@@ -243,4 +258,12 @@ fun FillBlankQuestionPane(
             }
         }
     }
+}
+
+private fun optionKindFor(option: String): String =
+    if (option.all { it.isDigit() }) "number" else "unit"
+
+private fun slotKindLabelFor(kind: String): String = when (kind) {
+    "unit" -> "填单位"
+    else -> "填数字"
 }

@@ -189,6 +189,18 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             blankOptions = listOf("90", "6", "400", "600")
         )
     ),
+    "measure-fill-05" to listOf(
+        Question(
+            prompt = "把数字和单位补完整。",
+            choices = emptyList(),
+            correctChoice = "300,米,90",
+            hint = "先看这个空格需要填数字还是单位。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", "00 厘米，9 分米 = ", " 厘米。"),
+            blankOptions = listOf("米", "90", "300", "厘米"),
+            blankSlotKinds = listOf("number", "unit", "number")
+        )
+    ),
     "division-steps-01" to listOf(
         Question(
             prompt = "按步骤完成平均分。",

@@ -257,6 +257,18 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun fillBlankMixedLesson_flowCompletesAndReturnsToMap() {
+        clearCalculationIsland()
+
+        openLessonFromMap("start-measure-fill-05")
+        answerFillBlankSequence(listOf(2 to 0, 0 to 1, 1 to 2))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun multiStepLesson_flowCompletesAndReturnsToMap() {
         unlockBigNumberIsland()
 
@@ -727,7 +739,8 @@ class MathIslandTabletFlowTest {
             "measure-fill-01",
             "measure-fill-02",
             "measure-fill-03",
-            "measure-fill-04"
+            "measure-fill-04",
+            "measure-fill-05"
         )
 
         val multiplicationLessonIds = setOf(

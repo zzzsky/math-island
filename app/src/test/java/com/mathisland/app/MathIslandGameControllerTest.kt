@@ -288,4 +288,18 @@ class MathIslandGameControllerTest {
         assertEquals(3, multiStepLesson.questions.first().stepPrompts.size)
         assertEquals(3, multiStepLesson.questions.first().stepChoices.size)
     }
+
+    @Test
+    fun mixedFillBlankLesson_resolvesSlotKinds() {
+        val lesson = curriculumController.islands
+            .first { it.id == "measurement-geometry-island" }
+            .lessons
+            .first { it.id == "measure-fill-05" }
+
+        assertEquals("fill-blank", lesson.questions.first().family)
+        assertEquals(
+            listOf("number", "unit", "number"),
+            lesson.questions.first().blankSlotKinds
+        )
+    }
 }

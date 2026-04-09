@@ -7,6 +7,7 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
@@ -110,5 +111,57 @@ class FillBlankQuestionPaneTest {
         composeRule.onNodeWithTag("fill-blank-submit").assertIsEnabled().performClick()
 
         assertEquals("400,90,6", submittedAnswer)
+    }
+
+    @Test
+    fun fillBlankQuestion_showsMixedSlotKinds() {
+        var submittedAnswer: String? = null
+        val question = Question(
+            prompt = "把长度换算补完整。",
+            choices = emptyList(),
+            correctChoice = "300,米,90",
+            hint = "先看每个空格需要填数字还是单位。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", "00 厘米，9 分米 = ", " 厘米。"),
+            blankOptions = listOf("米", "90", "300", "厘米"),
+            blankSlotKinds = listOf("number", "unit", "number")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = { submittedAnswer = it }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-0"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-1"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-1").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-slot-kind-2"))
+        composeRule.onNodeWithTag("fill-blank-slot-kind-2").assertIsDisplayed()
+
+        listOf(2 to 0, 0 to 1, 1 to 2).forEach { (optionIndex, slotIndex) ->
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-option-select-$optionIndex"))
+            composeRule.onNodeWithTag("fill-blank-option-select-$optionIndex").performClick()
+            composeRule.waitForIdle()
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-slot-$slotIndex"))
+            composeRule.onNodeWithTag("fill-blank-slot-action-$slotIndex").performClick()
+            composeRule.waitForIdle()
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-submit"))
+        composeRule.onNodeWithTag("fill-blank-submit").assertIsEnabled().performClick()
+
+        assertEquals("300,米,90", submittedAnswer)
     }
 }
