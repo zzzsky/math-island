@@ -44,6 +44,7 @@ fun FillBlankQuestionPane(
     val slotCount = (parts.size - 1).coerceAtLeast(0)
     val slotKinds = question.blankSlotKinds.takeIf { it.size == slotCount }
         ?: List(slotCount) { "number" }
+    val optionKinds = options.map(::optionKindFor)
     val canSubmit = actionState.enabled && slotCount > 0 && fillBlankState.isComplete(slotCount)
 
     RendererPanelStack(
@@ -56,8 +57,8 @@ fun FillBlankQuestionPane(
         },
         context = {
             RendererGuidanceCard(
-                title = "先把数字放进空格",
-                body = "先选下方数字，再点空格完成填空。",
+                title = "先看空格类型",
+                body = "先选空格或选项，再到对应分区完成填空。",
                 badgeText = lessonGuidanceBadgeTextFor(actionState.phase),
                 badgeVariant = lessonGuidanceBadgeVariantFor(actionState.phase),
                 containerColor = rendererStageContainerColorFor(actionState.stageTone())
@@ -94,8 +95,10 @@ fun FillBlankQuestionPane(
                     repeat(slotCount) { slotIndex ->
                         val assignedOptionIndex = fillBlankState.assignments[slotIndex]
                         val slotKind = slotKinds[slotIndex]
+                        val slotSelected = fillBlankState.selectedSlotIndex == slotIndex
+                        val selectedOptionKind = fillBlankState.selectedOptionIndex?.let { optionKinds[it] }
                         val assignedOption = assignedOptionIndex?.let(options::get)
-                        val mismatch = assignedOption != null && optionKindFor(assignedOption) != slotKind
+                        val mismatch = assignedOption != null && optionKinds[assignedOptionIndex] != slotKind
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
@@ -113,11 +116,15 @@ fun FillBlankQuestionPane(
                                 level = SurfaceLevel.Secondary,
                                 containerColor = if (assignedOptionIndex != null) {
                                     if (mismatch) RendererTokens.OptionSurface else RendererTokens.FillBlankFilledSurface
+                                } else if (slotSelected || selectedOptionKind == slotKind) {
+                                    RendererTokens.FillBlankSurface
                                 } else {
                                     RendererTokens.FillBlankSlotSurface
                                 },
                                 borderColor = if (assignedOptionIndex != null) {
                                     if (mismatch) MaterialTheme.colorScheme.error else RendererTokens.FillBlankFilledBorder
+                                } else if (slotSelected || selectedOptionKind == slotKind) {
+                                    MaterialTheme.colorScheme.primary
                                 } else {
                                     RendererTokens.FillBlankSlotBorder
                                 },
@@ -147,11 +154,21 @@ fun FillBlankQuestionPane(
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     ActionButton(
-                                        text = if (fillBlankState.selectedOptionIndex != null) "填到这里" else "等待选择",
-                                        onClick = { fillBlankState = fillBlankState.assignTo(slotIndex) },
-                                        enabled = fillBlankState.selectedOptionIndex != null && actionState.enabled,
+                                        text = when {
+                                            fillBlankState.selectedOptionIndex != null -> "填到这里"
+                                            slotSelected -> "已选空格"
+                                            else -> "先选这个空格"
+                                        },
+                                        onClick = {
+                                            fillBlankState = if (fillBlankState.selectedOptionIndex != null) {
+                                                fillBlankState.assignTo(slotIndex)
+                                            } else {
+                                                fillBlankState.selectSlot(slotIndex)
+                                            }
+                                        },
+                                        enabled = actionState.enabled,
                                         modifier = Modifier.testTag("fill-blank-slot-action-$slotIndex"),
-                                        role = ActionRole.Secondary
+                                        role = if (slotSelected) ActionRole.Secondary else ActionRole.OutlinedSecondary
                                     )
                                 }
                             }
@@ -166,58 +183,100 @@ fun FillBlankQuestionPane(
                 }
             }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
-            ) {
-                options.forEachIndexed { index, option ->
-                    val selected = fillBlankState.selectedOptionIndex == index
-                    val filled = fillBlankState.assignments.values.contains(index)
-                    StoryPanelCard(
-                        modifier = Modifier.testTag("fill-blank-option-$index"),
-                        level = SurfaceLevel.Secondary,
-                        containerColor = when {
-                            filled -> RendererTokens.FillBlankFilledSurface
-                            selected -> RendererTokens.FillBlankSurface
-                            else -> RendererTokens.OptionSurface
-                        },
-                        borderColor = when {
-                            filled -> RendererTokens.FillBlankFilledBorder
-                            selected -> MaterialTheme.colorScheme.primary
-                            else -> null
-                        },
-                        shape = RadiusTokens.CardMd
+            partitionedFillBlankOptions(options, optionKinds).forEach { (kind, optionIndexes) ->
+                StoryPanelCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("fill-blank-pool-$kind"),
+                    level = SurfaceLevel.Secondary,
+                    containerColor = if (fillBlankState.selectedSlotIndex?.let(slotKinds::get) == kind ||
+                        fillBlankState.selectedOptionIndex?.let { optionKinds[it] } == kind
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(SpacingTokens.Lg),
-                            verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
-                        ) {
-                            if (filled) {
-                                StatusChip(
-                                    text = "已使用",
-                                    variant = StatusVariant.Success,
-                                    modifier = Modifier.testTag("fill-blank-option-chip-$index")
-                                )
+                        RendererTokens.FillBlankSurface
+                    } else {
+                        RendererTokens.OptionSurface
+                    },
+                    borderColor = if (fillBlankState.selectedSlotIndex?.let(slotKinds::get) == kind ||
+                        fillBlankState.selectedOptionIndex?.let { optionKinds[it] } == kind
+                    ) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        null
+                    },
+                    shape = RadiusTokens.CardMd
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(SpacingTokens.Lg),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                    ) {
+                        StatusChip(
+                            text = slotKindLabelFor(kind),
+                            variant = if (fillBlankState.selectedSlotIndex?.let(slotKinds::get) == kind ||
+                                fillBlankState.selectedOptionIndex?.let { optionKinds[it] } == kind
+                            ) {
+                                StatusVariant.Highlight
+                            } else {
+                                StatusVariant.Neutral
+                            },
+                            modifier = Modifier.testTag("fill-blank-pool-chip-$kind")
+                        )
+                        optionIndexes.forEach { index ->
+                            val option = options[index]
+                            val selected = fillBlankState.selectedOptionIndex == index
+                            val filled = fillBlankState.assignments.values.contains(index)
+                            StoryPanelCard(
+                                modifier = Modifier.testTag("fill-blank-option-$index"),
+                                level = SurfaceLevel.Secondary,
+                                containerColor = when {
+                                    filled -> RendererTokens.FillBlankFilledSurface
+                                    selected -> RendererTokens.FillBlankSurface
+                                    else -> RendererTokens.OptionSurface
+                                },
+                                borderColor = when {
+                                    filled -> RendererTokens.FillBlankFilledBorder
+                                    selected -> MaterialTheme.colorScheme.primary
+                                    else -> null
+                                },
+                                shape = RadiusTokens.CardMd
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(SpacingTokens.Lg),
+                                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                                ) {
+                                    if (filled) {
+                                        StatusChip(
+                                            text = "已使用",
+                                            variant = StatusVariant.Success,
+                                            modifier = Modifier.testTag("fill-blank-option-chip-$index")
+                                        )
+                                    }
+                                    StatusChip(
+                                        text = slotKindLabelFor(kind),
+                                        variant = StatusVariant.Neutral,
+                                        modifier = Modifier.testTag("fill-blank-option-kind-$index")
+                                    )
+                                    Text(
+                                        text = option,
+                                        style = TypographyTokens.FeatureTitle,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    ActionButton(
+                                        text = when {
+                                            selected -> "已选中"
+                                            fillBlankState.selectedSlotIndex != null -> "填入已选空格"
+                                            else -> "选中后填空"
+                                        },
+                                        onClick = { fillBlankState = fillBlankState.assignSelected(index) },
+                                        modifier = Modifier.testTag("fill-blank-option-select-$index"),
+                                        role = if (selected) ActionRole.Secondary else ActionRole.OutlinedSecondary,
+                                        enabled = actionState.enabled
+                                    )
+                                }
                             }
-                            StatusChip(
-                                text = slotKindLabelFor(optionKindFor(option)),
-                                variant = StatusVariant.Neutral,
-                                modifier = Modifier.testTag("fill-blank-option-kind-$index")
-                            )
-                            Text(
-                                text = option,
-                                style = TypographyTokens.FeatureTitle,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            ActionButton(
-                                text = if (selected) "已选中" else "选中后填空",
-                                onClick = { fillBlankState = fillBlankState.selectOption(index) },
-                                modifier = Modifier.testTag("fill-blank-option-select-$index"),
-                                role = if (selected) ActionRole.Secondary else ActionRole.OutlinedSecondary,
-                                enabled = actionState.enabled
-                            )
                         }
                     }
                 }
@@ -262,6 +321,15 @@ fun FillBlankQuestionPane(
 
 private fun optionKindFor(option: String): String =
     if (option.all { it.isDigit() }) "number" else "unit"
+
+private fun partitionedFillBlankOptions(
+    options: List<String>,
+    optionKinds: List<String>
+): List<Pair<String, List<Int>>> =
+    listOf("number", "unit").mapNotNull { kind ->
+        val indexes = optionKinds.indices.filter { optionKinds[it] == kind }
+        indexes.takeIf { it.isNotEmpty() }?.let { kind to it }
+    }
 
 private fun slotKindLabelFor(kind: String): String = when (kind) {
     "unit" -> "填单位"

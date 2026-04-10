@@ -258,6 +258,18 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             blankSlotKinds = listOf("number", "unit", "number")
         )
     ),
+    "measure-fill-06" to listOf(
+        Question(
+            prompt = "按分区选项池把长度换算补完整。",
+            choices = emptyList(),
+            correctChoice = "米,300,分米,70",
+            hint = "先看空格要填数字还是单位，再去对应分区找答案。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", " 厘米，7 ", " = ", " 厘米。"),
+            blankOptions = listOf("分米", "70", "米", "300", "厘米"),
+            blankSlotKinds = listOf("unit", "number", "unit", "number")
+        )
+    ),
     "division-steps-01" to listOf(
         Question(
             prompt = "按步骤完成平均分。",

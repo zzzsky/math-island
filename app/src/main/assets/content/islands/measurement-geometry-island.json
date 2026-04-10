@@ -52,6 +52,12 @@
       "title": "数字单位混合桥",
       "summary": "把数字和单位分别填进对应空格。",
       "questionFamily": "FILL_BLANK"
+    },
+    {
+      "id": "measure-fill-06",
+      "title": "分区填空总检查",
+      "summary": "按数字池和单位池分别完成多空位换算。",
+      "questionFamily": "FILL_BLANK"
     }
   ]
 }

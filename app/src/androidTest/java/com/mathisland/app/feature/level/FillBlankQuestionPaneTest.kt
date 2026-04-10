@@ -164,4 +164,52 @@ class FillBlankQuestionPaneTest {
 
         assertEquals("300,米,90", submittedAnswer)
     }
+
+    @Test
+    fun fillBlankQuestion_showsPartitionedPoolsAndSupportsSlotFirstFlow() {
+        var submittedAnswer: String? = null
+        val question = Question(
+            prompt = "按分区选项池把长度换算补完整。",
+            choices = emptyList(),
+            correctChoice = "米,300,分米,70",
+            hint = "先看空格要填数字还是单位，再去对应分区找答案。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", " 厘米，7 ", " = ", " 厘米。"),
+            blankOptions = listOf("分米", "70", "米", "300", "厘米"),
+            blankSlotKinds = listOf("unit", "number", "unit", "number")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = { submittedAnswer = it }
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-pool-number"))
+        composeRule.onNodeWithTag("fill-blank-pool-number").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-pool-unit"))
+        composeRule.onNodeWithTag("fill-blank-pool-unit").assertIsDisplayed()
+
+        listOf(0 to 2, 1 to 3, 2 to 0, 3 to 1).forEach { (slotIndex, optionIndex) ->
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-slot-action-$slotIndex"))
+            composeRule.onNodeWithTag("fill-blank-slot-action-$slotIndex").performClick()
+            composeRule.waitForIdle()
+            composeRule.onNodeWithTag("renderer-fill-blank")
+                .performScrollToNode(hasTestTag("fill-blank-option-select-$optionIndex"))
+            composeRule.onNodeWithTag("fill-blank-option-select-$optionIndex").performClick()
+            composeRule.waitForIdle()
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-submit"))
+        composeRule.onNodeWithTag("fill-blank-submit").assertIsEnabled().performClick()
+
+        assertEquals("米,300,分米,70", submittedAnswer)
+    }
 }

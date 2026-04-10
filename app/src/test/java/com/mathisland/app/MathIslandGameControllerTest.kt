@@ -305,7 +305,9 @@ class MathIslandGameControllerTest {
             "measure-fill-01",
             "measure-fill-02",
             "measure-fill-03",
-            "measure-fill-04"
+            "measure-fill-04",
+            "measure-fill-05",
+            "measure-fill-06"
         )))
         assertTrue(divisionLessons.containsAll(listOf(
             "division-steps-01",
@@ -351,5 +353,20 @@ class MathIslandGameControllerTest {
             listOf("number", "unit", "number"),
             lesson.questions.first().blankSlotKinds
         )
+    }
+
+    @Test
+    fun partitionedFillBlankLesson_resolvesAdvancedSlotKinds() {
+        val lesson = curriculumController.islands
+            .first { it.id == "measurement-geometry-island" }
+            .lessons
+            .first { it.id == "measure-fill-06" }
+
+        assertEquals("fill-blank", lesson.questions.first().family)
+        assertEquals(
+            listOf("unit", "number", "unit", "number"),
+            lesson.questions.first().blankSlotKinds
+        )
+        assertEquals("米,300,分米,70", lesson.questions.first().correctChoice)
     }
 }

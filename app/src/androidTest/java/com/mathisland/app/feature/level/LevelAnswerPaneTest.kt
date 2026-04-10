@@ -513,6 +513,37 @@ class LevelAnswerPaneTest {
     }
 
     @Test
+    fun fillBlankQuestion_showsPartitionedPools() {
+        val question = Question(
+            prompt = "按分区选项池把长度换算补完整。",
+            choices = emptyList(),
+            correctChoice = "米,300,分米,70",
+            hint = "先看空格要填数字还是单位，再去对应分区找答案。",
+            family = "fill-blank",
+            blankParts = listOf("3 ", " = ", " 厘米，7 ", " = ", " 厘米。"),
+            blankOptions = listOf("分米", "70", "米", "300", "厘米"),
+            blankSlotKinds = listOf("unit", "number", "unit", "number")
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-fill-blank").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-pool-number"))
+        composeRule.onNodeWithTag("fill-blank-pool-number").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-fill-blank")
+            .performScrollToNode(hasTestTag("fill-blank-pool-unit"))
+        composeRule.onNodeWithTag("fill-blank-pool-unit").assertIsDisplayed()
+    }
+
+    @Test
     fun multiStepQuestion_usesMultiStepRenderer() {
         val question = Question(
             prompt = "按步骤完成平均分。",

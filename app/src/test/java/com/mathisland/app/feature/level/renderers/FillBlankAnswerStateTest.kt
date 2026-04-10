@@ -35,6 +35,17 @@ class FillBlankAnswerStateTest {
     }
 
     @Test
+    fun assignSelected_supportsSlotFirstFlow() {
+        val state = FillBlankAnswerState()
+            .selectSlot(1)
+            .assignSelected(0)
+
+        assertEquals(mapOf(1 to 0), state.assignments)
+        assertEquals(null, state.selectedSlotIndex)
+        assertEquals(null, state.selectedOptionIndex)
+    }
+
+    @Test
     fun fillBlankRendererType_isMapped() {
         assertEquals(QuestionRendererType.FILL_BLANK, rendererTypeFor("fill-blank"))
         assertTrue(FillBlankAnswerState(assignments = mapOf(0 to 0, 1 to 1)).isComplete(2))
