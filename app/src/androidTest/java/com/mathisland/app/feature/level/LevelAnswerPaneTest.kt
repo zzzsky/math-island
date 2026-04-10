@@ -627,4 +627,62 @@ class LevelAnswerPaneTest {
         composeRule.waitForIdle()
         composeRule.onNodeWithText("第二步：18 ÷ 4 的结果是什么？").assertIsDisplayed()
     }
+
+    @Test
+    fun multiStepConditionalQuestion_canRenderSharedFinalBranchPrompt() {
+        val question = Question(
+            prompt = "按条件步骤完成装盒判断。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子",
+            hint = "先判断有没有余数，再走对应步骤，最后收束到同一个判断。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步：先判断会不会有剩余？", "第二步", "第三步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("占位")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "step-3"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "exact-step-2" to listOf(StepBranchRule("*", "shared-final-step"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：14 ÷ 3 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是4余2", "商是5余1"),
+                "exact-step-2" to listOf("商是4", "商是3"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子", "6个盒子")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-1"))
+        composeRule.onNodeWithTag("multi-step-choice-1").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText("第二步：12 ÷ 3 的结果是什么？").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-0"))
+        composeRule.onNodeWithTag("multi-step-choice-0").performClick()
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText("第三步：现在至少要准备几个盒子？").assertIsDisplayed()
+    }
 }

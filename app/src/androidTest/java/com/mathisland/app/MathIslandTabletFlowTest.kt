@@ -353,6 +353,18 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun multiStepConvergedConditionalLesson_flowCompletesAndReturnsToMap() {
+        unlockBigNumberIsland()
+
+        openLessonFromMap("start-division-steps-06")
+        answerMultiStepSequence(listOf(1, 0, 0))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun challengeSprintLesson_usesDistinctQuestionSet() {
         unlockChallengeIsland()
 
@@ -861,7 +873,8 @@ class MathIslandTabletFlowTest {
             "division-steps-02",
             "division-steps-03",
             "division-steps-04",
-            "division-steps-05"
+            "division-steps-05",
+            "division-steps-06"
         )
 
         val bigNumberLessonIds = setOf(

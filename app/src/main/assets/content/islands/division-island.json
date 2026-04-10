@@ -52,6 +52,12 @@
       "title": "余数分支码头",
       "summary": "先判断有没有余数，再进入不同的后续步骤。",
       "questionFamily": "MULTI_STEP"
+    },
+    {
+      "id": "division-steps-06",
+      "title": "收束装盒码头",
+      "summary": "第二步按条件分支，第三步收束到统一的装盒判断。",
+      "questionFamily": "MULTI_STEP"
     }
   ]
 }

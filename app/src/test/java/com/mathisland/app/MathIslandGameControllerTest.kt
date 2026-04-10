@@ -279,6 +279,32 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun convergedConditionalMultiStepLesson_resolvesSharedFinalBranchMetadata() {
+        val lesson = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .first { it.id == "division-steps-06" }
+
+        assertEquals("multi-step", lesson.questions.first().family)
+        assertEquals(
+            listOf("branch-start", "step-2", "step-3"),
+            lesson.questions.first().stepBranchKeys
+        )
+        assertEquals(
+            "shared-final-step",
+            lesson.questions.first().stepBranchRules.getValue("remainder-step-2").first().nextBranchKey
+        )
+        assertEquals(
+            "shared-final-step",
+            lesson.questions.first().stepBranchRules.getValue("exact-step-2").first().nextBranchKey
+        )
+        assertEquals(
+            "第三步：现在至少要准备几个盒子？",
+            lesson.questions.first().stepBranchPrompts["shared-final-step"]
+        )
+    }
+
+    @Test
     fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
         val classificationLessons = curriculumController.islands
             .first { it.id == "classification-island" }
@@ -314,7 +340,8 @@ class MathIslandGameControllerTest {
             "division-steps-02",
             "division-steps-03",
             "division-steps-04",
-            "division-steps-05"
+            "division-steps-05",
+            "division-steps-06"
         )))
     }
 

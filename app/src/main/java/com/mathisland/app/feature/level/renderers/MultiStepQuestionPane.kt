@@ -36,7 +36,15 @@ fun MultiStepQuestionPane(
     actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
-    var multiStepState by remember(question.prompt, question.stepPrompts, question.stepChoices) {
+    var multiStepState by remember(
+        question.prompt,
+        question.stepPrompts,
+        question.stepChoices,
+        question.stepBranchKeys,
+        question.stepBranchRules,
+        question.stepBranchPrompts,
+        question.stepBranchChoices
+    ) {
         mutableStateOf(MultiStepAnswerState())
     }
     val stepCount = stepCountFor(question)

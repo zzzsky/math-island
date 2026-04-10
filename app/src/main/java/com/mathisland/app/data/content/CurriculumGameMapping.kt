@@ -391,6 +391,48 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 "add-step-3" to listOf("回到有没有余数的判断", "直接结束", "去做乘法")
             )
         )
+    ),
+    "division-steps-06" to listOf(
+        Question(
+            prompt = "按条件步骤完成装盒判断。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子",
+            hint = "先判断有没有余数，再走对应步骤，最后收束到同一个装盒判断。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：先判断这次平均分会不会有剩余？",
+                "第二步",
+                "第三步"
+            ),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("占位")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "step-3"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(
+                    StepBranchRule("*", "shared-final-step")
+                ),
+                "exact-step-2" to listOf(
+                    StepBranchRule("*", "shared-final-step")
+                )
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：14 ÷ 3 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是4余2", "商是5余1", "商是3余2"),
+                "exact-step-2" to listOf("商是4", "商是3", "商是5"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子", "6个盒子")
+            )
+        )
     )
 )
 
