@@ -7,6 +7,8 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -58,15 +60,13 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-0"))
         composeRule.onNodeWithTag("multi-step-choice-0").performClick()
-        composeRule.waitForIdle()
-        composeRule.onNodeWithTag("renderer-multi-step")
-            .performScrollToNode(hasText("第二步：每只小猴分到几个？"))
+        waitForText("第二步：每只小猴分到几个？")
         composeRule.onNodeWithText("第二步：每只小猴分到几个？").assertIsDisplayed()
 
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-1"))
         composeRule.onNodeWithTag("multi-step-choice-1").performClick()
-        composeRule.waitForIdle()
+        waitForTagToDisappear("multi-step-stage-confirming")
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-submit"))
         composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
@@ -111,11 +111,12 @@ class MultiStepQuestionPaneTest {
             composeRule.onNodeWithTag("renderer-multi-step")
                 .performScrollToNode(hasTestTag("multi-step-choice-$choiceIndex"))
             composeRule.onNodeWithTag("multi-step-choice-$choiceIndex").performClick()
-            composeRule.waitForIdle()
             if (index == 0) {
+                waitForText("第二步：17 ÷ 3 的结果是什么？")
                 composeRule.onNodeWithText("第二步：17 ÷ 3 的结果是什么？").assertIsDisplayed()
             }
             if (index == 1) {
+                waitForText("第三步：至少需要几个袋子？")
                 composeRule.onNodeWithText("第三步：至少需要几个袋子？").assertIsDisplayed()
             }
         }
@@ -184,19 +185,19 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-0"))
         composeRule.onNodeWithTag("multi-step-choice-0").performClick()
-        composeRule.waitForIdle()
+        waitForText("第二步：18 ÷ 4 的结果是什么？")
         composeRule.onNodeWithText("第二步：18 ÷ 4 的结果是什么？").assertIsDisplayed()
 
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-0"))
         composeRule.onNodeWithTag("multi-step-choice-0").performClick()
-        composeRule.waitForIdle()
+        waitForText("第三步：至少需要几个袋子？")
         composeRule.onNodeWithText("第三步：至少需要几个袋子？").assertIsDisplayed()
 
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-1"))
         composeRule.onNodeWithTag("multi-step-choice-1").performClick()
-        composeRule.waitForIdle()
+        waitForTagToDisappear("multi-step-stage-confirming")
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-submit"))
         composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
@@ -253,19 +254,19 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-1"))
         composeRule.onNodeWithTag("multi-step-choice-1").performClick()
-        composeRule.waitForIdle()
+        waitForText("第二步：12 ÷ 3 的结果是什么？")
         composeRule.onNodeWithText("第二步：12 ÷ 3 的结果是什么？").assertIsDisplayed()
 
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-0"))
         composeRule.onNodeWithTag("multi-step-choice-0").performClick()
-        composeRule.waitForIdle()
+        waitForText("第三步：现在至少要准备几个盒子？")
         composeRule.onNodeWithText("第三步：现在至少要准备几个盒子？").assertIsDisplayed()
 
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-0"))
         composeRule.onNodeWithTag("multi-step-choice-0").performClick()
-        composeRule.waitForIdle()
+        waitForTagToDisappear("multi-step-stage-confirming")
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-submit"))
         composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
@@ -340,7 +341,7 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-choice-1"))
         composeRule.onNodeWithTag("multi-step-choice-1").performClick()
-        composeRule.waitForIdle()
+        waitForText("整除路线")
         composeRule.onNodeWithText("整除路线").assertIsDisplayed()
         composeRule.onNodeWithText("直接说出整除后的商。").assertIsDisplayed()
 
@@ -348,7 +349,7 @@ class MultiStepQuestionPaneTest {
             composeRule.onNodeWithTag("renderer-multi-step")
                 .performScrollToNode(hasTestTag("multi-step-choice-$choiceIndex"))
             composeRule.onNodeWithTag("multi-step-choice-$choiceIndex").performClick()
-            composeRule.waitForIdle()
+            waitForTagToDisappear("multi-step-stage-confirming")
         }
 
         composeRule.onNodeWithText("分支判断: 正好分完").assertIsDisplayed()
@@ -360,5 +361,56 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithTag("multi-step-submit").assertIsEnabled().performClick()
 
         assertEquals("正好分完,商是4,4个盒子,正好装完，不用多准备", submittedAnswer)
+    }
+
+    @Test
+    fun multiStepQuestion_showsConfirmationStateBeforeAdvancing() {
+        val question = Question(
+            prompt = "按步骤完成平均分。",
+            choices = emptyList(),
+            correctChoice = "平均分给 3 只小猴,每只 4 个",
+            hint = "先想平均分，再判断每份有几个。",
+            family = "multi-step",
+            stepPrompts = listOf(
+                "第一步：先判断这题要怎么分？",
+                "第二步：每只小猴分到几个？"
+            ),
+            stepChoices = listOf(
+                listOf("平均分给 3 只小猴", "先把 12 和 3 相加"),
+                listOf("每只 3 个", "每只 4 个")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-0"))
+        composeRule.onNodeWithTag("multi-step-choice-0").performClick()
+
+        composeRule.onNodeWithTag("multi-step-confirmed-chip-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("multi-step-stage-confirming").assertIsDisplayed()
+        composeRule.onNodeWithTag("multi-step-progress-chip-0").assertIsDisplayed()
+
+        waitForText("第二步：每只小猴分到几个？")
+        composeRule.onNodeWithText("第二步：每只小猴分到几个？").assertIsDisplayed()
+    }
+
+    private fun waitForText(text: String) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    private fun waitForTagToDisappear(tag: String) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty()
+        }
     }
 }

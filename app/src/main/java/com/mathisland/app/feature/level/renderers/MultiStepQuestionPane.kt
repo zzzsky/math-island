@@ -1,5 +1,8 @@
 package com.mathisland.app.feature.level.renderers
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,11 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.model.Question
@@ -28,6 +33,16 @@ import com.mathisland.app.ui.theme.StatusVariant
 import com.mathisland.app.ui.theme.SurfaceLevel
 import com.mathisland.app.ui.theme.TextToneTokens
 import com.mathisland.app.ui.theme.TypographyTokens
+import kotlinx.coroutines.delay
+
+private const val MultiStepConfirmationDelayMillis = 320
+
+private data class PendingMultiStepTransition(
+    val stepIndex: Int,
+    val choiceIndex: Int,
+    val answer: String,
+    val nextBranchKey: String?
+)
 
 @Composable
 fun MultiStepQuestionPane(
@@ -49,13 +64,48 @@ fun MultiStepQuestionPane(
     ) {
         mutableStateOf(MultiStepAnswerState())
     }
+    var pendingTransition by remember(
+        question.prompt,
+        question.stepPrompts,
+        question.stepChoices,
+        question.stepBranchKeys,
+        question.stepBranchRules,
+        question.stepBranchPrompts,
+        question.stepBranchChoices,
+        question.stepPresentations,
+        question.stepBranchPresentations
+    ) {
+        mutableStateOf<PendingMultiStepTransition?>(null)
+    }
     val stepCount = stepCountFor(question)
     val completed = multiStepState.isComplete(stepCount)
     val currentStepIndex = multiStepState.currentStepIndex(stepCount)
     val currentPrompt = multiStepPromptFor(question, multiStepState)
     val currentChoices = multiStepChoicesFor(question, multiStepState)
     val currentPresentation = multiStepPresentationFor(question, multiStepState)
-    val canSubmit = actionState.enabled && completed
+    val transitionInFlight = pendingTransition != null
+    val stageScale by animateFloatAsState(
+        targetValue = if (transitionInFlight) 0.985f else 1f,
+        animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing),
+        label = "multiStepStageScale"
+    )
+    val stageAlpha by animateFloatAsState(
+        targetValue = if (transitionInFlight) 0.94f else 1f,
+        animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing),
+        label = "multiStepStageAlpha"
+    )
+    val canSubmit = actionState.enabled && completed && !transitionInFlight
+
+    LaunchedEffect(pendingTransition, stepCount) {
+        val transition = pendingTransition ?: return@LaunchedEffect
+        delay(MultiStepConfirmationDelayMillis.toLong())
+        multiStepState = multiStepState.advance(
+            answer = transition.answer,
+            stepCount = stepCount,
+            nextBranchKey = transition.nextBranchKey
+        )
+        pendingTransition = null
+    }
 
     RendererPanelStack(
         rendererTag = "renderer-multi-step",
@@ -112,7 +162,8 @@ fun MultiStepQuestionPane(
                         horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                     ) {
                         repeat(stepCount) { index ->
-                            val isDone = index < multiStepState.answers.size
+                            val isDone = index < multiStepState.answers.size ||
+                                pendingTransition?.stepIndex == index
                             StatusChip(
                                 text = if (isDone) "步骤 ${index + 1}" else "待完成",
                                 variant = if (isDone) StatusVariant.Success else StatusVariant.Neutral,
@@ -126,6 +177,11 @@ fun MultiStepQuestionPane(
             StoryPanelCard(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .graphicsLayer {
+                        scaleX = stageScale
+                        scaleY = stageScale
+                        alpha = stageAlpha
+                    }
                     .testTag("multi-step-stage-card"),
                 level = SurfaceLevel.Secondary,
                 containerColor = if (completed) {
@@ -152,6 +208,14 @@ fun MultiStepQuestionPane(
                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                         modifier = Modifier.testTag("multi-step-stage-title")
                     )
+
+                    if (transitionInFlight) {
+                        StatusChip(
+                            text = "已确认",
+                            variant = StatusVariant.Success,
+                            modifier = Modifier.testTag("multi-step-stage-confirming")
+                        )
+                    }
 
                     if (!completed && currentPresentation.supportText.isNotBlank()) {
                         Text(
@@ -184,10 +248,20 @@ fun MultiStepQuestionPane(
                         }
                     } else {
                         currentChoices.forEachIndexed { index, choice ->
+                            val isPendingSelected = pendingTransition?.choiceIndex == index
                             StoryPanelCard(
                                 modifier = Modifier.testTag("multi-step-choice-card-$index"),
                                 level = SurfaceLevel.Secondary,
-                                containerColor = RendererTokens.OptionSurface,
+                                containerColor = if (isPendingSelected) {
+                                    RendererTokens.OptionCorrectSurface
+                                } else {
+                                    RendererTokens.OptionSurface
+                                },
+                                borderColor = if (isPendingSelected) {
+                                    RendererTokens.OptionCorrectBorder
+                                } else {
+                                    null
+                                },
                                 shape = RadiusTokens.CardMd
                             ) {
                                 Column(
@@ -201,17 +275,33 @@ fun MultiStepQuestionPane(
                                         style = TypographyTokens.FeatureTitle,
                                         fontWeight = FontWeight.SemiBold
                                     )
+                                    if (isPendingSelected) {
+                                        StatusChip(
+                                            text = "已确认",
+                                            variant = StatusVariant.Success,
+                                            modifier = Modifier.testTag("multi-step-confirmed-chip-$index")
+                                        )
+                                    }
                                     ActionButton(
-                                        text = if (currentStepIndex == stepCount - 1) "完成这一步" else "进入下一步",
+                                        text = if (isPendingSelected) {
+                                            "已确认"
+                                        } else if (currentStepIndex == stepCount - 1) {
+                                            "完成这一步"
+                                        } else {
+                                            "进入下一步"
+                                        },
                                         onClick = {
-                                            multiStepState = multiStepState.advance(
-                                                answer = choice,
-                                                stepCount = stepCount,
-                                                nextBranchKey = nextBranchKeyFor(question, multiStepState, choice)
-                                            )
+                                            if (!transitionInFlight) {
+                                                pendingTransition = PendingMultiStepTransition(
+                                                    stepIndex = currentStepIndex,
+                                                    choiceIndex = index,
+                                                    answer = choice,
+                                                    nextBranchKey = nextBranchKeyFor(question, multiStepState, choice)
+                                                )
+                                            }
                                         },
                                         modifier = Modifier.testTag("multi-step-choice-$index"),
-                                        enabled = actionState.enabled,
+                                        enabled = actionState.enabled && !transitionInFlight,
                                         role = ActionRole.Primary
                                     )
                                 }
@@ -247,8 +337,11 @@ fun MultiStepQuestionPane(
                     ) {
                         ActionButton(
                             text = "重新开始",
-                            onClick = { multiStepState = multiStepState.reset() },
-                            enabled = multiStepState.answers.isNotEmpty() && actionState.enabled,
+                            onClick = {
+                                multiStepState = multiStepState.reset()
+                                pendingTransition = null
+                            },
+                            enabled = multiStepState.answers.isNotEmpty() && actionState.enabled && !transitionInFlight,
                             modifier = Modifier
                                 .weight(1f)
                                 .testTag("multi-step-reset"),

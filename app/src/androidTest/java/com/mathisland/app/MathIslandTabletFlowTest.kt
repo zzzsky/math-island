@@ -745,10 +745,20 @@ class MathIslandTabletFlowTest {
             composeRule.onNodeWithTag("renderer-multi-step")
                 .performScrollToNode(hasTestTag("multi-step-choice-$choiceIndex"))
             composeRule.onNodeWithTag("multi-step-choice-$choiceIndex").performClick()
-            composeRule.waitForIdle()
+            composeRule.waitUntil(5_000) {
+                composeRule.onAllNodesWithTag("multi-step-stage-confirming")
+                    .fetchSemanticsNodes().isEmpty()
+            }
         }
         composeRule.onNodeWithTag("renderer-multi-step")
             .performScrollToNode(hasTestTag("multi-step-submit"))
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("multi-step-submit")
+                .fetchSemanticsNodes()
+                .firstOrNull()
+                ?.config
+                ?.contains(androidx.compose.ui.semantics.SemanticsProperties.Disabled) == false
+        }
         composeRule.onNodeWithTag("multi-step-submit").performClick()
     }
 
