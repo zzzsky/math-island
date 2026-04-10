@@ -205,6 +205,22 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun multiRoundMatchingLesson_resolvesMatchingRounds() {
+        val lesson = curriculumController.islands
+            .first { it.id == "classification-island" }
+            .lessons
+            .first { it.id == "classification-match-06" }
+
+        assertEquals("matching", lesson.questions.first().family)
+        assertEquals(2, lesson.questions.first().matchingRounds.size)
+        assertEquals("第一轮：看场景选算法", lesson.questions.first().matchingRounds.first().title)
+        assertEquals(
+            "第二轮：把算法和它最适合解决的问题连起来。",
+            lesson.questions.first().matchingRounds.last().prompt
+        )
+    }
+
+    @Test
     fun measurementFillBlankLesson_resolvesFillBlankQuestions() {
         val lesson = curriculumController.islands
             .first { it.id == "measurement-geometry-island" }
@@ -282,7 +298,8 @@ class MathIslandGameControllerTest {
             "classification-match-02",
             "classification-match-03",
             "classification-match-04",
-            "classification-match-05"
+            "classification-match-05",
+            "classification-match-06"
         )))
         assertTrue(measurementLessons.containsAll(listOf(
             "measure-fill-01",

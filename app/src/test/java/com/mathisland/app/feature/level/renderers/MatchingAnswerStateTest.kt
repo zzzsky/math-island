@@ -2,6 +2,7 @@ package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.QuestionRendererType
 import com.mathisland.app.domain.model.MatchingGroup
+import com.mathisland.app.domain.model.MatchingRound
 import com.mathisland.app.rendererTypeFor
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -35,7 +36,7 @@ class MatchingAnswerStateTest {
 
         assertEquals(
             "平均分苹果=用除法,合并两堆贝壳=用加法||尺子=测长度,秤=测重量",
-            state.encodedAnswer(groups)
+            state.encodeGroupsForSingleRound(groups)
         )
     }
 
@@ -63,8 +64,88 @@ class MatchingAnswerStateTest {
             .selectLeft(0, 1)
             .assignTo(0, 1)
 
-        assertTrue(!incomplete.isComplete(groups))
-        assertTrue(complete.isComplete(groups))
+        assertTrue(!incomplete.isGroupSetComplete(groups))
+        assertTrue(complete.isGroupSetComplete(groups))
+    }
+
+    @Test
+    fun encodedAnswer_supportsMultiRoundMatching() {
+        val rounds = listOf(
+            MatchingRound(
+                title = "第一轮",
+                prompt = "场景配算法",
+                groups = listOf(
+                    MatchingGroup(
+                        title = "",
+                        leftItems = listOf("平均分苹果", "合并两堆贝壳"),
+                        rightItems = listOf("用加法", "用除法")
+                    )
+                )
+            ),
+            MatchingRound(
+                title = "第二轮",
+                prompt = "算法配作用",
+                groups = listOf(
+                    MatchingGroup(
+                        title = "",
+                        leftItems = listOf("用除法", "用加法"),
+                        rightItems = listOf("求合起来一共多少", "求每份有多少")
+                    )
+                )
+            )
+        )
+
+        val state = MatchingAnswerState()
+            .selectLeft(0, 0)
+            .assignTo(0, 1)
+            .selectLeft(0, 1)
+            .assignTo(0, 0)
+            .advanceRound(rounds)
+            .selectLeft(0, 0)
+            .assignTo(0, 1)
+            .selectLeft(0, 1)
+            .assignTo(0, 0)
+
+        assertEquals(
+            "平均分苹果=用除法,合并两堆贝壳=用加法>>>用除法=求每份有多少,用加法=求合起来一共多少",
+            state.encodeRounds(rounds)
+        )
+    }
+
+    @Test
+    fun advanceRound_movesOnlyAfterCurrentRoundCompletes() {
+        val rounds = listOf(
+            MatchingRound(
+                title = "第一轮",
+                prompt = "场景配算法",
+                groups = listOf(
+                    MatchingGroup(
+                        title = "",
+                        leftItems = listOf("平均分苹果"),
+                        rightItems = listOf("用除法")
+                    )
+                )
+            ),
+            MatchingRound(
+                title = "第二轮",
+                prompt = "算法配作用",
+                groups = listOf(
+                    MatchingGroup(
+                        title = "",
+                        leftItems = listOf("用除法"),
+                        rightItems = listOf("求每份有多少")
+                    )
+                )
+            )
+        )
+
+        val incomplete = MatchingAnswerState()
+        val complete = incomplete
+            .selectLeft(0, 0)
+            .assignTo(0, 0)
+
+        assertEquals(0, incomplete.advanceRound(rounds).currentRoundIndex)
+        assertEquals(1, complete.advanceRound(rounds).currentRoundIndex)
     }
 
     @Test
@@ -99,6 +180,10 @@ class MatchingAnswerStateTest {
     @Test
     fun matchingRendererType_isMapped() {
         assertEquals(QuestionRendererType.MATCHING, rendererTypeFor("matching"))
-        assertTrue(MatchingAnswerState().copy(assignmentsByGroup = mapOf(0 to mapOf(0 to 0, 1 to 1))).isComplete(2))
+        assertTrue(
+            MatchingAnswerState(
+                assignmentsByRound = mapOf(0 to mapOf(0 to mapOf(0 to 0, 1 to 1)))
+            ).isComplete(2)
+        )
     }
 }

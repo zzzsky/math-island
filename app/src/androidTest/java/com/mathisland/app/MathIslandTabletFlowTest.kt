@@ -224,6 +224,23 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun multiRoundMatchingLesson_flowCompletesAndReturnsToMap() {
+        unlockClassificationIsland()
+
+        openLessonFromMap("start-classification-match-06")
+        answerMultiRoundMatchingSequence(
+            listOf(
+                listOf(1, 0),
+                listOf(1, 0)
+            )
+        )
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun bigNumberLesson_showsSortSignalLights() {
         unlockBigNumberIsland()
 
@@ -639,6 +656,33 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithTag("matching-submit").performClick()
     }
 
+    private fun answerMultiRoundMatchingSequence(roundAssignments: List<List<Int>>) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag("renderer-matching").fetchSemanticsNodes().isNotEmpty()
+        }
+        roundAssignments.forEachIndexed { roundIndex, assignments ->
+            assignments.forEachIndexed { leftIndex, rightIndex ->
+                composeRule.onNodeWithTag("renderer-matching")
+                    .performScrollToNode(hasTestTag("matching-left-select-$leftIndex"))
+                composeRule.onNodeWithTag("matching-left-select-$leftIndex").performClick()
+                composeRule.waitForIdle()
+                composeRule.onNodeWithTag("renderer-matching")
+                    .performScrollToNode(hasTestTag("matching-right-assign-$rightIndex"))
+                composeRule.onNodeWithTag("matching-right-assign-$rightIndex").performClick()
+                composeRule.waitForIdle()
+            }
+            if (roundIndex < roundAssignments.lastIndex) {
+                composeRule.onNodeWithTag("renderer-matching")
+                    .performScrollToNode(hasTestTag("matching-next-round"))
+                composeRule.onNodeWithTag("matching-next-round").performClick()
+                composeRule.waitForIdle()
+            }
+        }
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-submit"))
+        composeRule.onNodeWithTag("matching-submit").performClick()
+    }
+
     private fun answerFillBlankSequence(optionToSlotAssignments: List<Pair<Int, Int>>) {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag("renderer-fill-blank").fetchSemanticsNodes().isNotEmpty()
@@ -818,7 +862,8 @@ class MathIslandTabletFlowTest {
             "classification-match-02",
             "classification-match-03",
             "classification-match-04",
-            "classification-match-05"
+            "classification-match-05",
+            "classification-match-06"
         )
     }
 }

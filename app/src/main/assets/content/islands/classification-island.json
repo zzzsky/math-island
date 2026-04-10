@@ -43,6 +43,12 @@
       "title": "双组语义配对",
       "summary": "按两个小组完成场景和工具的语义配对。",
       "questionFamily": "MATCHING"
+    },
+    {
+      "id": "classification-match-06",
+      "title": "两轮语义配对",
+      "summary": "先看场景选算法，再看算法选作用。",
+      "questionFamily": "MATCHING"
     }
   ]
 }

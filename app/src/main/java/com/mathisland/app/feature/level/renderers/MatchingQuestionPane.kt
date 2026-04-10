@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import com.mathisland.app.domain.model.MatchingGroup
+import com.mathisland.app.domain.model.MatchingRound
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.feature.level.lessonGuidanceBadgeTextFor
 import com.mathisland.app.feature.level.lessonGuidanceBadgeVariantFor
@@ -37,32 +38,33 @@ fun MatchingQuestionPane(
     actionState: RendererActionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
     onAnswer: (String) -> Unit
 ) {
-    val groups = question.matchingGroups.takeIf { it.isNotEmpty() }
-        ?: listOf(
-            MatchingGroup(
-                title = "",
-                leftItems = question.leftItems,
-                rightItems = question.rightItems
-            )
-        )
-    val hasGroupedSections = groups.size > 1
+    val rounds = matchingRoundsForQuestion(question)
     var matchingState by remember(question.prompt, question.leftItems, question.rightItems, question.matchingGroups) {
         mutableStateOf(MatchingAnswerState())
     }
-    val canSubmit = actionState.enabled && matchingState.isComplete(groups)
+    val currentRound = rounds[matchingState.currentRoundIndex]
+    val groups = currentRound.groups
+    val hasGroupedSections = groups.size > 1
+    val isFinalRound = matchingState.currentRoundIndex == rounds.lastIndex
+    val canAdvance = actionState.enabled && matchingState.canAdvanceRound(rounds)
+    val canSubmit = actionState.enabled && isFinalRound && matchingState.isRoundComplete(currentRound)
 
     RendererPanelStack(
         rendererTag = "renderer-matching",
         prompt = {
             RendererPromptCard(
-                prompt = question.prompt,
+                prompt = currentRound.prompt,
                 actionState = actionState
             )
         },
         context = {
             RendererGuidanceCard(
-                title = "先完成配对",
-                body = "先点左侧项目，再点右侧目标完成连接。",
+                title = if (rounds.size > 1) "先完成这一轮配对" else "先完成配对",
+                body = if (rounds.size > 1) {
+                    "先完成当前轮，再进入下一轮。"
+                } else {
+                    "先点左侧项目，再点右侧目标完成连接。"
+                },
                 badgeText = lessonGuidanceBadgeTextFor(actionState.phase),
                 badgeVariant = lessonGuidanceBadgeVariantFor(actionState.phase),
                 containerColor = rendererStageContainerColorFor(actionState.stageTone())
@@ -77,11 +79,46 @@ fun MatchingQuestionPane(
             RendererSectionHeader(
                 badgeText = actionState.sectionBadgeText(),
                 badgeVariant = actionState.sectionBadgeVariant(),
-                title = actionState.sectionTitle(),
-                body = actionState.sectionBody()
+                title = if (rounds.size > 1) {
+                    "第 ${matchingState.currentRoundIndex + 1} / ${rounds.size} 轮"
+                } else {
+                    actionState.sectionTitle()
+                },
+                body = if (rounds.size > 1) {
+                    currentRound.title
+                } else {
+                    actionState.sectionBody()
+                }
             )
+            if (rounds.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("matching-round-progress"),
+                    horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
+                ) {
+                    rounds.forEachIndexed { roundIndex, _ ->
+                        StatusChip(
+                                text = when {
+                                    roundIndex < matchingState.currentRoundIndex -> "已完成"
+                                    roundIndex == matchingState.currentRoundIndex -> "当前轮"
+                                    else -> "下一轮"
+                                },
+                                variant = when {
+                                    roundIndex < matchingState.currentRoundIndex -> StatusVariant.Success
+                                    roundIndex == matchingState.currentRoundIndex -> StatusVariant.Highlight
+                                    else -> StatusVariant.Neutral
+                                },
+                            modifier = Modifier.testTag("matching-round-chip-$roundIndex")
+                        )
+                    }
+                }
+            }
             groups.forEachIndexed { groupIndex, group ->
-                val groupAssignments = matchingState.assignmentsForGroup(groupIndex)
+                val groupAssignments = matchingState.assignmentsForGroup(
+                    roundIndex = matchingState.currentRoundIndex,
+                    groupIndex = groupIndex
+                )
                 val selectedLeft = matchingState.selectedLeft
                 StoryPanelCard(
                     modifier = Modifier
@@ -236,28 +273,65 @@ fun MatchingQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     Text(
-                        text = if (matchingState.isComplete(groups)) {
+                        text = if (matchingState.isGroupSetComplete(groups)) {
                             "配对完成"
+                        } else if (rounds.size > 1) {
+                            "本轮进度 ${matchingState.completedPairs(groups)}/${matchingState.totalPairs(groups)}"
                         } else {
                             "配对进度 ${matchingState.completedPairs(groups)}/${matchingState.totalPairs(groups)}"
                         },
                         style = TypographyTokens.SupportingLabel,
                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                     )
-                    ActionButton(
-                        text = actionState.resolveLabel("提交配对"),
-                        onClick = {
-                            onAnswer(matchingState.encodedAnswer(groups))
-                        },
-                        enabled = canSubmit,
-                        modifier = Modifier.testTag("matching-submit"),
-                        role = actionState.resolveRole(ActionRole.Primary)
-                    )
+                    if (rounds.size > 1 && !isFinalRound) {
+                        ActionButton(
+                            text = "进入下一轮",
+                            onClick = {
+                                matchingState = matchingState.advanceRound(rounds)
+                            },
+                            enabled = canAdvance,
+                            modifier = Modifier.testTag("matching-next-round"),
+                            role = ActionRole.Secondary
+                        )
+                    } else {
+                        ActionButton(
+                            text = actionState.resolveLabel("提交配对"),
+                            onClick = {
+                                onAnswer(
+                                    if (rounds.size > 1) {
+                                        matchingState.encodeRounds(rounds)
+                                    } else {
+                                        matchingState.encodeGroupsForSingleRound(groups)
+                                    }
+                                )
+                            },
+                            enabled = canSubmit,
+                            modifier = Modifier.testTag("matching-submit"),
+                            role = actionState.resolveRole(ActionRole.Primary)
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+private fun matchingRoundsForQuestion(question: Question): List<MatchingRound> =
+    question.matchingRounds.takeIf { it.isNotEmpty() }
+        ?: listOf(
+            MatchingRound(
+                title = "",
+                prompt = question.prompt,
+                groups = question.matchingGroups.takeIf { it.isNotEmpty() }
+                    ?: listOf(
+                        MatchingGroup(
+                            title = "",
+                            leftItems = question.leftItems,
+                            rightItems = question.rightItems
+                        )
+                    )
+            )
+        )
 
 private fun matchingLeftColumnTag(groupIndex: Int, grouped: Boolean): String =
     if (grouped) "matching-left-column-$groupIndex" else "matching-left-column"

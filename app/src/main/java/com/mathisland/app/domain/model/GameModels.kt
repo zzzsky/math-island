@@ -19,6 +19,7 @@ data class Question(
     val leftItems: List<String> = emptyList(),
     val rightItems: List<String> = emptyList(),
     val matchingGroups: List<MatchingGroup> = emptyList(),
+    val matchingRounds: List<MatchingRound> = emptyList(),
     val blankParts: List<String> = emptyList(),
     val blankOptions: List<String> = emptyList(),
     val blankSlotKinds: List<String> = emptyList(),
@@ -34,6 +35,12 @@ data class MatchingGroup(
     val title: String,
     val leftItems: List<String>,
     val rightItems: List<String>
+)
+
+data class MatchingRound(
+    val title: String,
+    val prompt: String,
+    val groups: List<MatchingGroup>
 )
 
 data class StepBranchRule(

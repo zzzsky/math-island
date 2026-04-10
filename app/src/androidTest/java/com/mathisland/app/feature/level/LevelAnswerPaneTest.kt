@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.mathisland.app.MathIslandTheme
 import com.mathisland.app.domain.model.MatchingGroup
+import com.mathisland.app.domain.model.MatchingRound
 import com.mathisland.app.domain.model.Question
 import com.mathisland.app.domain.model.StepBranchRule
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
@@ -391,6 +392,57 @@ class LevelAnswerPaneTest {
         composeRule.onNodeWithTag("renderer-matching")
             .performScrollToNode(hasTestTag("matching-submit"))
         composeRule.onNodeWithTag("matching-submit").assertIsDisplayed()
+    }
+
+    @Test
+    fun matchingMultiRoundQuestion_usesRoundProgressRenderer() {
+        val question = Question(
+            prompt = "按两轮完成语义配对。",
+            choices = emptyList(),
+            correctChoice = "平均分苹果=用除法,合并两堆贝壳=用加法>>>用除法=求每份有多少,用加法=求合起来一共多少",
+            hint = "先完成当前轮，再进入下一轮。",
+            family = "matching",
+            matchingRounds = listOf(
+                MatchingRound(
+                    title = "第一轮：看场景选算法",
+                    prompt = "第一轮：把场景和最合适的算法连起来。",
+                    groups = listOf(
+                        MatchingGroup(
+                            title = "",
+                            leftItems = listOf("平均分苹果", "合并两堆贝壳"),
+                            rightItems = listOf("用加法", "用除法")
+                        )
+                    )
+                ),
+                MatchingRound(
+                    title = "第二轮：看算法选作用",
+                    prompt = "第二轮：把算法和它最适合解决的问题连起来。",
+                    groups = listOf(
+                        MatchingGroup(
+                            title = "",
+                            leftItems = listOf("用除法", "用加法"),
+                            rightItems = listOf("求合起来一共多少", "求每份有多少")
+                        )
+                    )
+                )
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-matching").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-round-progress").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-round-chip-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("matching-round-chip-1").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-matching")
+            .performScrollToNode(hasTestTag("matching-next-round"))
     }
 
     @Test
