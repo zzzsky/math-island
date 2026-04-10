@@ -2,6 +2,7 @@ package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.QuestionRendererType
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepPresentation
 import com.mathisland.app.domain.model.StepBranchRule
 import com.mathisland.app.rendererTypeFor
 import org.junit.Assert.assertEquals
@@ -124,6 +125,80 @@ class MultiStepAnswerStateTest {
         assertEquals("shared-final-step", exactState.currentBranchKey(question, 2))
         assertEquals("第三步：现在至少要准备几个盒子？", multiStepPromptFor(question, remainderState))
         assertEquals("第三步：现在至少要准备几个盒子？", multiStepPromptFor(question, exactState))
+    }
+
+    @Test
+    fun branchPresentation_resolvesStageSupportAndAnswerLabel() {
+        val question = Question(
+            prompt = "按条件步骤完成装盒复核。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子,正好装完，不用多准备",
+            hint = "按步骤判断，再用统一结论收尾。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步", "第二步", "第三步", "第四步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("4个盒子", "5个盒子"),
+                listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "shared-final-step", "shared-wrap-up-step"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "exact-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "shared-final-step" to listOf(StepBranchRule("*", "shared-wrap-up-step"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：12 ÷ 5 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？",
+                "shared-wrap-up-step" to "第四步：最后该怎么复述？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是2余2", "商是4余1"),
+                "exact-step-2" to listOf("商是4", "商是3"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子"),
+                "shared-wrap-up-step" to listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepPresentations = listOf(
+                StepPresentation("先定路线", "先判断这次平均分会不会有剩余。", "分支判断"),
+                StepPresentation("计算结果", "把除法结果说清楚。", "除法结果"),
+                StepPresentation("统一装盒", "不管哪条路，最后都要回到装盒数量。", "装盒数量"),
+                StepPresentation("完整结论", "把你的判断完整说出来。", "最终结论")
+            ),
+            stepBranchPresentations = mapOf(
+                "remainder-step-2" to StepPresentation("余数路线", "先说出商和余数。", "余数结果"),
+                "exact-step-2" to StepPresentation("整除路线", "直接说出整除后的商。", "整除结果"),
+                "shared-final-step" to StepPresentation("统一装盒", "现在两条路线都回到同一个装盒判断。", "装盒数量")
+            )
+        )
+
+        val exactStepOne = MultiStepAnswerState()
+            .advance("正好分完", 4, nextBranchKeyFor(question, MultiStepAnswerState(), "正好分完"))
+        val exactStepTwo = exactStepOne.advance(
+            "商是4",
+            4,
+            nextBranchKeyFor(question, exactStepOne, "商是4")
+        )
+        val completed = exactStepTwo
+            .advance(
+                "4个盒子",
+                4,
+                nextBranchKeyFor(question, exactStepTwo, "4个盒子")
+            )
+            .advance("正好装完，不用多准备", 4)
+
+        assertEquals("整除路线", multiStepPresentationFor(question, exactStepOne).stageTitle)
+        assertEquals("直接说出整除后的商。", multiStepPresentationFor(question, exactStepOne).supportText)
+        assertEquals("统一装盒", multiStepPresentationFor(question, exactStepTwo).stageTitle)
+        assertEquals("分支判断", multiStepAnswerLabelFor(question, completed, 0))
+        assertEquals("整除结果", multiStepAnswerLabelFor(question, completed, 1))
+        assertEquals("装盒数量", multiStepAnswerLabelFor(question, completed, 2))
+        assertEquals("最终结论", multiStepAnswerLabelFor(question, completed, 3))
     }
 
     @Test

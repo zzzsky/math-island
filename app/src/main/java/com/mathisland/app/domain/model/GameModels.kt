@@ -28,7 +28,9 @@ data class Question(
     val stepBranchKeys: List<String> = emptyList(),
     val stepBranchRules: Map<String, List<StepBranchRule>> = emptyMap(),
     val stepBranchPrompts: Map<String, String> = emptyMap(),
-    val stepBranchChoices: Map<String, List<String>> = emptyMap()
+    val stepBranchChoices: Map<String, List<String>> = emptyMap(),
+    val stepPresentations: List<StepPresentation> = emptyList(),
+    val stepBranchPresentations: Map<String, StepPresentation> = emptyMap()
 )
 
 data class MatchingGroup(
@@ -46,6 +48,12 @@ data class MatchingRound(
 data class StepBranchRule(
     val whenAnswer: String,
     val nextBranchKey: String
+)
+
+data class StepPresentation(
+    val stageTitle: String,
+    val supportText: String,
+    val answerLabel: String
 )
 
 data class Lesson(

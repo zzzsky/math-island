@@ -43,7 +43,9 @@ fun MultiStepQuestionPane(
         question.stepBranchKeys,
         question.stepBranchRules,
         question.stepBranchPrompts,
-        question.stepBranchChoices
+        question.stepBranchChoices,
+        question.stepPresentations,
+        question.stepBranchPresentations
     ) {
         mutableStateOf(MultiStepAnswerState())
     }
@@ -52,6 +54,7 @@ fun MultiStepQuestionPane(
     val currentStepIndex = multiStepState.currentStepIndex(stepCount)
     val currentPrompt = multiStepPromptFor(question, multiStepState)
     val currentChoices = multiStepChoicesFor(question, multiStepState)
+    val currentPresentation = multiStepPresentationFor(question, multiStepState)
     val canSubmit = actionState.enabled && completed
 
     RendererPanelStack(
@@ -144,6 +147,22 @@ fun MultiStepQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                 ) {
                     Text(
+                        text = currentPresentation.stageTitle,
+                        style = TypographyTokens.SupportingLabel,
+                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                        modifier = Modifier.testTag("multi-step-stage-title")
+                    )
+
+                    if (!completed && currentPresentation.supportText.isNotBlank()) {
+                        Text(
+                            text = currentPresentation.supportText,
+                            style = TypographyTokens.BodyPrimary,
+                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                            modifier = Modifier.testTag("multi-step-stage-support")
+                        )
+                    }
+
+                    Text(
                         text = if (completed) {
                             "本题步骤都已完成"
                         } else {
@@ -157,7 +176,7 @@ fun MultiStepQuestionPane(
                     if (completed) {
                         multiStepState.answers.forEachIndexed { index, answer ->
                             Text(
-                                text = "步骤 ${index + 1}: $answer",
+                                text = "${multiStepAnswerLabelFor(question, multiStepState, index)}: $answer",
                                 style = TypographyTokens.BodyPrimary,
                                 color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
                                 modifier = Modifier.testTag("multi-step-answer-$index")

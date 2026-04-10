@@ -4,6 +4,7 @@ import com.mathisland.app.data.content.CurriculumRepository
 import com.mathisland.app.data.content.curriculumToGameIslands
 import com.mathisland.app.domain.model.AppDestination
 import com.mathisland.app.domain.model.ReviewTask
+import com.mathisland.app.domain.model.StepPresentation
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -305,6 +306,25 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun multiStepPresentationLesson_resolvesPresentationMetadata() {
+        val lesson = curriculumController.islands
+            .first { it.id == "division-island" }
+            .lessons
+            .first { it.id == "division-steps-07" }
+
+        assertEquals("multi-step", lesson.questions.first().family)
+        assertEquals(4, lesson.questions.first().stepPrompts.size)
+        assertEquals(
+            StepPresentation("先定路线", "先判断这次平均分会不会有剩余。", "分支判断"),
+            lesson.questions.first().stepPresentations.first()
+        )
+        assertEquals(
+            "整除路线",
+            lesson.questions.first().stepBranchPresentations.getValue("exact-step-2").stageTitle
+        )
+    }
+
+    @Test
     fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
         val classificationLessons = curriculumController.islands
             .first { it.id == "classification-island" }
@@ -341,7 +361,8 @@ class MathIslandGameControllerTest {
             "division-steps-03",
             "division-steps-04",
             "division-steps-05",
-            "division-steps-06"
+            "division-steps-06",
+            "division-steps-07"
         )))
     }
 
