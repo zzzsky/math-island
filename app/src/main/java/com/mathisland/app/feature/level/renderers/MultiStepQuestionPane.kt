@@ -36,6 +36,7 @@ import com.mathisland.app.ui.theme.TypographyTokens
 import kotlinx.coroutines.delay
 
 private const val MultiStepConfirmationDelayMillis = 320
+private const val MultiStepRecapHighlightMillis = 720
 
 private data class PendingMultiStepTransition(
     val stepIndex: Int,
@@ -77,6 +78,32 @@ fun MultiStepQuestionPane(
     ) {
         mutableStateOf<PendingMultiStepTransition?>(null)
     }
+    var expandedRecapStepIndexes by remember(
+        question.prompt,
+        question.stepPrompts,
+        question.stepChoices,
+        question.stepBranchKeys,
+        question.stepBranchRules,
+        question.stepBranchPrompts,
+        question.stepBranchChoices,
+        question.stepPresentations,
+        question.stepBranchPresentations
+    ) {
+        mutableStateOf(setOf<Int>())
+    }
+    var recentlyCompletedStepIndex by remember(
+        question.prompt,
+        question.stepPrompts,
+        question.stepChoices,
+        question.stepBranchKeys,
+        question.stepBranchRules,
+        question.stepBranchPrompts,
+        question.stepBranchChoices,
+        question.stepPresentations,
+        question.stepBranchPresentations
+    ) {
+        mutableStateOf<Int?>(null)
+    }
     val stepCount = stepCountFor(question)
     val completed = multiStepState.isComplete(stepCount)
     val currentStepIndex = multiStepState.currentStepIndex(stepCount)
@@ -104,7 +131,14 @@ fun MultiStepQuestionPane(
             stepCount = stepCount,
             nextBranchKey = transition.nextBranchKey
         )
+        recentlyCompletedStepIndex = transition.stepIndex
         pendingTransition = null
+    }
+
+    LaunchedEffect(recentlyCompletedStepIndex) {
+        if (recentlyCompletedStepIndex == null) return@LaunchedEffect
+        delay(MultiStepRecapHighlightMillis.toLong())
+        recentlyCompletedStepIndex = null
     }
 
     RendererPanelStack(
@@ -169,6 +203,105 @@ fun MultiStepQuestionPane(
                                 variant = if (isDone) StatusVariant.Success else StatusVariant.Neutral,
                                 modifier = Modifier.testTag("multi-step-progress-chip-$index")
                             )
+                        }
+                    }
+                }
+            }
+
+            if (multiStepState.answers.isNotEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("multi-step-recap-column"),
+                    verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                ) {
+                    multiStepState.answers.forEachIndexed { index, answer ->
+                        val recapPresentation = multiStepPresentationFor(question, multiStepState, index)
+                        val recapPrompt = multiStepPromptFor(question, multiStepState, index)
+                        val expanded = expandedRecapStepIndexes.contains(index)
+                        val isRecent = recentlyCompletedStepIndex == index
+                        StoryPanelCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("multi-step-recap-card-$index"),
+                            level = SurfaceLevel.Secondary,
+                            containerColor = if (isRecent) {
+                                RendererTokens.MultiStepCompletedSurface
+                            } else {
+                                RendererTokens.MultiStepSurface
+                            },
+                            borderColor = if (isRecent) {
+                                RendererTokens.MultiStepCompletedBorder
+                            } else {
+                                RendererTokens.MultiStepProgressBorder
+                            },
+                            shape = RadiusTokens.CardMd
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(SpacingTokens.Lg),
+                                verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                                ) {
+                                    StatusChip(
+                                        text = if (isRecent) "刚完成" else "已完成",
+                                        variant = StatusVariant.Success
+                                    )
+                                    Text(
+                                        text = multiStepAnswerLabelFor(question, multiStepState, index),
+                                        style = TypographyTokens.SupportingLabel,
+                                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
+                                    )
+                                    ActionButton(
+                                        text = if (expanded) "收起" else "展开",
+                                        onClick = {
+                                            expandedRecapStepIndexes = if (expanded) {
+                                                expandedRecapStepIndexes - index
+                                            } else {
+                                                expandedRecapStepIndexes + index
+                                            }
+                                        },
+                                        modifier = Modifier.testTag("multi-step-recap-toggle-$index"),
+                                        role = ActionRole.OutlinedSecondary
+                                    )
+                                }
+                                Text(
+                                    text = recapPresentation.stageTitle,
+                                    style = TypographyTokens.FeatureTitle,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Text(
+                                    text = answer,
+                                    style = TypographyTokens.BodyPrimary,
+                                    color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
+                                )
+                                if (expanded) {
+                                    Text(
+                                        text = recapPrompt,
+                                        style = TypographyTokens.BodyPrimary,
+                                        color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
+                                        modifier = Modifier.testTag("multi-step-recap-prompt-$index")
+                                    )
+                                    if (recapPresentation.supportText.isNotBlank()) {
+                                        Text(
+                                            text = recapPresentation.supportText,
+                                            style = TypographyTokens.Caption,
+                                            color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                                            modifier = Modifier.testTag("multi-step-recap-support-$index")
+                                        )
+                                    }
+                                    Text(
+                                        text = "${multiStepAnswerLabelFor(question, multiStepState, index)}: $answer",
+                                        style = TypographyTokens.BodyPrimary,
+                                        color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
+                                        modifier = Modifier.testTag("multi-step-recap-answer-$index")
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -340,6 +473,8 @@ fun MultiStepQuestionPane(
                             onClick = {
                                 multiStepState = multiStepState.reset()
                                 pendingTransition = null
+                                expandedRecapStepIndexes = emptySet()
+                                recentlyCompletedStepIndex = null
                             },
                             enabled = multiStepState.answers.isNotEmpty() && actionState.enabled && !transitionInFlight,
                             modifier = Modifier

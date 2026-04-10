@@ -402,6 +402,144 @@ class MultiStepQuestionPaneTest {
         composeRule.onNodeWithText("第二步：每只小猴分到几个？").assertIsDisplayed()
     }
 
+    @Test
+    fun multiStepQuestion_createsCollapsedRecapCardAfterStepCompletion() {
+        val question = Question(
+            prompt = "按条件步骤完成装盒复核。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子,正好装完，不用多准备",
+            hint = "按步骤判断，再用统一结论收尾。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步", "第二步", "第三步", "第四步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("4个盒子", "5个盒子"),
+                listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "shared-final-step", "shared-wrap-up-step"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "exact-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "shared-final-step" to listOf(StepBranchRule("*", "shared-wrap-up-step"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：12 ÷ 5 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？",
+                "shared-wrap-up-step" to "第四步：最后该怎么复述？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是2余2", "商是4余1"),
+                "exact-step-2" to listOf("商是4", "商是3"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子"),
+                "shared-wrap-up-step" to listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepPresentations = listOf(
+                StepPresentation("先定路线", "先判断这次平均分会不会有剩余。", "分支判断"),
+                StepPresentation("计算结果", "把除法结果说清楚。", "除法结果"),
+                StepPresentation("统一装盒", "不管哪条路，最后都要回到装盒数量。", "装盒数量"),
+                StepPresentation("完整结论", "把你的判断完整说出来。", "最终结论")
+            ),
+            stepBranchPresentations = mapOf(
+                "exact-step-2" to StepPresentation("整除路线", "直接说出整除后的商。", "整除结果")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(question = question, onAnswer = {})
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-1"))
+        composeRule.onNodeWithTag("multi-step-choice-1").performClick()
+        waitForText("第二步：12 ÷ 3 的结果是什么？")
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-toggle-0"))
+        composeRule.onNodeWithTag("multi-step-recap-toggle-0").assertIsDisplayed()
+        composeRule.onNodeWithText("分支判断").assertIsDisplayed()
+        composeRule.onNodeWithText("正好分完").assertIsDisplayed()
+        assertEquals(0, composeRule.onAllNodesWithTag("multi-step-recap-prompt-0").fetchSemanticsNodes().size)
+        assertEquals(0, composeRule.onAllNodesWithTag("multi-step-recap-support-0").fetchSemanticsNodes().size)
+    }
+
+    @Test
+    fun multiStepQuestion_expandsRecapCardToShowStepDetails() {
+        val question = Question(
+            prompt = "按条件步骤完成装盒复核。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子,正好装完，不用多准备",
+            hint = "按步骤判断，再用统一结论收尾。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步", "第二步", "第三步", "第四步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("4个盒子", "5个盒子"),
+                listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "shared-final-step", "shared-wrap-up-step"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "exact-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "shared-final-step" to listOf(StepBranchRule("*", "shared-wrap-up-step"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：12 ÷ 5 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？",
+                "shared-wrap-up-step" to "第四步：最后该怎么复述？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是2余2", "商是4余1"),
+                "exact-step-2" to listOf("商是4", "商是3"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子"),
+                "shared-wrap-up-step" to listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepPresentations = listOf(
+                StepPresentation("先定路线", "先判断这次平均分会不会有剩余。", "分支判断"),
+                StepPresentation("计算结果", "把除法结果说清楚。", "除法结果"),
+                StepPresentation("统一装盒", "不管哪条路，最后都要回到装盒数量。", "装盒数量"),
+                StepPresentation("完整结论", "把你的判断完整说出来。", "最终结论")
+            ),
+            stepBranchPresentations = mapOf(
+                "exact-step-2" to StepPresentation("整除路线", "直接说出整除后的商。", "整除结果")
+            )
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(question = question, onAnswer = {})
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-choice-1"))
+        composeRule.onNodeWithTag("multi-step-choice-1").performClick()
+        waitForText("第二步：12 ÷ 3 的结果是什么？")
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-toggle-0"))
+        composeRule.onNodeWithTag("multi-step-recap-toggle-0").performClick()
+
+        waitForTag("multi-step-recap-prompt-0")
+        waitForTag("multi-step-recap-support-0")
+        waitForTag("multi-step-recap-answer-0")
+        composeRule.onNodeWithText("先判断这次平均分会不会有剩余。").assertIsDisplayed()
+        composeRule.onNodeWithText("第一步").assertIsDisplayed()
+    }
+
     private fun waitForText(text: String) {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
@@ -411,6 +549,12 @@ class MultiStepQuestionPaneTest {
     private fun waitForTagToDisappear(tag: String) {
         composeRule.waitUntil(5_000) {
             composeRule.onAllNodesWithTag(tag).fetchSemanticsNodes().isEmpty()
+        }
+    }
+
+    private fun waitForTag(tag: String) {
+        composeRule.waitUntil(5_000) {
+            composeRule.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
         }
     }
 }

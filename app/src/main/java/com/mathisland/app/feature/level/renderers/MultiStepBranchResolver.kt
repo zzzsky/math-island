@@ -7,9 +7,7 @@ private const val AnyAnswerBranch = "*"
 
 fun multiStepPromptFor(question: Question, state: MultiStepAnswerState): String {
     val stepIndex = state.currentStepIndex(stepCountFor(question))
-    val branchKey = state.currentBranchKey(question, stepIndex)
-    return question.stepBranchPrompts[branchKey]
-        ?: question.stepPrompts.getOrElse(stepIndex) { "" }
+    return multiStepPromptFor(question, state, stepIndex)
 }
 
 fun multiStepChoicesFor(question: Question, state: MultiStepAnswerState): List<String> {
@@ -21,8 +19,7 @@ fun multiStepChoicesFor(question: Question, state: MultiStepAnswerState): List<S
 
 fun multiStepPresentationFor(question: Question, state: MultiStepAnswerState): StepPresentation {
     val stepIndex = state.currentStepIndex(stepCountFor(question))
-    val branchKey = state.currentBranchKey(question, stepIndex)
-    return multiStepPresentationFor(question, stepIndex, branchKey)
+    return multiStepPresentationFor(question, state, stepIndex)
 }
 
 fun multiStepAnswerLabelFor(
@@ -60,6 +57,25 @@ fun nextBranchKeyFor(
 
 fun stepCountFor(question: Question): Int =
     minOf(question.stepPrompts.size, question.stepChoices.size)
+
+fun multiStepPromptFor(
+    question: Question,
+    state: MultiStepAnswerState,
+    stepIndex: Int
+): String {
+    val branchKey = state.currentBranchKey(question, stepIndex)
+    return question.stepBranchPrompts[branchKey]
+        ?: question.stepPrompts.getOrElse(stepIndex) { "" }
+}
+
+fun multiStepPresentationFor(
+    question: Question,
+    state: MultiStepAnswerState,
+    stepIndex: Int
+): StepPresentation {
+    val branchKey = state.currentBranchKey(question, stepIndex)
+    return multiStepPresentationFor(question, stepIndex, branchKey)
+}
 
 private fun multiStepPresentationFor(
     question: Question,
