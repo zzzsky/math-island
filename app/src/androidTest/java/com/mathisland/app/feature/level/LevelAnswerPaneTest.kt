@@ -13,10 +13,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.test.platform.app.InstrumentationRegistry
 import com.mathisland.app.MathIslandTheme
+import com.mathisland.app.data.content.CurriculumRepository
+import com.mathisland.app.data.content.curriculumToGameIslands
 import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.MatchingRound
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepFeedbackHint
 import com.mathisland.app.domain.model.StepPresentation
 import com.mathisland.app.domain.model.StepBranchRule
 import com.mathisland.app.feature.level.renderers.AnswerFeedbackKind
@@ -857,6 +861,315 @@ class LevelAnswerPaneTest {
             .performScrollToNode(hasText("第二步：12 ÷ 3 的结果是什么？"))
         composeRule.onNodeWithText("第二步：12 ÷ 3 的结果是什么？").assertIsDisplayed()
         composeRule.onNodeWithTag("multi-step-choice-0").assertIsDisplayed()
+    }
+
+    @Test
+    fun multiStepQuestion_correctFeedbackShowsReviewRecapState() {
+        val question = multiStepFeedbackQuestion()
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Correct,
+            title = "回答正确",
+            body = "这一题已经完成。",
+            submittedAnswer = "平均分给 3 只小猴,每只 4 个"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = false
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasText("结果回看"))
+        composeRule.onNodeWithText("结果回看").assertIsDisplayed()
+        composeRule.onNodeWithText("这次提交的步骤已经整理好了。").assertIsDisplayed()
+        composeRule.onAllNodesWithText("步骤通过").assertCountEquals(2)
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-0"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-0").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("multi-step-choice-0").assertCountEquals(0)
+    }
+
+    @Test
+    fun multiStepQuestion_incorrectFeedbackAutoExpandsHintedRecapStep() {
+        val question = multiStepFeedbackQuestion(
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(),
+                StepFeedbackHint(
+                    incorrectLabel = "优先重看",
+                    incorrectBody = "先回到这一步重新核对。",
+                    expandOnIncorrect = true
+                )
+            )
+        )
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Incorrect,
+            title = "再试一次",
+            body = "先看过程，再重新做一遍。",
+            submittedAnswer = "平均分给 3 只小猴,每只 3 个"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = true
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        waitForTag("multi-step-recap-prompt-1")
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasText("重看步骤"))
+        composeRule.onNodeWithText("重看步骤").assertIsDisplayed()
+        composeRule.onNodeWithText("优先重看").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-1"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-1").assertIsDisplayed()
+        composeRule.onNodeWithText("先回到这一步重新核对。").assertIsDisplayed()
+        composeRule.onNodeWithText("第二步：每只小猴分到几个？").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("multi-step-choice-0").assertCountEquals(0)
+    }
+
+    @Test
+    fun multiStepQuestion_timeoutFeedbackShowsReadOnlyReviewState() {
+        val question = multiStepFeedbackQuestion()
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.TimeoutExpired,
+            title = "已超时",
+            body = "本题按当前步骤结算。",
+            submittedAnswer = "平均分给 3 只小猴,每只 3 个"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(
+                        feedback = feedback,
+                        inputEnabled = false
+                    ),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasText("本题回看"))
+        composeRule.onNodeWithText("本题回看").assertIsDisplayed()
+        composeRule.onNodeWithText("本题已经结束，先回看这次记录的步骤。").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-0"))
+        composeRule.onNodeWithTag("multi-step-recap-status-0").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-1"))
+        composeRule.onNodeWithTag("multi-step-recap-status-1").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-0"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-0").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("multi-step-choice-0").assertCountEquals(0)
+    }
+
+    @Test
+    fun multiStepLesson05_retryFeedbackExpandsAuthoredDiagnosisStep() {
+        val question = curriculumQuestion("division-steps-05")
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Incorrect,
+            title = "再试一次",
+            body = "先回看步骤，再重新做。",
+            submittedAnswer = "还要先做加法,对，先做加法,直接结束"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        waitForTag("multi-step-recap-prompt-0")
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-0"))
+        composeRule.onNodeWithText("先定路线").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-0"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-0").assertIsDisplayed()
+        composeRule.onNodeWithText("先判断有没有余数，再决定后面走哪条步骤路线。").assertIsDisplayed()
+    }
+
+    @Test
+    fun multiStepLesson06_timeoutFeedbackExpandsSharedConclusionStep() {
+        val question = curriculumQuestion("division-steps-06")
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.TimeoutExpired,
+            title = "已超时",
+            body = "本题按当前步骤结算。",
+            submittedAnswer = "正好分完,商是4,4个盒子"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(feedback = feedback, inputEnabled = false),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        waitForTag("multi-step-recap-prompt-2")
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-2"))
+        composeRule.onNodeWithText("共享结论").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-2"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-2").assertIsDisplayed()
+        composeRule.onNodeWithText("虽然前面路线不同，最后都回到同一个装盒判断。").assertIsDisplayed()
+    }
+
+    @Test
+    fun multiStepLesson07_correctFeedbackShowsAuthoredWrapUpCopy() {
+        val question = curriculumQuestion("division-steps-07")
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Correct,
+            title = "回答正确",
+            body = "这一题已经完成。",
+            submittedAnswer = "正好分完,商是4,4个盒子,正好装完，不用多准备"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(feedback = feedback, inputEnabled = false),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-3"))
+        composeRule.onNodeWithText("说完整了").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-3"))
+        composeRule.onAllNodesWithTag("multi-step-recap-feedback-3").assertCountEquals(1)
+        composeRule.onAllNodesWithText("你把最后的结论说完整了，这一步把整道题收稳了。").assertCountEquals(1)
+        composeRule.onAllNodesWithTag("multi-step-recap-prompt-3").assertCountEquals(0)
+    }
+
+    @Test
+    fun multiStepLesson01_retryFeedbackExpandsSetupStep() {
+        val question = curriculumQuestion("division-steps-01")
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.Incorrect,
+            title = "再试一次",
+            body = "先回看步骤，再重新做。",
+            submittedAnswer = "先把 12 和 3 相加,每只 3 个"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(feedback = feedback, inputEnabled = true),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        waitForTag("multi-step-recap-prompt-0")
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-0"))
+        composeRule.onNodeWithText("先看平均分").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-0"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-0").assertIsDisplayed()
+    }
+
+    @Test
+    fun multiStepLesson04_timeoutFeedbackExpandsConclusionStep() {
+        val question = curriculumQuestion("division-steps-04")
+        val feedback = AnswerFeedbackUiState(
+            kind = AnswerFeedbackKind.TimeoutExpired,
+            title = "已超时",
+            body = "本题按当前步骤结算。",
+            submittedAnswer = "先算 17 ÷ 3,商是 5 余 2,6 个袋子"
+        )
+
+        composeRule.setContent {
+            MathIslandTheme {
+                LevelAnswerPane(
+                    question = question,
+                    feedback = feedback,
+                    actionState = rendererActionStateFor(feedback = feedback, inputEnabled = false),
+                    onAnswer = {}
+                )
+            }
+        }
+
+        waitForTag("multi-step-recap-prompt-2")
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-status-2"))
+        composeRule.onNodeWithText("回到袋子数").assertIsDisplayed()
+        composeRule.onNodeWithTag("renderer-multi-step")
+            .performScrollToNode(hasTestTag("multi-step-recap-feedback-2"))
+        composeRule.onNodeWithTag("multi-step-recap-feedback-2").assertIsDisplayed()
+    }
+
+    private fun multiStepFeedbackQuestion(
+        stepFeedbackHints: List<StepFeedbackHint> = emptyList()
+    ): Question = Question(
+        prompt = "按步骤完成平均分。",
+        choices = emptyList(),
+        correctChoice = "平均分给 3 只小猴,每只 4 个",
+        hint = "先想平均分，再判断每份有几个。",
+        family = "multi-step",
+        stepPrompts = listOf(
+            "第一步：先判断这题要怎么分？",
+            "第二步：每只小猴分到几个？"
+        ),
+        stepChoices = listOf(
+            listOf("平均分给 3 只小猴", "先把 12 和 3 相加", "先比较水果颜色"),
+            listOf("每只 3 个", "每只 4 个", "每只 5 个")
+        ),
+        stepPresentations = listOf(
+            StepPresentation("先定做法", "先确定这题是不是平均分。", "分法判断"),
+            StepPresentation("再给结果", "把每只分到多少说完整。", "每份数量")
+        ),
+        stepFeedbackHints = stepFeedbackHints
+    )
+
+    private fun curriculumQuestion(lessonId: String): Question {
+        val curriculum = CurriculumRepository.loadFromAssets(
+            InstrumentationRegistry.getInstrumentation().targetContext.assets
+        )
+        return curriculumToGameIslands(curriculum)
+            .first { island -> island.id == "division-island" }
+            .lessons
+            .first { lesson -> lesson.id == lessonId }
+            .questions
+            .first()
     }
 
     private fun waitForText(text: String) {

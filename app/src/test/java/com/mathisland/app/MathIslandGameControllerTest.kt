@@ -325,6 +325,79 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun basicMultiStepLessons_resolveAuthoredFeedbackHints() {
+        val divisionIsland = curriculumController.islands
+            .first { it.id == "division-island" }
+        val lesson01 = divisionIsland.lessons.first { it.id == "division-steps-01" }
+        val lesson02 = divisionIsland.lessons.first { it.id == "division-steps-02" }
+        val lesson03 = divisionIsland.lessons.first { it.id == "division-steps-03" }
+        val lesson04 = divisionIsland.lessons.first { it.id == "division-steps-04" }
+
+        assertEquals("先看平均分", lesson01.questions.first().stepFeedbackHints[0].incorrectLabel)
+        assertTrue(lesson01.questions.first().stepFeedbackHints[0].expandOnIncorrect)
+        assertEquals("回看结果", lesson01.questions.first().stepFeedbackHints[1].timeoutLabel)
+        assertTrue(lesson01.questions.first().stepFeedbackHints[1].expandOnTimeout)
+
+        assertEquals("先做除法", lesson02.questions.first().stepFeedbackHints[0].incorrectLabel)
+        assertTrue(lesson02.questions.first().stepFeedbackHints[0].expandOnIncorrect)
+        assertEquals("补一条船", lesson02.questions.first().stepFeedbackHints[1].timeoutLabel)
+        assertTrue(lesson02.questions.first().stepFeedbackHints[1].expandOnTimeout)
+
+        assertEquals("先定分法", lesson03.questions.first().stepFeedbackHints[0].incorrectLabel)
+        assertTrue(lesson03.questions.first().stepFeedbackHints[0].expandOnIncorrect)
+        assertEquals("回看每盒", lesson03.questions.first().stepFeedbackHints[1].timeoutLabel)
+        assertTrue(lesson03.questions.first().stepFeedbackHints[1].expandOnTimeout)
+
+        assertEquals("先看要算什么", lesson04.questions.first().stepFeedbackHints[0].incorrectLabel)
+        assertTrue(lesson04.questions.first().stepFeedbackHints[0].expandOnIncorrect)
+        assertEquals("回到袋子数", lesson04.questions.first().stepFeedbackHints[2].timeoutLabel)
+        assertTrue(lesson04.questions.first().stepFeedbackHints[2].expandOnTimeout)
+    }
+
+    @Test
+    fun advancedMultiStepLessons_resolveAuthoredFeedbackHints() {
+        val divisionIsland = curriculumController.islands
+            .first { it.id == "division-island" }
+        val lesson05 = divisionIsland.lessons.first { it.id == "division-steps-05" }
+        val lesson06 = divisionIsland.lessons.first { it.id == "division-steps-06" }
+        val lesson07 = divisionIsland.lessons.first { it.id == "division-steps-07" }
+
+        assertEquals("先定路线", lesson05.questions.first().stepFeedbackHints[0].incorrectLabel)
+        assertEquals(
+            "先判断有没有余数，再决定后面走哪条步骤路线。",
+            lesson05.questions.first().stepFeedbackHints[0].incorrectBody
+        )
+        assertTrue(lesson05.questions.first().stepFeedbackHints[0].expandOnIncorrect)
+        assertEquals("回看结论", lesson05.questions.first().stepFeedbackHints[2].timeoutLabel)
+        assertEquals(
+            "最后袋子数量要跟着前一步的结果一起判断。",
+            lesson05.questions.first().stepFeedbackHints[2].timeoutBody
+        )
+        assertTrue(lesson05.questions.first().stepFeedbackHints[2].expandOnTimeout)
+
+        assertEquals("重看计算", lesson06.questions.first().stepFeedbackHints[1].incorrectLabel)
+        assertEquals(
+            "先重看这一步的除法结果，后面的装盒数量都跟着它走。",
+            lesson06.questions.first().stepFeedbackHints[1].incorrectBody
+        )
+        assertTrue(lesson06.questions.first().stepFeedbackHints[1].expandOnIncorrect)
+        assertEquals("共享结论", lesson06.questions.first().stepFeedbackHints[2].timeoutLabel)
+        assertEquals(
+            "虽然前面路线不同，最后都回到同一个装盒判断。",
+            lesson06.questions.first().stepFeedbackHints[2].timeoutBody
+        )
+        assertTrue(lesson06.questions.first().stepFeedbackHints[2].expandOnTimeout)
+
+        assertEquals("回看分支", lesson07.questions.first().stepFeedbackHints[1].incorrectLabel)
+        assertEquals(
+            "先回看这一步的分支计算，再继续看后面的统一结论。",
+            lesson07.questions.first().stepFeedbackHints[1].incorrectBody
+        )
+        assertTrue(lesson07.questions.first().stepFeedbackHints[1].expandOnIncorrect)
+        assertEquals("说完整了", lesson07.questions.first().stepFeedbackHints[3].correctLabel)
+    }
+
+    @Test
     fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
         val classificationLessons = curriculumController.islands
             .first { it.id == "classification-island" }

@@ -30,7 +30,8 @@ data class Question(
     val stepBranchPrompts: Map<String, String> = emptyMap(),
     val stepBranchChoices: Map<String, List<String>> = emptyMap(),
     val stepPresentations: List<StepPresentation> = emptyList(),
-    val stepBranchPresentations: Map<String, StepPresentation> = emptyMap()
+    val stepBranchPresentations: Map<String, StepPresentation> = emptyMap(),
+    val stepFeedbackHints: List<StepFeedbackHint> = emptyList()
 )
 
 data class MatchingGroup(
@@ -54,6 +55,17 @@ data class StepPresentation(
     val stageTitle: String,
     val supportText: String,
     val answerLabel: String
+)
+
+data class StepFeedbackHint(
+    val correctLabel: String? = null,
+    val correctBody: String? = null,
+    val incorrectLabel: String? = null,
+    val incorrectBody: String? = null,
+    val timeoutLabel: String? = null,
+    val timeoutBody: String? = null,
+    val expandOnIncorrect: Boolean = false,
+    val expandOnTimeout: Boolean = false
 )
 
 data class Lesson(

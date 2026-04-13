@@ -104,13 +104,37 @@ fun MultiStepQuestionPane(
     ) {
         mutableStateOf<Int?>(null)
     }
+    var feedbackReviewState by remember(
+        question.prompt,
+        question.stepPrompts,
+        question.stepChoices,
+        question.stepBranchKeys,
+        question.stepBranchRules,
+        question.stepBranchPrompts,
+        question.stepBranchChoices,
+        question.stepPresentations,
+        question.stepBranchPresentations,
+        question.stepFeedbackHints,
+        feedback?.kind,
+        feedback?.submittedAnswer
+    ) {
+        mutableStateOf(
+            if (feedback?.submittedAnswer.isNullOrBlank()) {
+                null
+            } else {
+                multiStepStateForSubmittedAnswer(question, feedback?.submittedAnswer)
+            }
+        )
+    }
     val stepCount = stepCountFor(question)
-    val completed = multiStepState.isComplete(stepCount)
-    val currentStepIndex = multiStepState.currentStepIndex(stepCount)
-    val currentPrompt = multiStepPromptFor(question, multiStepState)
-    val currentChoices = multiStepChoicesFor(question, multiStepState)
-    val currentPresentation = multiStepPresentationFor(question, multiStepState)
-    val transitionInFlight = pendingTransition != null
+    val displayState = feedbackReviewState ?: multiStepState
+    val isFeedbackReview = feedbackReviewState != null
+    val completed = displayState.isComplete(stepCount)
+    val currentStepIndex = displayState.currentStepIndex(stepCount)
+    val currentPrompt = multiStepPromptFor(question, displayState)
+    val currentChoices = multiStepChoicesFor(question, displayState)
+    val currentPresentation = multiStepPresentationFor(question, displayState)
+    val transitionInFlight = pendingTransition != null && !isFeedbackReview
     val stageScale by animateFloatAsState(
         targetValue = if (transitionInFlight) 0.985f else 1f,
         animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing),
@@ -121,7 +145,7 @@ fun MultiStepQuestionPane(
         animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing),
         label = "multiStepStageAlpha"
     )
-    val canSubmit = actionState.enabled && completed && !transitionInFlight
+    val canSubmit = actionState.enabled && completed && !transitionInFlight && !isFeedbackReview
 
     LaunchedEffect(pendingTransition, stepCount) {
         val transition = pendingTransition ?: return@LaunchedEffect
@@ -139,6 +163,46 @@ fun MultiStepQuestionPane(
         if (recentlyCompletedStepIndex == null) return@LaunchedEffect
         delay(MultiStepRecapHighlightMillis.toLong())
         recentlyCompletedStepIndex = null
+    }
+
+    LaunchedEffect(feedbackReviewState, feedback?.kind) {
+        val reviewState = feedbackReviewState ?: return@LaunchedEffect
+        val feedbackKind = feedback?.kind ?: return@LaunchedEffect
+        pendingTransition = null
+        recentlyCompletedStepIndex = null
+        expandedRecapStepIndexes = reviewState.answers.indices
+            .filter { index ->
+                multiStepRecapFeedbackStateFor(
+                    feedbackKind = feedbackKind,
+                    hint = question.stepFeedbackHints.getOrNull(index)
+                ).autoExpand
+            }
+            .toSet()
+    }
+
+    val reviewStageTitle = when (feedback?.kind) {
+        AnswerFeedbackKind.Correct -> "结果回看"
+        AnswerFeedbackKind.Incorrect -> "重看步骤"
+        AnswerFeedbackKind.TimedWarning,
+        AnswerFeedbackKind.TimeoutExpired,
+        -> "本题回看"
+        null -> currentPresentation.stageTitle
+    }
+    val reviewPrompt = when (feedback?.kind) {
+        AnswerFeedbackKind.Correct -> "这次提交的步骤已经整理好了。"
+        AnswerFeedbackKind.Incorrect -> "先看下方标记的步骤，再重新开始。"
+        AnswerFeedbackKind.TimedWarning,
+        AnswerFeedbackKind.TimeoutExpired,
+        -> "本题已经结束，先回看这次记录的步骤。"
+        null -> currentPrompt
+    }
+    val reviewSupport = when (feedback?.kind) {
+        AnswerFeedbackKind.Correct -> "下方 recap 卡片会按完成结果整理这次过程。"
+        AnswerFeedbackKind.Incorrect -> "本轮不支持在步骤内直接改写，使用“重新开始”重新走一遍。"
+        AnswerFeedbackKind.TimedWarning,
+        AnswerFeedbackKind.TimeoutExpired,
+        -> "下方 recap 卡片会保留这次步骤记录，方便快速回看。"
+        null -> currentPresentation.supportText
     }
 
     RendererPanelStack(
@@ -196,7 +260,7 @@ fun MultiStepQuestionPane(
                         horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Xs)
                     ) {
                         repeat(stepCount) { index ->
-                            val isDone = index < multiStepState.answers.size ||
+                            val isDone = index < displayState.answers.size ||
                                 pendingTransition?.stepIndex == index
                             StatusChip(
                                 text = if (isDone) "步骤 ${index + 1}" else "待完成",
@@ -208,18 +272,26 @@ fun MultiStepQuestionPane(
                 }
             }
 
-            if (multiStepState.answers.isNotEmpty()) {
+            if (displayState.answers.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("multi-step-recap-column"),
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
-                    multiStepState.answers.forEachIndexed { index, answer ->
-                        val recapPresentation = multiStepPresentationFor(question, multiStepState, index)
-                        val recapPrompt = multiStepPromptFor(question, multiStepState, index)
+                    displayState.answers.forEachIndexed { index, answer ->
+                        val recapPresentation = multiStepPresentationFor(question, displayState, index)
+                        val recapPrompt = multiStepPromptFor(question, displayState, index)
+                        val recapFeedbackState = if (isFeedbackReview && feedback != null) {
+                            multiStepRecapFeedbackStateFor(
+                                feedbackKind = feedback.kind,
+                                hint = question.stepFeedbackHints.getOrNull(index)
+                            )
+                        } else {
+                            null
+                        }
                         val expanded = expandedRecapStepIndexes.contains(index)
-                        val isRecent = recentlyCompletedStepIndex == index
+                        val isRecent = !isFeedbackReview && recentlyCompletedStepIndex == index
                         StoryPanelCard(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -248,11 +320,12 @@ fun MultiStepQuestionPane(
                                     horizontalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                                 ) {
                                     StatusChip(
-                                        text = if (isRecent) "刚完成" else "已完成",
-                                        variant = StatusVariant.Success
+                                        text = recapFeedbackState?.chipText ?: if (isRecent) "刚完成" else "已完成",
+                                        variant = recapFeedbackState?.chipVariant ?: StatusVariant.Success,
+                                        modifier = Modifier.testTag("multi-step-recap-status-$index")
                                     )
                                     Text(
-                                        text = multiStepAnswerLabelFor(question, multiStepState, index),
+                                        text = multiStepAnswerLabelFor(question, displayState, index),
                                         style = TypographyTokens.SupportingLabel,
                                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                                     )
@@ -279,6 +352,14 @@ fun MultiStepQuestionPane(
                                     style = TypographyTokens.BodyPrimary,
                                     color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface)
                                 )
+                                if (recapFeedbackState != null) {
+                                    Text(
+                                        text = recapFeedbackState.body,
+                                        style = TypographyTokens.Caption,
+                                        color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
+                                        modifier = Modifier.testTag("multi-step-recap-feedback-$index")
+                                    )
+                                }
                                 if (expanded) {
                                     Text(
                                         text = recapPrompt,
@@ -295,7 +376,7 @@ fun MultiStepQuestionPane(
                                         )
                                     }
                                     Text(
-                                        text = "${multiStepAnswerLabelFor(question, multiStepState, index)}: $answer",
+                                        text = "${multiStepAnswerLabelFor(question, displayState, index)}: $answer",
                                         style = TypographyTokens.BodyPrimary,
                                         color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
                                         modifier = Modifier.testTag("multi-step-recap-answer-$index")
@@ -336,7 +417,7 @@ fun MultiStepQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Md)
                 ) {
                     Text(
-                        text = currentPresentation.stageTitle,
+                        text = if (isFeedbackReview) reviewStageTitle else currentPresentation.stageTitle,
                         style = TypographyTokens.SupportingLabel,
                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                         modifier = Modifier.testTag("multi-step-stage-title")
@@ -350,9 +431,9 @@ fun MultiStepQuestionPane(
                         )
                     }
 
-                    if (!completed && currentPresentation.supportText.isNotBlank()) {
+                    if ((!completed || isFeedbackReview) && reviewSupport.isNotBlank()) {
                         Text(
-                            text = currentPresentation.supportText,
+                            text = reviewSupport,
                             style = TypographyTokens.BodyPrimary,
                             color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface),
                             modifier = Modifier.testTag("multi-step-stage-support")
@@ -360,7 +441,9 @@ fun MultiStepQuestionPane(
                     }
 
                     Text(
-                        text = if (completed) {
+                        text = if (isFeedbackReview) {
+                            reviewPrompt
+                        } else if (completed) {
                             "本题步骤都已完成"
                         } else {
                             currentPrompt
@@ -370,10 +453,10 @@ fun MultiStepQuestionPane(
                         modifier = Modifier.testTag("multi-step-prompt")
                     )
 
-                    if (completed) {
-                        multiStepState.answers.forEachIndexed { index, answer ->
+                    if (completed || isFeedbackReview) {
+                        displayState.answers.forEachIndexed { index, answer ->
                             Text(
-                                text = "${multiStepAnswerLabelFor(question, multiStepState, index)}: $answer",
+                                text = "${multiStepAnswerLabelFor(question, displayState, index)}: $answer",
                                 style = TypographyTokens.BodyPrimary,
                                 color = TextToneTokens.high(MaterialTheme.colorScheme.onSurface),
                                 modifier = Modifier.testTag("multi-step-answer-$index")
@@ -460,7 +543,7 @@ fun MultiStepQuestionPane(
                     verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
                 ) {
                     Text(
-                        text = if (completed) "步骤答案已记录" else "还差 ${stepCount - multiStepState.answers.size} 步",
+                        text = if (completed) "步骤答案已记录" else "还差 ${stepCount - displayState.answers.size} 步",
                         style = TypographyTokens.SupportingLabel,
                         color = TextToneTokens.medium(MaterialTheme.colorScheme.onSurface)
                     )
@@ -472,11 +555,12 @@ fun MultiStepQuestionPane(
                             text = "重新开始",
                             onClick = {
                                 multiStepState = multiStepState.reset()
+                                feedbackReviewState = null
                                 pendingTransition = null
                                 expandedRecapStepIndexes = emptySet()
                                 recentlyCompletedStepIndex = null
                             },
-                            enabled = multiStepState.answers.isNotEmpty() && actionState.enabled && !transitionInFlight,
+                            enabled = displayState.answers.isNotEmpty() && actionState.enabled && !transitionInFlight,
                             modifier = Modifier
                                 .weight(1f)
                                 .testTag("multi-step-reset"),

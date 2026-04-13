@@ -8,6 +8,7 @@ import com.mathisland.app.domain.model.Lesson
 import com.mathisland.app.domain.model.MatchingGroup
 import com.mathisland.app.domain.model.MatchingRound
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepFeedbackHint
 import com.mathisland.app.domain.model.StepPresentation
 import com.mathisland.app.domain.model.StepBranchRule
 
@@ -285,6 +286,26 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             stepChoices = listOf(
                 listOf("平均分给 3 只小猴", "先把 12 和 3 相加", "先比较水果颜色"),
                 listOf("每只 3 个", "每只 4 个", "每只 5 个")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "看对分法",
+                    correctBody = "你先判断出了这是平均分，后面的答案就更容易接对。",
+                    incorrectLabel = "先看平均分",
+                    incorrectBody = "先判断这题是不是平均分，再去想每只分到几个。",
+                    timeoutLabel = "回看分法",
+                    timeoutBody = "先回看你有没有先看出这是平均分。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "答对结果",
+                    correctBody = "这一步把每只分到几个说清楚了。",
+                    incorrectLabel = "再看结果",
+                    incorrectBody = "最后每只分到几个，要跟着前面的平均分思路来答。",
+                    timeoutLabel = "回看结果",
+                    timeoutBody = "最后每只分到几个，要跟着前面的平均分语境来答。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -302,6 +323,26 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             stepChoices = listOf(
                 listOf("先算 22 ÷ 4", "先算 22 + 4", "先比较船的颜色"),
                 listOf("5 条", "6 条", "7 条")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "先做除法",
+                    correctBody = "你先选对了要做的运算，后面的判断才站得住。",
+                    incorrectLabel = "先做除法",
+                    incorrectBody = "先做除法，不要一开始就跳到别的运算。",
+                    timeoutLabel = "回看运算",
+                    timeoutBody = "先回看这题是不是应该先做除法。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "补对船数",
+                    correctBody = "你把有余数时要多租一条船说出来了。",
+                    incorrectLabel = "看余数",
+                    incorrectBody = "有余数时，最后的船数还要再多一条。",
+                    timeoutLabel = "补一条船",
+                    timeoutBody = "22 ÷ 4 还有余数，所以最后要多租一条船。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -319,6 +360,26 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             stepChoices = listOf(
                 listOf("把 18 平均分给 6 个盒子", "先把 18 和 6 相减", "先数盒子颜色"),
                 listOf("2 个", "3 个", "4 个")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "先定分法",
+                    correctBody = "你先看出了这是平均分到盒子的题。",
+                    incorrectLabel = "先定分法",
+                    incorrectBody = "先明确是把 18 平均分到盒子里，再去想每盒几个。",
+                    timeoutLabel = "回看分法",
+                    timeoutBody = "先回看你有没有先看出这是平均分到盒子。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "答出每盒",
+                    correctBody = "这一步把每盒装几个说清楚了。",
+                    incorrectLabel = "再看每盒",
+                    incorrectBody = "每个盒子装几个，要顺着前面的平均分结果来答。",
+                    timeoutLabel = "回看每盒",
+                    timeoutBody = "最后每盒数量来自前面的平均分结果。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -338,6 +399,34 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 listOf("先算 17 ÷ 3", "先算 17 + 3", "先比较袋子颜色"),
                 listOf("商是 4 余 1", "商是 5 余 2", "商是 6 余 1"),
                 listOf("5 个袋子", "6 个袋子", "7 个袋子")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "先定算法",
+                    correctBody = "你先找对了要算的除法，后面步骤才能接起来。",
+                    incorrectLabel = "先看要算什么",
+                    incorrectBody = "先看这一步要先算什么，不要直接跳到后面的数量。",
+                    timeoutLabel = "回看起点",
+                    timeoutBody = "先回看这题是不是该先算 17 ÷ 3。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "算清商余",
+                    correctBody = "这一步把商和余数说准确了。",
+                    incorrectLabel = "核对商余",
+                    incorrectBody = "先把商和余数说准确，再去判断最后要几个袋子。",
+                    timeoutLabel = "回看商余",
+                    timeoutBody = "先回看商和余数，再看最后的袋子数量。"
+                ),
+                StepFeedbackHint(
+                    correctLabel = "落到袋数",
+                    correctBody = "最后袋子数量已经顺着商和余数判断出来了。",
+                    incorrectLabel = "接上袋数",
+                    incorrectBody = "袋子数量要跟着前面的商和余数一起判断。",
+                    timeoutLabel = "回到袋子数",
+                    timeoutBody = "最后袋子数量要跟着前面的商和余数来判断。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -390,6 +479,34 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 "exact-step-3" to listOf("4个袋子", "5个袋子", "6个袋子"),
                 "add-step-2" to listOf("对，先做加法", "不对，应该先做除法", "先比较袋子颜色"),
                 "add-step-3" to listOf("回到有没有余数的判断", "直接结束", "去做乘法")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "选对路线",
+                    correctBody = "先判断有没有余数，后面的步骤路线才会稳定。",
+                    incorrectLabel = "先定路线",
+                    incorrectBody = "先判断有没有余数，再决定后面走哪条步骤路线。",
+                    timeoutLabel = "先看路线",
+                    timeoutBody = "先看你有没有先判断剩余，再回看后面的步骤。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "算清结果",
+                    correctBody = "这一步把路线里的计算结果说清楚了。",
+                    incorrectLabel = "核对结果",
+                    incorrectBody = "把这一步的商和余数，或整除结果，再核对一次。",
+                    timeoutLabel = "回看计算",
+                    timeoutBody = "先看这一步的结果说得对不对，再去看最后数量。"
+                ),
+                StepFeedbackHint(
+                    correctLabel = "落到数量",
+                    correctBody = "最后的袋子数量跟着前一步结果一起定下来了。",
+                    incorrectLabel = "接上结论",
+                    incorrectBody = "最后袋子数量要跟着前一步结果一起判断。",
+                    timeoutLabel = "回看结论",
+                    timeoutBody = "最后袋子数量要跟着前一步的结果一起判断。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -432,6 +549,34 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 "remainder-step-2" to listOf("商是4余2", "商是5余1", "商是3余2"),
                 "exact-step-2" to listOf("商是4", "商是3", "商是5"),
                 "shared-final-step" to listOf("4个盒子", "5个盒子", "6个盒子")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "选对路线",
+                    correctBody = "先分清有没有余数，后面的步骤才会走对。",
+                    incorrectLabel = "先分路线",
+                    incorrectBody = "先判断这次是有余数还是正好分完。",
+                    timeoutLabel = "先看分路",
+                    timeoutBody = "先看你有没有先选对路线，再回看后面的判断。"
+                ),
+                StepFeedbackHint(
+                    correctLabel = "算对结果",
+                    correctBody = "这一步把当前路线里的除法结果算准了。",
+                    incorrectLabel = "重看计算",
+                    incorrectBody = "先重看这一步的除法结果，后面的装盒数量都跟着它走。",
+                    timeoutLabel = "回看计算",
+                    timeoutBody = "先看分支里的除法结果，再去看最后装盒数量。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "收束判断",
+                    correctBody = "两条路线最后都收束到了同一个装盒结论。",
+                    incorrectLabel = "接回结论",
+                    incorrectBody = "前面的路线不同，但最后都要回到同一个装盒判断。",
+                    timeoutLabel = "共享结论",
+                    timeoutBody = "虽然前面路线不同，最后都回到同一个装盒判断。",
+                    expandOnTimeout = true
+                )
             )
         )
     ),
@@ -492,6 +637,42 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
                 "remainder-step-2" to StepPresentation("余数路线", "先说出商和余数。", "余数结果"),
                 "exact-step-2" to StepPresentation("整除路线", "直接说出整除后的商。", "整除结果"),
                 "shared-final-step" to StepPresentation("统一装盒", "现在两条路线都回到同一个装盒判断。", "装盒数量")
+            ),
+            stepFeedbackHints = listOf(
+                StepFeedbackHint(
+                    correctLabel = "路线清楚",
+                    correctBody = "你先把路线判断清楚了，后面的步骤更容易接稳。",
+                    incorrectLabel = "先看路线",
+                    incorrectBody = "先判断这次平均分会不会有剩余，再往下走。",
+                    timeoutLabel = "回看起点",
+                    timeoutBody = "先回看你有没有先选对路线，再看后面的步骤。"
+                ),
+                StepFeedbackHint(
+                    correctLabel = "算准分支",
+                    correctBody = "这一步把分支里的计算结果说清楚了。",
+                    incorrectLabel = "回看分支",
+                    incorrectBody = "先回看这一步的分支计算，再继续看后面的统一结论。",
+                    timeoutLabel = "回看计算",
+                    timeoutBody = "先看分支里的计算结果，再去看统一装盒结论。",
+                    expandOnIncorrect = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "接到结论",
+                    correctBody = "这一步把不同路线重新收束到了同一个装盒判断。",
+                    incorrectLabel = "看统一结论",
+                    incorrectBody = "先看这里有没有把前面的结果正确接回统一装盒判断。",
+                    timeoutLabel = "统一结论",
+                    timeoutBody = "本题已经结束，先看这里怎么把前面的路线收回统一结论。",
+                    expandOnTimeout = true
+                ),
+                StepFeedbackHint(
+                    correctLabel = "说完整了",
+                    correctBody = "你把最后的结论说完整了，这一步把整道题收稳了。",
+                    incorrectLabel = "补完整句",
+                    incorrectBody = "最后一步要把前面的判断完整复述出来。",
+                    timeoutLabel = "回看收尾",
+                    timeoutBody = "最后再看一眼完整结论是怎么说的。"
+                )
             )
         )
     )

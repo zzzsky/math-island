@@ -2,6 +2,7 @@ package com.mathisland.app.feature.level.renderers
 
 import com.mathisland.app.QuestionRendererType
 import com.mathisland.app.domain.model.Question
+import com.mathisland.app.domain.model.StepFeedbackHint
 import com.mathisland.app.domain.model.StepPresentation
 import com.mathisland.app.domain.model.StepBranchRule
 import com.mathisland.app.rendererTypeFor
@@ -199,6 +200,83 @@ class MultiStepAnswerStateTest {
         assertEquals("整除结果", multiStepAnswerLabelFor(question, completed, 1))
         assertEquals("装盒数量", multiStepAnswerLabelFor(question, completed, 2))
         assertEquals("最终结论", multiStepAnswerLabelFor(question, completed, 3))
+    }
+
+    @Test
+    fun submittedAnswer_reconstructsBranchAwareStateForFeedbackReview() {
+        val question = Question(
+            prompt = "按条件步骤完成装盒复核。",
+            choices = emptyList(),
+            correctChoice = "正好分完,商是4,4个盒子,正好装完，不用多准备",
+            hint = "按步骤判断，再用统一结论收尾。",
+            family = "multi-step",
+            stepPrompts = listOf("第一步", "第二步", "第三步", "第四步"),
+            stepChoices = listOf(
+                listOf("有余数", "正好分完"),
+                listOf("占位"),
+                listOf("4个盒子", "5个盒子"),
+                listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            ),
+            stepBranchKeys = listOf("branch-start", "step-2", "shared-final-step", "shared-wrap-up-step"),
+            stepBranchRules = mapOf(
+                "branch-start" to listOf(
+                    StepBranchRule("有余数", "remainder-step-2"),
+                    StepBranchRule("正好分完", "exact-step-2")
+                ),
+                "remainder-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "exact-step-2" to listOf(StepBranchRule("*", "shared-final-step")),
+                "shared-final-step" to listOf(StepBranchRule("*", "shared-wrap-up-step"))
+            ),
+            stepBranchPrompts = mapOf(
+                "remainder-step-2" to "第二步：12 ÷ 5 的结果是什么？",
+                "exact-step-2" to "第二步：12 ÷ 3 的结果是什么？",
+                "shared-final-step" to "第三步：现在至少要准备几个盒子？",
+                "shared-wrap-up-step" to "第四步：最后该怎么复述？"
+            ),
+            stepBranchChoices = mapOf(
+                "remainder-step-2" to listOf("商是2余2", "商是4余1"),
+                "exact-step-2" to listOf("商是4", "商是3"),
+                "shared-final-step" to listOf("4个盒子", "5个盒子"),
+                "shared-wrap-up-step" to listOf("正好装完，不用多准备", "有余数，要多准备1个盒子")
+            )
+        )
+
+        val reconstructed = multiStepStateForSubmittedAnswer(
+            question = question,
+            submittedAnswer = "正好分完,商是4,4个盒子,正好装完，不用多准备"
+        )
+
+        assertEquals(
+            listOf("正好分完", "商是4", "4个盒子", "正好装完，不用多准备"),
+            reconstructed.answers
+        )
+        assertEquals("exact-step-2", reconstructed.currentBranchKey(question, 1))
+        assertEquals("shared-final-step", reconstructed.currentBranchKey(question, 2))
+        assertEquals("shared-wrap-up-step", reconstructed.currentBranchKey(question, 3))
+    }
+
+    @Test
+    fun feedbackHint_resolvesRetryFocusAndFallbackCopy() {
+        val hint = StepFeedbackHint(
+            incorrectLabel = "优先重看",
+            incorrectBody = "先回到这一步重新核对。",
+            expandOnIncorrect = true
+        )
+
+        val retryState = multiStepRecapFeedbackStateFor(
+            feedbackKind = AnswerFeedbackKind.Incorrect,
+            hint = hint
+        )
+        val timeoutFallback = multiStepRecapFeedbackStateFor(
+            feedbackKind = AnswerFeedbackKind.TimeoutExpired,
+            hint = null
+        )
+
+        assertEquals("优先重看", retryState.chipText)
+        assertEquals("先回到这一步重新核对。", retryState.body)
+        assertTrue(retryState.autoExpand)
+        assertEquals("本题结束", timeoutFallback.chipText)
+        assertTrue(timeoutFallback.body.isNotBlank())
     }
 
     @Test
