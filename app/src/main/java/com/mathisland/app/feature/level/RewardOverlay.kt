@@ -120,22 +120,27 @@ fun RewardOverlay(
                 RewardRevealBlock(
                     visible = motionValue >= motionSpec.chipRevealAt
                 ) {
-                    RewardSummaryHeader(
-                        reward = reward,
-                        totalStars = state.totalStars,
-                        primaryAccent = motionSpec.accent,
-                        accentMint = accentMint,
-                        returnLabel = state.continueLabel,
-                        returnVariant = rewardStatusVariant(reward)
-                    )
+                    Box(modifier = Modifier.testTag("reward-hero-section")) {
+                        RewardSummaryHeader(
+                            reward = reward,
+                            totalStars = state.totalStars,
+                            primaryAccent = motionSpec.accent,
+                            accentMint = accentMint,
+                            returnLabel = state.continueLabel,
+                            returnVariant = rewardStatusVariant(reward)
+                        )
+                    }
                 }
                 RewardRevealBlock(
                     visible = motionValue >= motionSpec.summaryRevealAt
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
+                    Column(
+                        modifier = Modifier.testTag("reward-primary-summary-section"),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                    ) {
                         RewardSectionHeader(
-                            title = "本次表现",
-                            body = "先看清结果，再决定是继续推进、回放复习，还是立刻再试一次。"
+                            title = "这次收获",
+                            body = "先看清这次拿到的结果，再决定下一步去哪里继续冒险。"
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -160,30 +165,31 @@ fun RewardOverlay(
                                 accent = accentMint
                             )
                         }
+                        SummarySpotlightCard(
+                            label = "这次结论",
+                            title = rewardSpotlightTitle(reward),
+                            body = rewardSpotlightBody(reward),
+                            accent = motionSpec.accent
+                        )
                     }
-                }
-                RewardRevealBlock(
-                    visible = motionValue >= motionSpec.spotlightRevealAt
-                ) {
-                    SummarySpotlightCard(
-                        label = "本轮结论",
-                        title = rewardSpotlightTitle(reward),
-                        body = rewardSpotlightBody(reward),
-                        accent = motionSpec.accent
-                    )
                 }
                 RewardRevealBlock(
                     visible = motionValue >= motionSpec.supportingRevealAt
                 ) {
-                    RewardHighlights(reward = reward)
+                    Column(modifier = Modifier.testTag("reward-supporting-details-section")) {
+                        RewardHighlights(reward = reward)
+                    }
                 }
                 RewardRevealBlock(
                     visible = motionValue >= motionSpec.detailRevealAt
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)) {
+                    Column(
+                        modifier = Modifier.testTag("reward-next-action-section"),
+                        verticalArrangement = Arrangement.spacedBy(SpacingTokens.Sm)
+                    ) {
                         RewardSectionHeader(
-                            title = "继续航线",
-                            body = "下一步已经整理好，保留当前流程和按钮契约，只把决策信息摆得更清楚。"
+                            title = "下一步冒险",
+                            body = "下一步已经整理好了，选一个最顺手的动作继续往前走。"
                         )
                         StoryPanelCard(
                             level = SurfaceLevel.Secondary,

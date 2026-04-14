@@ -57,16 +57,15 @@ class RewardOverlayTest {
             }
         }
 
-        composeRule.onNodeWithText("本次表现").assertIsDisplayed()
-        composeRule.onNodeWithText("整备评级").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithText("继续航线").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-hero-section").assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-primary-summary-section").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-supporting-details-section").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("reward-next-action-section").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-return-kind-pill").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-step-kind-pill").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-next-step-card").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-next-step-detail-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-action-card").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("reward-next-action-emphasis").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("reward-next-action-pill").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("下一步冒险").performScrollTo().assertIsDisplayed()
         composeRule.onAllNodesWithTag("reward-return-map").assertCountEquals(1)
     }
 }

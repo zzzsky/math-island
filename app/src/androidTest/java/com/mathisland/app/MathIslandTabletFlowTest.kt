@@ -141,10 +141,12 @@ class MathIslandTabletFlowTest {
         composeRule.onNodeWithText("家长入口").assertIsDisplayed()
         composeRule.onNodeWithTag("parent-answer-15").performClick()
 
-        composeRule.onNodeWithTag("parent-summary-today-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-primary-summary-section").assertIsDisplayed()
         composeRule.onNodeWithTag("parent-summary-weak-card").assertIsDisplayed()
         composeRule.onNodeWithTag("parent-summary-streak-stat").assertIsDisplayed()
-        composeRule.onNodeWithTag("parent-summary-recommended-card").assertIsDisplayed()
+        composeRule.onNodeWithTag("parent-summary-scroll")
+            .performScrollToNode(hasTestTag("parent-summary-next-action-card"))
+        composeRule.onNodeWithTag("parent-summary-next-action-card").assertIsDisplayed()
     }
 
     @Test
