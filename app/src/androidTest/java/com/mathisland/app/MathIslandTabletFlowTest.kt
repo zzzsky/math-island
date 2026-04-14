@@ -253,6 +253,30 @@ class MathIslandTabletFlowTest {
     }
 
     @Test
+    fun divisionApplyLesson_flowCompletesAndReturnsToMap() {
+        unlockDivisionIsland()
+
+        openLessonFromMap("start-division-apply-01")
+        answerChoiceSequence(listOf("每个篮子装 6 个", "坐满 5 条船后还剩 2 人", "每张桌子 4 个"))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
+    fun divisionContainerLesson_flowCompletesAndReturnsToMap() {
+        unlockDivisionIsland()
+
+        openLessonFromMap("start-division-container-01")
+        answerChoiceSequence(listOf("5 盒", "5 袋", "4 盘"))
+
+        composeRule.onNodeWithText("关卡完成").assertIsDisplayed()
+        returnToMapFromReward()
+        assertReturnedToMap()
+    }
+
+    @Test
     fun challengeLesson_usesNumberPadRenderer() {
         unlockChallengeIsland()
 
@@ -526,6 +550,27 @@ class MathIslandTabletFlowTest {
                 "Ruler Ranger",
                 "Forest Singer",
                 "Harbor Captain"
+            )
+        )
+    }
+
+    private fun unlockDivisionIsland() {
+        seedProgressForLessons(
+            completedLessonIds = setOf(
+                *calculationLessonIds.toTypedArray(),
+                *measurementLessonIds.toTypedArray(),
+                *multiplicationLessonIds.toTypedArray()
+            ),
+            unlockedIslandIds = setOf(
+                "calculation-island",
+                "measurement-geometry-island",
+                "multiplication-island",
+                "division-island"
+            ),
+            stickerNames = setOf(
+                "Bridge Builder",
+                "Ruler Ranger",
+                "Forest Singer"
             )
         )
     }
@@ -892,7 +937,13 @@ class MathIslandTabletFlowTest {
 
         val divisionLessonIds = setOf(
             "division-share-01",
+            "division-share-02",
             "division-remainder-01",
+            "division-remainder-02",
+            "division-leftover-01",
+            "division-container-01",
+            "division-transport-01",
+            "division-apply-01",
             "division-steps-01",
             "division-steps-02",
             "division-steps-03",

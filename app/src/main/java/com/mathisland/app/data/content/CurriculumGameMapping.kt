@@ -272,6 +272,144 @@ private val lessonQuestionBanks: Map<String, List<Question>> = mapOf(
             blankSlotKinds = listOf("unit", "number", "unit", "number")
         )
     ),
+    "division-share-02" to listOf(
+        Question(
+            prompt = "18 块饼干平均放进 3 个盘子里，每个盘子放几块？",
+            choices = listOf("5 块", "6 块", "7 块"),
+            correctChoice = "6 块",
+            hint = "18 平均分成 3 份，每份是 6。",
+            family = "division"
+        ),
+        Question(
+            prompt = "20 支铅笔平均分给 4 个小组，每组分到几支？",
+            choices = listOf("4 支", "5 支", "6 支"),
+            correctChoice = "5 支",
+            hint = "20 ÷ 4 = 5。",
+            family = "division"
+        ),
+        Question(
+            prompt = "16 个草莓平均装在 2 个盘子里，每盘有几个？",
+            choices = listOf("6 个", "8 个", "10 个"),
+            correctChoice = "8 个",
+            hint = "16 ÷ 2 = 8。",
+            family = "division"
+        )
+    ),
+    "division-remainder-02" to listOf(
+        Question(
+            prompt = "14 个贝壳平均装进 4 个小袋，每袋先装同样多，还剩几个？",
+            choices = listOf("剩 1 个", "剩 2 个", "剩 3 个"),
+            correctChoice = "剩 2 个",
+            hint = "14 ÷ 4 = 3 余 2。",
+            family = "division"
+        ),
+        Question(
+            prompt = "17 个苹果平均分给 5 个小朋友，每人先分同样多，还剩几个？",
+            choices = listOf("剩 1 个", "剩 2 个", "剩 3 个"),
+            correctChoice = "剩 2 个",
+            hint = "17 ÷ 5 = 3 余 2。",
+            family = "division"
+        ),
+        Question(
+            prompt = "19 本练习册每 6 本捆成一叠，可以捆成 3 叠后还余几本？",
+            choices = listOf("余 1 本", "余 2 本", "余 3 本"),
+            correctChoice = "余 1 本",
+            hint = "19 ÷ 6 = 3 余 1。",
+            family = "division"
+        )
+    ),
+    "division-leftover-01" to listOf(
+        Question(
+            prompt = "13 颗星星平均装进 4 个盒子里，还剩几颗？",
+            choices = listOf("剩 1 颗", "剩 2 颗", "剩 3 颗"),
+            correctChoice = "剩 1 颗",
+            hint = "13 ÷ 4 = 3 余 1，余数就是剩下的数量。",
+            family = "division"
+        ),
+        Question(
+            prompt = "17 块饼干平均分给 5 只小猴，分完后还剩几块？",
+            choices = listOf("剩 1 块", "剩 2 块", "剩 3 块"),
+            correctChoice = "剩 2 块",
+            hint = "17 ÷ 5 = 3 余 2，余数表示还剩下的部分。",
+            family = "division"
+        ),
+        Question(
+            prompt = "22 个苹果平均装进 6 个篮子里，分完后还剩几个？",
+            choices = listOf("剩 2 个", "剩 3 个", "剩 4 个"),
+            correctChoice = "剩 4 个",
+            hint = "22 ÷ 6 = 3 余 4，先算商，再看剩下多少。",
+            family = "division"
+        )
+    ),
+    "division-container-01" to listOf(
+        Question(
+            prompt = "17 个橘子每 4 个装一盒，17 ÷ 4 = 4 余 1，至少要几盒？",
+            choices = listOf("4 盒", "5 盒", "6 盒"),
+            correctChoice = "5 盒",
+            hint = "有余数就要多准备 1 个盒子。",
+            family = "division"
+        ),
+        Question(
+            prompt = "14 个面包每 3 个装一袋，14 ÷ 3 = 4 余 2，至少要几袋？",
+            choices = listOf("4 袋", "5 袋", "6 袋"),
+            correctChoice = "5 袋",
+            hint = "余下的也要再占 1 个袋子。",
+            family = "division"
+        ),
+        Question(
+            prompt = "19 个小蛋糕每 6 个放一盘，19 ÷ 6 = 3 余 1，至少要几盘？",
+            choices = listOf("3 盘", "4 盘", "5 盘"),
+            correctChoice = "4 盘",
+            hint = "只要有余数，就还要多加 1 个盘子。",
+            family = "division"
+        )
+    ),
+    "division-transport-01" to listOf(
+        Question(
+            prompt = "17 位游客坐小船，每条船坐 4 人，至少要几条船？",
+            choices = listOf("4 条", "5 条", "6 条"),
+            correctChoice = "5 条",
+            hint = "17 ÷ 4 = 4 余 1，余数还要再加 1 条船。",
+            family = "division"
+        ),
+        Question(
+            prompt = "26 位小朋友坐大巴，每辆车坐 6 人，至少要几辆车？",
+            choices = listOf("4 辆", "5 辆", "6 辆"),
+            correctChoice = "5 辆",
+            hint = "26 ÷ 6 = 4 余 2，有余数就要多一辆。",
+            family = "division"
+        ),
+        Question(
+            prompt = "31 箱饮料每趟运 7 箱，至少要运几趟？",
+            choices = listOf("4 趟", "5 趟", "6 趟"),
+            correctChoice = "5 趟",
+            hint = "31 ÷ 7 = 4 余 3，余下的还要再跑一趟。",
+            family = "division"
+        )
+    ),
+    "division-apply-01" to listOf(
+        Question(
+            prompt = "18 个橘子装进 3 个篮子里，18 ÷ 3 = 6 说明什么？",
+            choices = listOf("一共要 6 个篮子", "每个篮子装 6 个", "还剩 6 个橘子"),
+            correctChoice = "每个篮子装 6 个",
+            hint = "先算出商，再看它表示每份有多少。",
+            family = "division"
+        ),
+        Question(
+            prompt = "22 人坐船，每条船坐 4 人，22 ÷ 4 = 5 余 2，下面哪句话对？",
+            choices = listOf("坐满 5 条船后还剩 2 人", "每条船坐 2 人", "一共只要 4 条船"),
+            correctChoice = "坐满 5 条船后还剩 2 人",
+            hint = "商表示坐满几条，余数表示还剩几人。",
+            family = "division"
+        ),
+        Question(
+            prompt = "24 个面包平均分给 6 张桌子，24 ÷ 6 = 4，这里的 4 表示什么？",
+            choices = listOf("4 张桌子", "每张桌子 4 个", "还剩 4 个面包"),
+            correctChoice = "每张桌子 4 个",
+            hint = "把算出来的结果放回场景里理解。",
+            family = "division"
+        )
+    ),
     "division-steps-01" to listOf(
         Question(
             prompt = "按步骤完成平均分。",

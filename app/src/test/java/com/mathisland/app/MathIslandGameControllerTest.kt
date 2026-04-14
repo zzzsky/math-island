@@ -398,6 +398,64 @@ class MathIslandGameControllerTest {
     }
 
     @Test
+    fun divisionIsland_exposesExpandedLessonLadder_withPlayableQuestions() {
+        val divisionIsland = curriculumController.islands
+            .first { it.id == "division-island" }
+
+        assertEquals(
+            listOf(
+                "division-share-01",
+                "division-share-02",
+                "division-remainder-01",
+                "division-remainder-02",
+                "division-leftover-01",
+                "division-container-01",
+                "division-transport-01",
+                "division-apply-01",
+                "division-steps-01",
+                "division-steps-02",
+                "division-steps-03",
+                "division-steps-04",
+                "division-steps-05",
+                "division-steps-06",
+                "division-steps-07"
+            ),
+            divisionIsland.lessons.map { it.id }
+        )
+
+        val shareLesson = divisionIsland.lessons.first { it.id == "division-share-02" }
+        val remainderLesson = divisionIsland.lessons.first { it.id == "division-remainder-02" }
+        val leftoverLesson = divisionIsland.lessons.first { it.id == "division-leftover-01" }
+        val containerLesson = divisionIsland.lessons.first { it.id == "division-container-01" }
+        val transportLesson = divisionIsland.lessons.first { it.id == "division-transport-01" }
+        val applyLesson = divisionIsland.lessons.first { it.id == "division-apply-01" }
+
+        assertEquals("division", shareLesson.questions.first().family)
+        assertTrue(shareLesson.questions.isNotEmpty())
+        assertTrue(shareLesson.questions.first().prompt.isNotBlank())
+
+        assertEquals("division", remainderLesson.questions.first().family)
+        assertTrue(remainderLesson.questions.isNotEmpty())
+        assertTrue(remainderLesson.questions.first().prompt.isNotBlank())
+
+        assertEquals("division", leftoverLesson.questions.first().family)
+        assertTrue(leftoverLesson.questions.isNotEmpty())
+        assertTrue(leftoverLesson.questions.first().prompt.isNotBlank())
+
+        assertEquals("division", containerLesson.questions.first().family)
+        assertTrue(containerLesson.questions.isNotEmpty())
+        assertTrue(containerLesson.questions.first().prompt.isNotBlank())
+
+        assertEquals("division", transportLesson.questions.first().family)
+        assertTrue(transportLesson.questions.isNotEmpty())
+        assertTrue(transportLesson.questions.first().prompt.isNotBlank())
+
+        assertEquals("division", applyLesson.questions.first().family)
+        assertTrue(applyLesson.questions.isNotEmpty())
+        assertTrue(applyLesson.questions.first().prompt.isNotBlank())
+    }
+
+    @Test
     fun matchingFillBlankAndMultiStepExpansionLessons_areAvailable() {
         val classificationLessons = curriculumController.islands
             .first { it.id == "classification-island" }

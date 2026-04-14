@@ -18,9 +18,45 @@
       "questionFamily": "DIVISION"
     },
     {
+      "id": "division-share-02",
+      "title": "点心平均分盘",
+      "summary": "继续练习平均分，稳定理解每份有多少。",
+      "questionFamily": "DIVISION"
+    },
+    {
       "id": "division-remainder-01",
       "title": "租船进一法",
       "summary": "练习有余数除法和情境取舍。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-remainder-02",
+      "title": "余下几个观察站",
+      "summary": "练习先看商和余数，再说清楚还剩几个。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-leftover-01",
+      "title": "剩余观察站",
+      "summary": "练习把余数看成还剩多少，先学会直接读出剩下的部分。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-container-01",
+      "title": "余数补一箱",
+      "summary": "练习有余数时要多准备一个盒子、袋子或盘子。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-transport-01",
+      "title": "多一趟运输",
+      "summary": "练习有余数时判断是否要多一辆车、再跑一趟。",
+      "questionFamily": "DIVISION"
+    },
+    {
+      "id": "division-apply-01",
+      "title": "分装解释桥",
+      "summary": "先算除法，再判断结果在情境里表示什么。",
       "questionFamily": "DIVISION"
     },
     {
